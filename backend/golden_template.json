@@ -1,0 +1,8207 @@
+[
+    {
+        "frame": 0,
+        "angles": {}
+    },
+    {
+        "frame": 1,
+        "angles": {}
+    },
+    {
+        "frame": 2,
+        "angles": {}
+    },
+    {
+        "frame": 3,
+        "angles": {}
+    },
+    {
+        "frame": 4,
+        "angles": {}
+    },
+    {
+        "frame": 5,
+        "angles": {}
+    },
+    {
+        "frame": 6,
+        "angles": {}
+    },
+    {
+        "frame": 7,
+        "angles": {}
+    },
+    {
+        "frame": 8,
+        "angles": {}
+    },
+    {
+        "frame": 9,
+        "angles": {}
+    },
+    {
+        "frame": 10,
+        "angles": {}
+    },
+    {
+        "frame": 11,
+        "angles": {}
+    },
+    {
+        "frame": 12,
+        "angles": {}
+    },
+    {
+        "frame": 13,
+        "angles": {}
+    },
+    {
+        "frame": 14,
+        "angles": {}
+    },
+    {
+        "frame": 15,
+        "angles": {}
+    },
+    {
+        "frame": 16,
+        "angles": {}
+    },
+    {
+        "frame": 17,
+        "angles": {}
+    },
+    {
+        "frame": 18,
+        "angles": {}
+    },
+    {
+        "frame": 19,
+        "angles": {}
+    },
+    {
+        "frame": 20,
+        "angles": {}
+    },
+    {
+        "frame": 21,
+        "angles": {}
+    },
+    {
+        "frame": 22,
+        "angles": {}
+    },
+    {
+        "frame": 23,
+        "angles": {}
+    },
+    {
+        "frame": 24,
+        "angles": {}
+    },
+    {
+        "frame": 25,
+        "angles": {}
+    },
+    {
+        "frame": 26,
+        "angles": {}
+    },
+    {
+        "frame": 27,
+        "angles": {}
+    },
+    {
+        "frame": 28,
+        "angles": {}
+    },
+    {
+        "frame": 29,
+        "angles": {}
+    },
+    {
+        "frame": 30,
+        "angles": {}
+    },
+    {
+        "frame": 31,
+        "angles": {}
+    },
+    {
+        "frame": 32,
+        "angles": {}
+    },
+    {
+        "frame": 33,
+        "angles": {}
+    },
+    {
+        "frame": 34,
+        "angles": {}
+    },
+    {
+        "frame": 35,
+        "angles": {}
+    },
+    {
+        "frame": 36,
+        "angles": {}
+    },
+    {
+        "frame": 37,
+        "angles": {}
+    },
+    {
+        "frame": 38,
+        "angles": {}
+    },
+    {
+        "frame": 39,
+        "angles": {}
+    },
+    {
+        "frame": 40,
+        "angles": {}
+    },
+    {
+        "frame": 41,
+        "angles": {}
+    },
+    {
+        "frame": 42,
+        "angles": {}
+    },
+    {
+        "frame": 43,
+        "angles": {}
+    },
+    {
+        "frame": 44,
+        "angles": {}
+    },
+    {
+        "frame": 45,
+        "angles": {}
+    },
+    {
+        "frame": 46,
+        "angles": {}
+    },
+    {
+        "frame": 47,
+        "angles": {}
+    },
+    {
+        "frame": 48,
+        "angles": {}
+    },
+    {
+        "frame": 49,
+        "angles": {}
+    },
+    {
+        "frame": 50,
+        "angles": {}
+    },
+    {
+        "frame": 51,
+        "angles": {}
+    },
+    {
+        "frame": 52,
+        "angles": {}
+    },
+    {
+        "frame": 53,
+        "angles": {}
+    },
+    {
+        "frame": 54,
+        "angles": {}
+    },
+    {
+        "frame": 55,
+        "angles": {}
+    },
+    {
+        "frame": 56,
+        "angles": {}
+    },
+    {
+        "frame": 57,
+        "angles": {}
+    },
+    {
+        "frame": 58,
+        "angles": {}
+    },
+    {
+        "frame": 59,
+        "angles": {}
+    },
+    {
+        "frame": 60,
+        "angles": {}
+    },
+    {
+        "frame": 61,
+        "angles": {}
+    },
+    {
+        "frame": 62,
+        "angles": {}
+    },
+    {
+        "frame": 63,
+        "angles": {}
+    },
+    {
+        "frame": 64,
+        "angles": {}
+    },
+    {
+        "frame": 65,
+        "angles": {}
+    },
+    {
+        "frame": 66,
+        "angles": {}
+    },
+    {
+        "frame": 67,
+        "angles": {}
+    },
+    {
+        "frame": 68,
+        "angles": {}
+    },
+    {
+        "frame": 69,
+        "angles": {}
+    },
+    {
+        "frame": 70,
+        "angles": {}
+    },
+    {
+        "frame": 71,
+        "angles": {}
+    },
+    {
+        "frame": 72,
+        "angles": {}
+    },
+    {
+        "frame": 73,
+        "angles": {}
+    },
+    {
+        "frame": 74,
+        "angles": {}
+    },
+    {
+        "frame": 75,
+        "angles": {}
+    },
+    {
+        "frame": 76,
+        "angles": {}
+    },
+    {
+        "frame": 77,
+        "angles": {}
+    },
+    {
+        "frame": 78,
+        "angles": {}
+    },
+    {
+        "frame": 79,
+        "angles": {}
+    },
+    {
+        "frame": 80,
+        "angles": {}
+    },
+    {
+        "frame": 81,
+        "angles": {}
+    },
+    {
+        "frame": 82,
+        "angles": {}
+    },
+    {
+        "frame": 83,
+        "angles": {}
+    },
+    {
+        "frame": 84,
+        "angles": {}
+    },
+    {
+        "frame": 85,
+        "angles": {}
+    },
+    {
+        "frame": 86,
+        "angles": {
+            "knee_angle": 140.52338476011442,
+            "hip_angle": 166.70483095186734
+        }
+    },
+    {
+        "frame": 87,
+        "angles": {
+            "knee_angle": 130.82714939857178,
+            "hip_angle": 156.13666223447558
+        }
+    },
+    {
+        "frame": 88,
+        "angles": {
+            "knee_angle": 116.40354618971502,
+            "hip_angle": 136.74840365598413
+        }
+    },
+    {
+        "frame": 89,
+        "angles": {
+            "knee_angle": 103.12313339971021,
+            "hip_angle": 120.410424233421
+        }
+    },
+    {
+        "frame": 90,
+        "angles": {
+            "knee_angle": 99.83749791586371,
+            "hip_angle": 114.88166313529824
+        }
+    },
+    {
+        "frame": 91,
+        "angles": {
+            "knee_angle": 95.14568893062703,
+            "hip_angle": 108.42592161023548
+        }
+    },
+    {
+        "frame": 92,
+        "angles": {
+            "knee_angle": 95.50463236312429,
+            "hip_angle": 107.28718580544997
+        }
+    },
+    {
+        "frame": 93,
+        "angles": {
+            "knee_angle": 94.18952985482548,
+            "hip_angle": 104.95001682320925
+        }
+    },
+    {
+        "frame": 94,
+        "angles": {
+            "knee_angle": 93.29209788341355,
+            "hip_angle": 103.4108973958311
+        }
+    },
+    {
+        "frame": 95,
+        "angles": {
+            "knee_angle": 94.15241894891422,
+            "hip_angle": 104.28285214466018
+        }
+    },
+    {
+        "frame": 96,
+        "angles": {
+            "knee_angle": 94.54181343106492,
+            "hip_angle": 104.63698347848772
+        }
+    },
+    {
+        "frame": 97,
+        "angles": {
+            "knee_angle": 94.52121567249405,
+            "hip_angle": 104.33110070068408
+        }
+    },
+    {
+        "frame": 98,
+        "angles": {
+            "knee_angle": 94.71533158377889,
+            "hip_angle": 104.64476124078911
+        }
+    },
+    {
+        "frame": 99,
+        "angles": {
+            "knee_angle": 94.77463275656119,
+            "hip_angle": 104.83599498880487
+        }
+    },
+    {
+        "frame": 100,
+        "angles": {
+            "knee_angle": 95.05668309322789,
+            "hip_angle": 105.13357540357413
+        }
+    },
+    {
+        "frame": 101,
+        "angles": {
+            "knee_angle": 95.13459321581905,
+            "hip_angle": 105.19115527362442
+        }
+    },
+    {
+        "frame": 102,
+        "angles": {
+            "knee_angle": 95.12180299685376,
+            "hip_angle": 105.13863569205786
+        }
+    },
+    {
+        "frame": 103,
+        "angles": {
+            "knee_angle": 95.0727604559849,
+            "hip_angle": 105.04838672332762
+        }
+    },
+    {
+        "frame": 104,
+        "angles": {
+            "knee_angle": 95.05319032675845,
+            "hip_angle": 105.01483232234868
+        }
+    },
+    {
+        "frame": 105,
+        "angles": {
+            "knee_angle": 95.16007222765012,
+            "hip_angle": 105.11280225994012
+        }
+    },
+    {
+        "frame": 106,
+        "angles": {
+            "knee_angle": 95.28545066659714,
+            "hip_angle": 105.21323612473496
+        }
+    },
+    {
+        "frame": 107,
+        "angles": {
+            "knee_angle": 95.29364178850291,
+            "hip_angle": 105.15473050352607
+        }
+    },
+    {
+        "frame": 108,
+        "angles": {
+            "knee_angle": 95.46103307689171,
+            "hip_angle": 105.24767266389591
+        }
+    },
+    {
+        "frame": 109,
+        "angles": {
+            "knee_angle": 95.6751574582823,
+            "hip_angle": 105.3894441879947
+        }
+    },
+    {
+        "frame": 110,
+        "angles": {
+            "knee_angle": 95.96375432705896,
+            "hip_angle": 105.60796483217258
+        }
+    },
+    {
+        "frame": 111,
+        "angles": {
+            "knee_angle": 96.23408731121285,
+            "hip_angle": 105.81724183684487
+        }
+    },
+    {
+        "frame": 112,
+        "angles": {
+            "knee_angle": 96.46311648359311,
+            "hip_angle": 105.96868553300529
+        }
+    },
+    {
+        "frame": 113,
+        "angles": {
+            "knee_angle": 96.52982390602023,
+            "hip_angle": 105.94321786437538
+        }
+    },
+    {
+        "frame": 114,
+        "angles": {
+            "knee_angle": 96.52204366463215,
+            "hip_angle": 105.87271350729249
+        }
+    },
+    {
+        "frame": 115,
+        "angles": {
+            "knee_angle": 96.49578918692231,
+            "hip_angle": 105.78830800884636
+        }
+    },
+    {
+        "frame": 116,
+        "angles": {
+            "knee_angle": 96.53010357731792,
+            "hip_angle": 105.81489439054194
+        }
+    },
+    {
+        "frame": 117,
+        "angles": {
+            "knee_angle": 96.62067208614411,
+            "hip_angle": 105.90065760630812
+        }
+    },
+    {
+        "frame": 118,
+        "angles": {
+            "knee_angle": 96.73545253315069,
+            "hip_angle": 106.01736774792347
+        }
+    },
+    {
+        "frame": 119,
+        "angles": {
+            "knee_angle": 96.78887119582146,
+            "hip_angle": 106.06507334992116
+        }
+    },
+    {
+        "frame": 120,
+        "angles": {
+            "knee_angle": 96.80913301251105,
+            "hip_angle": 106.08037871892152
+        }
+    },
+    {
+        "frame": 121,
+        "angles": {
+            "knee_angle": 96.87132750184159,
+            "hip_angle": 106.14251223273473
+        }
+    },
+    {
+        "frame": 122,
+        "angles": {
+            "knee_angle": 96.8806052535114,
+            "hip_angle": 106.1492979847768
+        }
+    },
+    {
+        "frame": 123,
+        "angles": {
+            "knee_angle": 96.88617292604877,
+            "hip_angle": 106.15974481922103
+        }
+    },
+    {
+        "frame": 124,
+        "angles": {
+            "knee_angle": 96.89494902812125,
+            "hip_angle": 106.17166446620672
+        }
+    },
+    {
+        "frame": 125,
+        "angles": {
+            "knee_angle": 96.9062197939284,
+            "hip_angle": 106.18825797227248
+        }
+    },
+    {
+        "frame": 126,
+        "angles": {
+            "knee_angle": 96.9366888272196,
+            "hip_angle": 106.22937113722148
+        }
+    },
+    {
+        "frame": 127,
+        "angles": {
+            "knee_angle": 96.9545656373545,
+            "hip_angle": 106.25960407491542
+        }
+    },
+    {
+        "frame": 128,
+        "angles": {
+            "knee_angle": 96.97347042857493,
+            "hip_angle": 106.29908344589899
+        }
+    },
+    {
+        "frame": 129,
+        "angles": {
+            "knee_angle": 97.00339436991796,
+            "hip_angle": 106.35457561147793
+        }
+    },
+    {
+        "frame": 130,
+        "angles": {
+            "knee_angle": 97.02835461048475,
+            "hip_angle": 106.39965114247669
+        }
+    },
+    {
+        "frame": 131,
+        "angles": {
+            "knee_angle": 97.05578525361629,
+            "hip_angle": 106.4450599682766
+        }
+    },
+    {
+        "frame": 132,
+        "angles": {
+            "knee_angle": 97.07903351500251,
+            "hip_angle": 106.48372939088183
+        }
+    },
+    {
+        "frame": 133,
+        "angles": {
+            "knee_angle": 97.0931120453815,
+            "hip_angle": 106.50327498421856
+        }
+    },
+    {
+        "frame": 134,
+        "angles": {
+            "knee_angle": 97.10024167185428,
+            "hip_angle": 106.51432088444608
+        }
+    },
+    {
+        "frame": 135,
+        "angles": {
+            "knee_angle": 97.10322507025698,
+            "hip_angle": 106.52134363103349
+        }
+    },
+    {
+        "frame": 136,
+        "angles": {
+            "knee_angle": 97.10539549275809,
+            "hip_angle": 106.52910496446252
+        }
+    },
+    {
+        "frame": 137,
+        "angles": {
+            "knee_angle": 97.10748553875749,
+            "hip_angle": 106.53967935212407
+        }
+    },
+    {
+        "frame": 138,
+        "angles": {
+            "knee_angle": 97.12416717752146,
+            "hip_angle": 106.56482160484718
+        }
+    },
+    {
+        "frame": 139,
+        "angles": {
+            "knee_angle": 97.13133308371621,
+            "hip_angle": 106.58452833256715
+        }
+    },
+    {
+        "frame": 140,
+        "angles": {
+            "knee_angle": 97.1426024315097,
+            "hip_angle": 106.60474009110882
+        }
+    },
+    {
+        "frame": 141,
+        "angles": {
+            "knee_angle": 97.17147100198808,
+            "hip_angle": 106.64299507573712
+        }
+    },
+    {
+        "frame": 142,
+        "angles": {
+            "knee_angle": 97.19563454935509,
+            "hip_angle": 106.67756675254769
+        }
+    },
+    {
+        "frame": 143,
+        "angles": {
+            "knee_angle": 97.2063104192613,
+            "hip_angle": 106.69195047625686
+        }
+    },
+    {
+        "frame": 144,
+        "angles": {
+            "knee_angle": 97.2229134613861,
+            "hip_angle": 106.7105409087718
+        }
+    },
+    {
+        "frame": 145,
+        "angles": {
+            "knee_angle": 97.24214343571933,
+            "hip_angle": 106.73253597135182
+        }
+    },
+    {
+        "frame": 146,
+        "angles": {
+            "knee_angle": 97.258497655436,
+            "hip_angle": 106.75153146831911
+        }
+    },
+    {
+        "frame": 147,
+        "angles": {
+            "knee_angle": 97.27080296966354,
+            "hip_angle": 106.76853173613125
+        }
+    },
+    {
+        "frame": 148,
+        "angles": {
+            "knee_angle": 97.28175965905784,
+            "hip_angle": 106.78608704504671
+        }
+    },
+    {
+        "frame": 149,
+        "angles": {
+            "knee_angle": 97.29500939388932,
+            "hip_angle": 106.80608872051339
+        }
+    },
+    {
+        "frame": 150,
+        "angles": {
+            "knee_angle": 97.30566926849963,
+            "hip_angle": 106.82165786052173
+        }
+    },
+    {
+        "frame": 151,
+        "angles": {
+            "knee_angle": 97.31156118117373,
+            "hip_angle": 106.83090635272157
+        }
+    },
+    {
+        "frame": 152,
+        "angles": {
+            "knee_angle": 97.31987434438716,
+            "hip_angle": 106.84195325800655
+        }
+    },
+    {
+        "frame": 153,
+        "angles": {
+            "knee_angle": 97.33911039801876,
+            "hip_angle": 106.86470934595616
+        }
+    },
+    {
+        "frame": 154,
+        "angles": {
+            "knee_angle": 97.37407856340823,
+            "hip_angle": 106.90545373650977
+        }
+    },
+    {
+        "frame": 155,
+        "angles": {
+            "knee_angle": 97.3983253689612,
+            "hip_angle": 106.93190547535792
+        }
+    },
+    {
+        "frame": 156,
+        "angles": {
+            "knee_angle": 97.40607824403772,
+            "hip_angle": 106.94235110864928
+        }
+    },
+    {
+        "frame": 157,
+        "angles": {
+            "knee_angle": 97.41739053052123,
+            "hip_angle": 106.95706950212588
+        }
+    },
+    {
+        "frame": 158,
+        "angles": {
+            "knee_angle": 97.41981355932377,
+            "hip_angle": 106.96419170337442
+        }
+    },
+    {
+        "frame": 159,
+        "angles": {
+            "knee_angle": 97.43006287579716,
+            "hip_angle": 106.9797011006409
+        }
+    },
+    {
+        "frame": 160,
+        "angles": {
+            "knee_angle": 97.45362693165511,
+            "hip_angle": 107.01245987255204
+        }
+    },
+    {
+        "frame": 161,
+        "angles": {
+            "knee_angle": 97.50462438608194,
+            "hip_angle": 107.07157409898437
+        }
+    },
+    {
+        "frame": 162,
+        "angles": {
+            "knee_angle": 97.59438275615268,
+            "hip_angle": 107.1610447251183
+        }
+    },
+    {
+        "frame": 163,
+        "angles": {
+            "knee_angle": 97.6864239037462,
+            "hip_angle": 107.24913307472784
+        }
+    },
+    {
+        "frame": 164,
+        "angles": {
+            "knee_angle": 97.74456787808501,
+            "hip_angle": 107.30346704688687
+        }
+    },
+    {
+        "frame": 165,
+        "angles": {
+            "knee_angle": 97.79391896775732,
+            "hip_angle": 107.34708731661735
+        }
+    },
+    {
+        "frame": 166,
+        "angles": {
+            "knee_angle": 97.81821949198779,
+            "hip_angle": 107.36547999303006
+        }
+    },
+    {
+        "frame": 167,
+        "angles": {
+            "knee_angle": 97.85339838003367,
+            "hip_angle": 107.39389697874128
+        }
+    },
+    {
+        "frame": 168,
+        "angles": {
+            "knee_angle": 97.88384258038647,
+            "hip_angle": 107.42215728434275
+        }
+    },
+    {
+        "frame": 169,
+        "angles": {
+            "knee_angle": 97.90268460952565,
+            "hip_angle": 107.4387505663401
+        }
+    },
+    {
+        "frame": 170,
+        "angles": {
+            "knee_angle": 97.91686014212206,
+            "hip_angle": 107.44485982860304
+        }
+    },
+    {
+        "frame": 171,
+        "angles": {
+            "knee_angle": 97.92786935210292,
+            "hip_angle": 107.45004443767466
+        }
+    },
+    {
+        "frame": 172,
+        "angles": {
+            "knee_angle": 97.9402164896255,
+            "hip_angle": 107.45726746591777
+        }
+    },
+    {
+        "frame": 173,
+        "angles": {
+            "knee_angle": 97.94316593072226,
+            "hip_angle": 107.45052235724177
+        }
+    },
+    {
+        "frame": 174,
+        "angles": {
+            "knee_angle": 97.92487248314765,
+            "hip_angle": 107.41911535285084
+        }
+    },
+    {
+        "frame": 175,
+        "angles": {
+            "knee_angle": 97.88863772560306,
+            "hip_angle": 107.37046829922298
+        }
+    },
+    {
+        "frame": 176,
+        "angles": {
+            "knee_angle": 97.75138539724186,
+            "hip_angle": 107.21130935663676
+        }
+    },
+    {
+        "frame": 177,
+        "angles": {
+            "knee_angle": 97.69002435556722,
+            "hip_angle": 107.11839623734106
+        }
+    },
+    {
+        "frame": 178,
+        "angles": {
+            "knee_angle": 97.78902122172745,
+            "hip_angle": 107.18102048432685
+        }
+    },
+    {
+        "frame": 179,
+        "angles": {
+            "knee_angle": 97.5592785304576,
+            "hip_angle": 106.93078028602244
+        }
+    },
+    {
+        "frame": 180,
+        "angles": {
+            "knee_angle": 97.42522048727521,
+            "hip_angle": 106.77386759643032
+        }
+    },
+    {
+        "frame": 181,
+        "angles": {
+            "knee_angle": 97.41174190082864,
+            "hip_angle": 106.66892953494613
+        }
+    },
+    {
+        "frame": 182,
+        "angles": {
+            "knee_angle": 97.29405656915108,
+            "hip_angle": 106.43962162012137
+        }
+    },
+    {
+        "frame": 183,
+        "angles": {}
+    },
+    {
+        "frame": 184,
+        "angles": {
+            "knee_angle": 117.76801508703454,
+            "hip_angle": 163.82088326969486
+        }
+    },
+    {
+        "frame": 185,
+        "angles": {
+            "knee_angle": 121.94692947639966,
+            "hip_angle": 175.24112462801568
+        }
+    },
+    {
+        "frame": 186,
+        "angles": {
+            "knee_angle": 119.74397188627665,
+            "hip_angle": 179.365969200972
+        }
+    },
+    {
+        "frame": 187,
+        "angles": {
+            "knee_angle": 119.14138540254088,
+            "hip_angle": 175.3566069954324
+        }
+    },
+    {
+        "frame": 188,
+        "angles": {
+            "knee_angle": 116.10165531441204,
+            "hip_angle": 167.66423972686215
+        }
+    },
+    {
+        "frame": 189,
+        "angles": {
+            "knee_angle": 121.79171094329543,
+            "hip_angle": 171.38646798971297
+        }
+    },
+    {
+        "frame": 190,
+        "angles": {
+            "knee_angle": 126.94300404556434,
+            "hip_angle": 178.15027921018
+        }
+    },
+    {
+        "frame": 191,
+        "angles": {
+            "knee_angle": 124.27317826571982,
+            "hip_angle": 174.38912859428834
+        }
+    },
+    {
+        "frame": 192,
+        "angles": {
+            "knee_angle": 136.9089504766192,
+            "hip_angle": 176.4117385660258
+        }
+    },
+    {
+        "frame": 193,
+        "angles": {
+            "knee_angle": 141.30438344399184,
+            "hip_angle": 173.97697563158175
+        }
+    },
+    {
+        "frame": 194,
+        "angles": {
+            "knee_angle": 140.61753435429338,
+            "hip_angle": 170.18524840011077
+        }
+    },
+    {
+        "frame": 195,
+        "angles": {
+            "knee_angle": 141.42009227891884,
+            "hip_angle": 169.23574616240154
+        }
+    },
+    {
+        "frame": 196,
+        "angles": {
+            "knee_angle": 148.86408171232029,
+            "hip_angle": 164.42256169412545
+        }
+    },
+    {
+        "frame": 197,
+        "angles": {
+            "knee_angle": 149.05899242477582,
+            "hip_angle": 167.5568899588812
+        }
+    },
+    {
+        "frame": 198,
+        "angles": {
+            "knee_angle": 153.26798761605178,
+            "hip_angle": 161.59805956851073
+        }
+    },
+    {
+        "frame": 199,
+        "angles": {
+            "knee_angle": 153.02616028631425,
+            "hip_angle": 158.51012622038974
+        }
+    },
+    {
+        "frame": 200,
+        "angles": {
+            "knee_angle": 145.07555074731872,
+            "hip_angle": 155.49902115542906
+        }
+    },
+    {
+        "frame": 201,
+        "angles": {
+            "knee_angle": 161.68069417112247,
+            "hip_angle": 98.76627344399867
+        }
+    },
+    {
+        "frame": 202,
+        "angles": {
+            "knee_angle": 158.15038469191387,
+            "hip_angle": 108.30762271705048
+        }
+    },
+    {
+        "frame": 203,
+        "angles": {
+            "knee_angle": 159.9644419113489,
+            "hip_angle": 88.36930203500614
+        }
+    },
+    {
+        "frame": 204,
+        "angles": {
+            "knee_angle": 153.55875185726035,
+            "hip_angle": 87.06907345031169
+        }
+    },
+    {
+        "frame": 205,
+        "angles": {
+            "knee_angle": 144.7077286414246,
+            "hip_angle": 80.46228368824117
+        }
+    },
+    {
+        "frame": 206,
+        "angles": {
+            "knee_angle": 135.74036464448216,
+            "hip_angle": 162.86706083999817
+        }
+    },
+    {
+        "frame": 207,
+        "angles": {
+            "knee_angle": 127.14309052390202,
+            "hip_angle": 166.00548931748307
+        }
+    },
+    {
+        "frame": 208,
+        "angles": {
+            "knee_angle": 118.45045323210897,
+            "hip_angle": 170.2608656639703
+        }
+    },
+    {
+        "frame": 209,
+        "angles": {
+            "knee_angle": 120.74952958199802,
+            "hip_angle": 170.86599469711817
+        }
+    },
+    {
+        "frame": 210,
+        "angles": {
+            "knee_angle": 138.04564480978541,
+            "hip_angle": 139.9575201648507
+        }
+    },
+    {
+        "frame": 211,
+        "angles": {
+            "knee_angle": 171.02980768368164,
+            "hip_angle": 103.8191805156373
+        }
+    },
+    {
+        "frame": 212,
+        "angles": {
+            "knee_angle": 179.5902067183092,
+            "hip_angle": 95.61076077652056
+        }
+    },
+    {
+        "frame": 213,
+        "angles": {
+            "knee_angle": 175.23059029101873,
+            "hip_angle": 97.64155575707706
+        }
+    },
+    {
+        "frame": 214,
+        "angles": {
+            "knee_angle": 165.60029005959137,
+            "hip_angle": 97.531096414927
+        }
+    },
+    {
+        "frame": 215,
+        "angles": {
+            "knee_angle": 168.30693887037722,
+            "hip_angle": 94.2537230221201
+        }
+    },
+    {
+        "frame": 216,
+        "angles": {
+            "knee_angle": 170.24263809210512,
+            "hip_angle": 97.80726760342776
+        }
+    },
+    {
+        "frame": 217,
+        "angles": {
+            "knee_angle": 176.0208449255582,
+            "hip_angle": 94.3831628163786
+        }
+    },
+    {
+        "frame": 218,
+        "angles": {}
+    },
+    {
+        "frame": 219,
+        "angles": {
+            "knee_angle": 163.72502785430774,
+            "hip_angle": 93.24249072538045
+        }
+    },
+    {
+        "frame": 220,
+        "angles": {
+            "knee_angle": 174.75045107662902,
+            "hip_angle": 95.27536117344818
+        }
+    },
+    {
+        "frame": 221,
+        "angles": {
+            "knee_angle": 166.07816901158031,
+            "hip_angle": 109.17099139562981
+        }
+    },
+    {
+        "frame": 222,
+        "angles": {
+            "knee_angle": 166.3271647653991,
+            "hip_angle": 111.74546880414911
+        }
+    },
+    {
+        "frame": 223,
+        "angles": {
+            "knee_angle": 166.6852637435789,
+            "hip_angle": 106.14173487091233
+        }
+    },
+    {
+        "frame": 224,
+        "angles": {
+            "knee_angle": 170.12884791774988,
+            "hip_angle": 104.16710005919865
+        }
+    },
+    {
+        "frame": 225,
+        "angles": {
+            "knee_angle": 171.78684267168273,
+            "hip_angle": 94.46847059252812
+        }
+    },
+    {
+        "frame": 226,
+        "angles": {
+            "knee_angle": 169.88164932944383,
+            "hip_angle": 93.36886737708959
+        }
+    },
+    {
+        "frame": 227,
+        "angles": {
+            "knee_angle": 175.88238646326815,
+            "hip_angle": 87.22826957210334
+        }
+    },
+    {
+        "frame": 228,
+        "angles": {
+            "knee_angle": 174.5221888980304,
+            "hip_angle": 78.85732115907905
+        }
+    },
+    {
+        "frame": 229,
+        "angles": {
+            "knee_angle": 177.18374600195287,
+            "hip_angle": 80.03937182432648
+        }
+    },
+    {
+        "frame": 230,
+        "angles": {
+            "knee_angle": 176.4577071277115,
+            "hip_angle": 78.8655663549352
+        }
+    },
+    {
+        "frame": 231,
+        "angles": {
+            "knee_angle": 177.8240034656484,
+            "hip_angle": 81.34605387780067
+        }
+    },
+    {
+        "frame": 232,
+        "angles": {
+            "knee_angle": 175.56058454859505,
+            "hip_angle": 84.59042309153196
+        }
+    },
+    {
+        "frame": 233,
+        "angles": {
+            "knee_angle": 173.4840570216305,
+            "hip_angle": 85.82987078320062
+        }
+    },
+    {
+        "frame": 234,
+        "angles": {
+            "knee_angle": 174.44815175473676,
+            "hip_angle": 86.3639367793386
+        }
+    },
+    {
+        "frame": 235,
+        "angles": {
+            "knee_angle": 171.88766587118073,
+            "hip_angle": 87.82559534200793
+        }
+    },
+    {
+        "frame": 236,
+        "angles": {
+            "knee_angle": 171.77960978395046,
+            "hip_angle": 88.15304259738939
+        }
+    },
+    {
+        "frame": 237,
+        "angles": {
+            "knee_angle": 160.11399910419092,
+            "hip_angle": 94.47092174203284
+        }
+    },
+    {
+        "frame": 238,
+        "angles": {}
+    },
+    {
+        "frame": 239,
+        "angles": {}
+    },
+    {
+        "frame": 240,
+        "angles": {}
+    },
+    {
+        "frame": 241,
+        "angles": {}
+    },
+    {
+        "frame": 242,
+        "angles": {
+            "knee_angle": 176.82950882312724,
+            "hip_angle": 88.83864608035184
+        }
+    },
+    {
+        "frame": 243,
+        "angles": {
+            "knee_angle": 175.91163579921977,
+            "hip_angle": 94.43038725895157
+        }
+    },
+    {
+        "frame": 244,
+        "angles": {
+            "knee_angle": 175.71390334311428,
+            "hip_angle": 102.69369337851674
+        }
+    },
+    {
+        "frame": 245,
+        "angles": {}
+    },
+    {
+        "frame": 246,
+        "angles": {
+            "knee_angle": 88.95440092229117,
+            "hip_angle": 140.065947983003
+        }
+    },
+    {
+        "frame": 247,
+        "angles": {
+            "knee_angle": 94.24980754191536,
+            "hip_angle": 151.64577944614587
+        }
+    },
+    {
+        "frame": 248,
+        "angles": {
+            "knee_angle": 91.13531954858723,
+            "hip_angle": 147.614950486706
+        }
+    },
+    {
+        "frame": 249,
+        "angles": {
+            "knee_angle": 92.47333677365187,
+            "hip_angle": 145.08584533728106
+        }
+    },
+    {
+        "frame": 250,
+        "angles": {
+            "knee_angle": 103.2259065287875,
+            "hip_angle": 146.94623571077813
+        }
+    },
+    {
+        "frame": 251,
+        "angles": {
+            "knee_angle": 110.57125900610383,
+            "hip_angle": 152.9846804188913
+        }
+    },
+    {
+        "frame": 252,
+        "angles": {
+            "knee_angle": 108.42608404119326,
+            "hip_angle": 151.29001529765543
+        }
+    },
+    {
+        "frame": 253,
+        "angles": {
+            "knee_angle": 107.31114365089017,
+            "hip_angle": 149.81563935740115
+        }
+    },
+    {
+        "frame": 254,
+        "angles": {
+            "knee_angle": 104.30965585786267,
+            "hip_angle": 146.79753265012212
+        }
+    },
+    {
+        "frame": 255,
+        "angles": {
+            "knee_angle": 99.37769323384575,
+            "hip_angle": 138.03816173504953
+        }
+    },
+    {
+        "frame": 256,
+        "angles": {
+            "knee_angle": 99.57287073685569,
+            "hip_angle": 139.24606474407602
+        }
+    },
+    {
+        "frame": 257,
+        "angles": {
+            "knee_angle": 99.6789975321616,
+            "hip_angle": 138.54672412734269
+        }
+    },
+    {
+        "frame": 258,
+        "angles": {
+            "knee_angle": 98.90987182100395,
+            "hip_angle": 135.12400523654452
+        }
+    },
+    {
+        "frame": 259,
+        "angles": {
+            "knee_angle": 101.44885950456677,
+            "hip_angle": 138.60230842122718
+        }
+    },
+    {
+        "frame": 260,
+        "angles": {
+            "knee_angle": 102.22350423864862,
+            "hip_angle": 138.62917103798623
+        }
+    },
+    {
+        "frame": 261,
+        "angles": {
+            "knee_angle": 95.79885260793054,
+            "hip_angle": 136.03597924970728
+        }
+    },
+    {
+        "frame": 262,
+        "angles": {
+            "knee_angle": 86.3740028984351,
+            "hip_angle": 126.76511495361655
+        }
+    },
+    {
+        "frame": 263,
+        "angles": {
+            "knee_angle": 89.71729251008644,
+            "hip_angle": 128.54590785667162
+        }
+    },
+    {
+        "frame": 264,
+        "angles": {
+            "knee_angle": 90.45837243002326,
+            "hip_angle": 123.073094561716
+        }
+    },
+    {
+        "frame": 265,
+        "angles": {
+            "knee_angle": 93.32870127479912,
+            "hip_angle": 126.25904556634066
+        }
+    },
+    {
+        "frame": 266,
+        "angles": {
+            "knee_angle": 101.81510946192105,
+            "hip_angle": 139.71906796780124
+        }
+    },
+    {
+        "frame": 267,
+        "angles": {
+            "knee_angle": 102.26601361672789,
+            "hip_angle": 140.94593769422093
+        }
+    },
+    {
+        "frame": 268,
+        "angles": {
+            "knee_angle": 104.44758523181974,
+            "hip_angle": 143.77824491487993
+        }
+    },
+    {
+        "frame": 269,
+        "angles": {
+            "knee_angle": 113.494434671841,
+            "hip_angle": 152.2250375383842
+        }
+    },
+    {
+        "frame": 270,
+        "angles": {
+            "knee_angle": 108.71138484426406,
+            "hip_angle": 146.21754990599106
+        }
+    },
+    {
+        "frame": 271,
+        "angles": {
+            "knee_angle": 107.01851324244382,
+            "hip_angle": 144.18945477098598
+        }
+    },
+    {
+        "frame": 272,
+        "angles": {
+            "knee_angle": 114.5395848951414,
+            "hip_angle": 149.9605260431668
+        }
+    },
+    {
+        "frame": 273,
+        "angles": {
+            "knee_angle": 119.04856455268958,
+            "hip_angle": 154.42044201967818
+        }
+    },
+    {
+        "frame": 274,
+        "angles": {
+            "knee_angle": 118.65922745974692,
+            "hip_angle": 156.99019947706296
+        }
+    },
+    {
+        "frame": 275,
+        "angles": {
+            "knee_angle": 113.4325531075466,
+            "hip_angle": 154.04749653870337
+        }
+    },
+    {
+        "frame": 276,
+        "angles": {
+            "knee_angle": 96.07160868830938,
+            "hip_angle": 140.29736250791802
+        }
+    },
+    {
+        "frame": 277,
+        "angles": {
+            "knee_angle": 107.44383643099512,
+            "hip_angle": 152.02476444382654
+        }
+    },
+    {
+        "frame": 278,
+        "angles": {
+            "knee_angle": 125.38263922222654,
+            "hip_angle": 169.3847015292454
+        }
+    },
+    {
+        "frame": 279,
+        "angles": {
+            "knee_angle": 129.48952424597778,
+            "hip_angle": 174.68008287309135
+        }
+    },
+    {
+        "frame": 280,
+        "angles": {
+            "knee_angle": 140.8096609156286,
+            "hip_angle": 172.41005853707767
+        }
+    },
+    {
+        "frame": 281,
+        "angles": {
+            "knee_angle": 149.0581176782266,
+            "hip_angle": 162.4000763722084
+        }
+    },
+    {
+        "frame": 282,
+        "angles": {
+            "knee_angle": 145.78024127306568,
+            "hip_angle": 162.6947698077249
+        }
+    },
+    {
+        "frame": 283,
+        "angles": {
+            "knee_angle": 147.03144468794932,
+            "hip_angle": 160.4518836243801
+        }
+    },
+    {
+        "frame": 284,
+        "angles": {
+            "knee_angle": 147.79594196654082,
+            "hip_angle": 158.171591204917
+        }
+    },
+    {
+        "frame": 285,
+        "angles": {
+            "knee_angle": 148.49369840836556,
+            "hip_angle": 158.4739095790215
+        }
+    },
+    {
+        "frame": 286,
+        "angles": {
+            "knee_angle": 149.2304797379289,
+            "hip_angle": 159.35251173273178
+        }
+    },
+    {
+        "frame": 287,
+        "angles": {
+            "knee_angle": 146.88225524003983,
+            "hip_angle": 160.56553886080107
+        }
+    },
+    {
+        "frame": 288,
+        "angles": {
+            "knee_angle": 145.06243920830593,
+            "hip_angle": 162.12437440804928
+        }
+    },
+    {
+        "frame": 289,
+        "angles": {
+            "knee_angle": 143.46218023182755,
+            "hip_angle": 161.76497887351513
+        }
+    },
+    {
+        "frame": 290,
+        "angles": {
+            "knee_angle": 140.14421239897163,
+            "hip_angle": 162.08725419490526
+        }
+    },
+    {
+        "frame": 291,
+        "angles": {
+            "knee_angle": 141.6561204470711,
+            "hip_angle": 163.82873243354692
+        }
+    },
+    {
+        "frame": 292,
+        "angles": {
+            "knee_angle": 155.24429293456018,
+            "hip_angle": 150.93284695290302
+        }
+    },
+    {
+        "frame": 293,
+        "angles": {
+            "knee_angle": 158.8381388080518,
+            "hip_angle": 145.52973384742953
+        }
+    },
+    {
+        "frame": 294,
+        "angles": {
+            "knee_angle": 156.63685658392427,
+            "hip_angle": 146.62435992511985
+        }
+    },
+    {
+        "frame": 295,
+        "angles": {
+            "knee_angle": 160.17220549166458,
+            "hip_angle": 144.0441337941535
+        }
+    },
+    {
+        "frame": 296,
+        "angles": {
+            "knee_angle": 158.085959777836,
+            "hip_angle": 145.15499765727495
+        }
+    },
+    {
+        "frame": 297,
+        "angles": {
+            "knee_angle": 157.31723268841267,
+            "hip_angle": 144.65698901867032
+        }
+    },
+    {
+        "frame": 298,
+        "angles": {
+            "knee_angle": 156.27062145430392,
+            "hip_angle": 144.69848928694472
+        }
+    },
+    {
+        "frame": 299,
+        "angles": {
+            "knee_angle": 156.9266745089316,
+            "hip_angle": 143.97211085791074
+        }
+    },
+    {
+        "frame": 300,
+        "angles": {
+            "knee_angle": 160.1211893894873,
+            "hip_angle": 141.26444864361545
+        }
+    },
+    {
+        "frame": 301,
+        "angles": {
+            "knee_angle": 158.84149508495446,
+            "hip_angle": 139.9935473568943
+        }
+    },
+    {
+        "frame": 302,
+        "angles": {
+            "knee_angle": 157.72438965974825,
+            "hip_angle": 140.62339960325278
+        }
+    },
+    {
+        "frame": 303,
+        "angles": {
+            "knee_angle": 155.88934484703728,
+            "hip_angle": 141.29312432392493
+        }
+    },
+    {
+        "frame": 304,
+        "angles": {
+            "knee_angle": 152.21799562211424,
+            "hip_angle": 145.67333681711315
+        }
+    },
+    {
+        "frame": 305,
+        "angles": {
+            "knee_angle": 148.9207730481612,
+            "hip_angle": 147.97246982036359
+        }
+    },
+    {
+        "frame": 306,
+        "angles": {
+            "knee_angle": 145.97156565121716,
+            "hip_angle": 150.67509021579156
+        }
+    },
+    {
+        "frame": 307,
+        "angles": {
+            "knee_angle": 142.13127567895842,
+            "hip_angle": 154.5038457121271
+        }
+    },
+    {
+        "frame": 308,
+        "angles": {
+            "knee_angle": 142.9058078129988,
+            "hip_angle": 156.1404687216791
+        }
+    },
+    {
+        "frame": 309,
+        "angles": {
+            "knee_angle": 145.7310658041199,
+            "hip_angle": 155.9426070284081
+        }
+    },
+    {
+        "frame": 310,
+        "angles": {
+            "knee_angle": 141.12506005934506,
+            "hip_angle": 157.71971641818448
+        }
+    },
+    {
+        "frame": 311,
+        "angles": {}
+    },
+    {
+        "frame": 312,
+        "angles": {
+            "knee_angle": 160.728955313237,
+            "hip_angle": 152.13219393808714
+        }
+    },
+    {
+        "frame": 313,
+        "angles": {
+            "knee_angle": 176.88456136736824,
+            "hip_angle": 133.2792494843556
+        }
+    },
+    {
+        "frame": 314,
+        "angles": {
+            "knee_angle": 175.23908344480063,
+            "hip_angle": 127.33544971263255
+        }
+    },
+    {
+        "frame": 315,
+        "angles": {
+            "knee_angle": 178.32343108361482,
+            "hip_angle": 128.48853261817058
+        }
+    },
+    {
+        "frame": 316,
+        "angles": {
+            "knee_angle": 157.8849130470188,
+            "hip_angle": 141.05816949955846
+        }
+    },
+    {
+        "frame": 317,
+        "angles": {
+            "knee_angle": 166.31068251202834,
+            "hip_angle": 133.870392560919
+        }
+    },
+    {
+        "frame": 318,
+        "angles": {
+            "knee_angle": 175.0245132847389,
+            "hip_angle": 129.02327349660212
+        }
+    },
+    {
+        "frame": 319,
+        "angles": {
+            "knee_angle": 165.28586856084414,
+            "hip_angle": 136.61926687554705
+        }
+    },
+    {
+        "frame": 320,
+        "angles": {
+            "knee_angle": 161.4757679739234,
+            "hip_angle": 137.4325997602135
+        }
+    },
+    {
+        "frame": 321,
+        "angles": {
+            "knee_angle": 153.4747124154339,
+            "hip_angle": 141.92189089134402
+        }
+    },
+    {
+        "frame": 322,
+        "angles": {
+            "knee_angle": 156.1096420960443,
+            "hip_angle": 138.77890325042628
+        }
+    },
+    {
+        "frame": 323,
+        "angles": {
+            "knee_angle": 153.27877679291836,
+            "hip_angle": 141.77135715851074
+        }
+    },
+    {
+        "frame": 324,
+        "angles": {
+            "knee_angle": 148.6536331137666,
+            "hip_angle": 143.7388281054469
+        }
+    },
+    {
+        "frame": 325,
+        "angles": {
+            "knee_angle": 145.9955155433032,
+            "hip_angle": 145.5065465321108
+        }
+    },
+    {
+        "frame": 326,
+        "angles": {
+            "knee_angle": 144.85764240967922,
+            "hip_angle": 147.13220981355894
+        }
+    },
+    {
+        "frame": 327,
+        "angles": {
+            "knee_angle": 146.15108405053033,
+            "hip_angle": 145.68312106850442
+        }
+    },
+    {
+        "frame": 328,
+        "angles": {
+            "knee_angle": 146.8664352424309,
+            "hip_angle": 144.77386693589142
+        }
+    },
+    {
+        "frame": 329,
+        "angles": {
+            "knee_angle": 146.94909475030792,
+            "hip_angle": 144.8999610892499
+        }
+    },
+    {
+        "frame": 330,
+        "angles": {
+            "knee_angle": 147.26395231713556,
+            "hip_angle": 144.88954776247516
+        }
+    },
+    {
+        "frame": 331,
+        "angles": {
+            "knee_angle": 147.57010300051434,
+            "hip_angle": 144.8609352150292
+        }
+    },
+    {
+        "frame": 332,
+        "angles": {
+            "knee_angle": 148.95036148769077,
+            "hip_angle": 144.03174171555523
+        }
+    },
+    {
+        "frame": 333,
+        "angles": {
+            "knee_angle": 149.9775501890116,
+            "hip_angle": 143.32935894001065
+        }
+    },
+    {
+        "frame": 334,
+        "angles": {
+            "knee_angle": 151.37243377413066,
+            "hip_angle": 142.73960962592838
+        }
+    },
+    {
+        "frame": 335,
+        "angles": {
+            "knee_angle": 151.74502964901882,
+            "hip_angle": 142.05422640349263
+        }
+    },
+    {
+        "frame": 336,
+        "angles": {
+            "knee_angle": 151.0714130638773,
+            "hip_angle": 143.07618988808184
+        }
+    },
+    {
+        "frame": 337,
+        "angles": {
+            "knee_angle": 151.34079346853355,
+            "hip_angle": 142.31971003481607
+        }
+    },
+    {
+        "frame": 338,
+        "angles": {
+            "knee_angle": 151.90027277212224,
+            "hip_angle": 142.54978077631276
+        }
+    },
+    {
+        "frame": 339,
+        "angles": {
+            "knee_angle": 151.84507159393942,
+            "hip_angle": 142.83336512405907
+        }
+    },
+    {
+        "frame": 340,
+        "angles": {
+            "knee_angle": 151.88683269531475,
+            "hip_angle": 142.90608950406255
+        }
+    },
+    {
+        "frame": 341,
+        "angles": {
+            "knee_angle": 152.29699463803263,
+            "hip_angle": 142.78709527922723
+        }
+    },
+    {
+        "frame": 342,
+        "angles": {
+            "knee_angle": 152.6490641861709,
+            "hip_angle": 142.53491900447148
+        }
+    },
+    {
+        "frame": 343,
+        "angles": {
+            "knee_angle": 152.4983940738915,
+            "hip_angle": 142.30608355949272
+        }
+    },
+    {
+        "frame": 344,
+        "angles": {
+            "knee_angle": 151.79637088013502,
+            "hip_angle": 142.28891756093566
+        }
+    },
+    {
+        "frame": 345,
+        "angles": {
+            "knee_angle": 151.90101302506744,
+            "hip_angle": 142.22019957331864
+        }
+    },
+    {
+        "frame": 346,
+        "angles": {
+            "knee_angle": 150.94715097418285,
+            "hip_angle": 142.51483374668987
+        }
+    },
+    {
+        "frame": 347,
+        "angles": {
+            "knee_angle": 151.1518491499712,
+            "hip_angle": 142.36061432394163
+        }
+    },
+    {
+        "frame": 348,
+        "angles": {
+            "knee_angle": 147.81630072978814,
+            "hip_angle": 145.1130890051006
+        }
+    },
+    {
+        "frame": 349,
+        "angles": {
+            "knee_angle": 148.7036833224892,
+            "hip_angle": 146.17750141656552
+        }
+    },
+    {
+        "frame": 350,
+        "angles": {
+            "knee_angle": 147.26651325853007,
+            "hip_angle": 147.1847444836078
+        }
+    },
+    {
+        "frame": 351,
+        "angles": {
+            "knee_angle": 146.63923349170625,
+            "hip_angle": 147.75987673565012
+        }
+    },
+    {
+        "frame": 352,
+        "angles": {
+            "knee_angle": 146.5324913111581,
+            "hip_angle": 147.72868229434724
+        }
+    },
+    {
+        "frame": 353,
+        "angles": {
+            "knee_angle": 146.31682293086018,
+            "hip_angle": 148.2278366351934
+        }
+    },
+    {
+        "frame": 354,
+        "angles": {
+            "knee_angle": 146.38505466810145,
+            "hip_angle": 147.9712056768138
+        }
+    },
+    {
+        "frame": 355,
+        "angles": {
+            "knee_angle": 146.4214342429783,
+            "hip_angle": 147.9909362355113
+        }
+    },
+    {
+        "frame": 356,
+        "angles": {
+            "knee_angle": 146.44027479110346,
+            "hip_angle": 147.95523896444493
+        }
+    },
+    {
+        "frame": 357,
+        "angles": {
+            "knee_angle": 146.5407203678097,
+            "hip_angle": 147.87302089440954
+        }
+    },
+    {
+        "frame": 358,
+        "angles": {
+            "knee_angle": 146.5750226080843,
+            "hip_angle": 147.72583674976948
+        }
+    },
+    {
+        "frame": 359,
+        "angles": {
+            "knee_angle": 146.7481575504129,
+            "hip_angle": 147.70445683934744
+        }
+    },
+    {
+        "frame": 360,
+        "angles": {
+            "knee_angle": 146.89029159267508,
+            "hip_angle": 147.5521789593092
+        }
+    },
+    {
+        "frame": 361,
+        "angles": {
+            "knee_angle": 146.97591339308335,
+            "hip_angle": 147.4549464701956
+        }
+    },
+    {
+        "frame": 362,
+        "angles": {
+            "knee_angle": 147.23026255288326,
+            "hip_angle": 147.18513388722513
+        }
+    },
+    {
+        "frame": 363,
+        "angles": {
+            "knee_angle": 147.45725357041786,
+            "hip_angle": 146.93161888895185
+        }
+    },
+    {
+        "frame": 364,
+        "angles": {
+            "knee_angle": 147.902389843409,
+            "hip_angle": 146.41749970690026
+        }
+    },
+    {
+        "frame": 365,
+        "angles": {
+            "knee_angle": 151.52688485761695,
+            "hip_angle": 142.81290333636878
+        }
+    },
+    {
+        "frame": 366,
+        "angles": {
+            "knee_angle": 153.67838387266067,
+            "hip_angle": 140.7023995790001
+        }
+    },
+    {
+        "frame": 367,
+        "angles": {
+            "knee_angle": 153.88220452959217,
+            "hip_angle": 140.32826074342333
+        }
+    },
+    {
+        "frame": 368,
+        "angles": {
+            "knee_angle": 153.6092687876691,
+            "hip_angle": 140.36234537551675
+        }
+    },
+    {
+        "frame": 369,
+        "angles": {
+            "knee_angle": 153.2736447831891,
+            "hip_angle": 140.04468056567413
+        }
+    },
+    {
+        "frame": 370,
+        "angles": {
+            "knee_angle": 153.74651657372857,
+            "hip_angle": 139.4632544670778
+        }
+    },
+    {
+        "frame": 371,
+        "angles": {
+            "knee_angle": 153.81470376587936,
+            "hip_angle": 139.19454697185387
+        }
+    },
+    {
+        "frame": 372,
+        "angles": {
+            "knee_angle": 153.89899552801765,
+            "hip_angle": 139.0120378988585
+        }
+    },
+    {
+        "frame": 373,
+        "angles": {
+            "knee_angle": 153.80796959325548,
+            "hip_angle": 138.98105341480232
+        }
+    },
+    {
+        "frame": 374,
+        "angles": {
+            "knee_angle": 153.76755741940087,
+            "hip_angle": 138.9532885327507
+        }
+    },
+    {
+        "frame": 375,
+        "angles": {
+            "knee_angle": 153.6956980154878,
+            "hip_angle": 138.97731093815403
+        }
+    },
+    {
+        "frame": 376,
+        "angles": {
+            "knee_angle": 153.54232220163783,
+            "hip_angle": 139.05834278818773
+        }
+    },
+    {
+        "frame": 377,
+        "angles": {
+            "knee_angle": 153.4542544975206,
+            "hip_angle": 139.0677725818287
+        }
+    },
+    {
+        "frame": 378,
+        "angles": {
+            "knee_angle": 153.41613260596404,
+            "hip_angle": 138.98971360982307
+        }
+    },
+    {
+        "frame": 379,
+        "angles": {
+            "knee_angle": 152.8847694559026,
+            "hip_angle": 139.35907045405273
+        }
+    },
+    {
+        "frame": 380,
+        "angles": {
+            "knee_angle": 151.99651876347136,
+            "hip_angle": 139.88775599718008
+        }
+    },
+    {
+        "frame": 381,
+        "angles": {
+            "knee_angle": 151.58909608638052,
+            "hip_angle": 140.1865260077277
+        }
+    },
+    {
+        "frame": 382,
+        "angles": {
+            "knee_angle": 148.94501249848688,
+            "hip_angle": 143.01035523741783
+        }
+    },
+    {
+        "frame": 383,
+        "angles": {
+            "knee_angle": 146.92968032890715,
+            "hip_angle": 144.94418822568258
+        }
+    },
+    {
+        "frame": 384,
+        "angles": {
+            "knee_angle": 147.55031882232424,
+            "hip_angle": 144.42665471599318
+        }
+    },
+    {
+        "frame": 385,
+        "angles": {
+            "knee_angle": 147.73081211052033,
+            "hip_angle": 144.43212906688828
+        }
+    },
+    {
+        "frame": 386,
+        "angles": {
+            "knee_angle": 147.7996791011147,
+            "hip_angle": 144.3746433598158
+        }
+    },
+    {
+        "frame": 387,
+        "angles": {
+            "knee_angle": 147.61953035427746,
+            "hip_angle": 144.71873581747235
+        }
+    },
+    {
+        "frame": 388,
+        "angles": {
+            "knee_angle": 147.52948533389514,
+            "hip_angle": 144.82713219958575
+        }
+    },
+    {
+        "frame": 389,
+        "angles": {
+            "knee_angle": 147.54970360109218,
+            "hip_angle": 144.87887474531811
+        }
+    },
+    {
+        "frame": 390,
+        "angles": {}
+    },
+    {
+        "frame": 391,
+        "angles": {
+            "knee_angle": 150.81374840073468,
+            "hip_angle": 146.52001111547594
+        }
+    },
+    {
+        "frame": 392,
+        "angles": {
+            "knee_angle": 149.5265813864478,
+            "hip_angle": 144.98509539849405
+        }
+    },
+    {
+        "frame": 393,
+        "angles": {
+            "knee_angle": 149.18184595822547,
+            "hip_angle": 144.5040022428017
+        }
+    },
+    {
+        "frame": 394,
+        "angles": {
+            "knee_angle": 148.8244610300764,
+            "hip_angle": 144.07505062556672
+        }
+    },
+    {
+        "frame": 395,
+        "angles": {
+            "knee_angle": 148.48048083609473,
+            "hip_angle": 143.67611129193713
+        }
+    },
+    {
+        "frame": 396,
+        "angles": {
+            "knee_angle": 148.2097296894249,
+            "hip_angle": 143.3454774333101
+        }
+    },
+    {
+        "frame": 397,
+        "angles": {
+            "knee_angle": 147.8696074961866,
+            "hip_angle": 142.94377892021564
+        }
+    },
+    {
+        "frame": 398,
+        "angles": {
+            "knee_angle": 147.6137461996629,
+            "hip_angle": 142.6544601411379
+        }
+    },
+    {
+        "frame": 399,
+        "angles": {
+            "knee_angle": 147.48019241866407,
+            "hip_angle": 142.50837291600115
+        }
+    },
+    {
+        "frame": 400,
+        "angles": {
+            "knee_angle": 147.44690691174526,
+            "hip_angle": 142.47111277986002
+        }
+    },
+    {
+        "frame": 401,
+        "angles": {
+            "knee_angle": 147.42031853139895,
+            "hip_angle": 142.44283021369336
+        }
+    },
+    {
+        "frame": 402,
+        "angles": {
+            "knee_angle": 147.38527349782146,
+            "hip_angle": 142.408790707631
+        }
+    },
+    {
+        "frame": 403,
+        "angles": {
+            "knee_angle": 147.36447317642347,
+            "hip_angle": 142.38890009113572
+        }
+    },
+    {
+        "frame": 404,
+        "angles": {
+            "knee_angle": 147.35524909907113,
+            "hip_angle": 142.3786882263079
+        }
+    },
+    {
+        "frame": 405,
+        "angles": {
+            "knee_angle": 147.3496067957349,
+            "hip_angle": 142.36784650171882
+        }
+    },
+    {
+        "frame": 406,
+        "angles": {
+            "knee_angle": 147.3424066569417,
+            "hip_angle": 142.35633311500376
+        }
+    },
+    {
+        "frame": 407,
+        "angles": {
+            "knee_angle": 147.3208473612369,
+            "hip_angle": 142.32898262639583
+        }
+    },
+    {
+        "frame": 408,
+        "angles": {
+            "knee_angle": 147.30046662214227,
+            "hip_angle": 142.30979707901346
+        }
+    },
+    {
+        "frame": 409,
+        "angles": {
+            "knee_angle": 147.29895944474035,
+            "hip_angle": 142.3101307212449
+        }
+    },
+    {
+        "frame": 410,
+        "angles": {
+            "knee_angle": 147.27950286823202,
+            "hip_angle": 142.2965653122646
+        }
+    },
+    {
+        "frame": 411,
+        "angles": {
+            "knee_angle": 147.28657735294283,
+            "hip_angle": 142.30800969260864
+        }
+    },
+    {
+        "frame": 412,
+        "angles": {
+            "knee_angle": 147.33187612471136,
+            "hip_angle": 142.35401404781408
+        }
+    },
+    {
+        "frame": 413,
+        "angles": {
+            "knee_angle": 147.3592602724856,
+            "hip_angle": 142.38272429820626
+        }
+    },
+    {
+        "frame": 414,
+        "angles": {
+            "knee_angle": 147.36237198707627,
+            "hip_angle": 142.38856632358423
+        }
+    },
+    {
+        "frame": 415,
+        "angles": {
+            "knee_angle": 147.39526243816846,
+            "hip_angle": 142.42114911743585
+        }
+    },
+    {
+        "frame": 416,
+        "angles": {
+            "knee_angle": 147.42325564375597,
+            "hip_angle": 142.44804719466714
+        }
+    },
+    {
+        "frame": 417,
+        "angles": {
+            "knee_angle": 147.42416474903604,
+            "hip_angle": 142.4470345573986
+        }
+    },
+    {
+        "frame": 418,
+        "angles": {
+            "knee_angle": 147.4381258343262,
+            "hip_angle": 142.4598675439971
+        }
+    },
+    {
+        "frame": 419,
+        "angles": {
+            "knee_angle": 147.44997020123935,
+            "hip_angle": 142.47124508175148
+        }
+    },
+    {
+        "frame": 420,
+        "angles": {
+            "knee_angle": 147.49026970992918,
+            "hip_angle": 142.5112401717914
+        }
+    },
+    {
+        "frame": 421,
+        "angles": {
+            "knee_angle": 147.51630365266456,
+            "hip_angle": 142.53527677210175
+        }
+    },
+    {
+        "frame": 422,
+        "angles": {
+            "knee_angle": 147.55813471289576,
+            "hip_angle": 142.5770033774022
+        }
+    },
+    {
+        "frame": 423,
+        "angles": {
+            "knee_angle": 147.59927209313935,
+            "hip_angle": 142.61865841894624
+        }
+    },
+    {
+        "frame": 424,
+        "angles": {
+            "knee_angle": 147.61483890709917,
+            "hip_angle": 142.63397929281172
+        }
+    },
+    {
+        "frame": 425,
+        "angles": {
+            "knee_angle": 147.62119393845268,
+            "hip_angle": 142.64031219524645
+        }
+    },
+    {
+        "frame": 426,
+        "angles": {
+            "knee_angle": 147.62649189819254,
+            "hip_angle": 142.64541760629342
+        }
+    },
+    {
+        "frame": 427,
+        "angles": {
+            "knee_angle": 147.6347403526384,
+            "hip_angle": 142.65474164600013
+        }
+    },
+    {
+        "frame": 428,
+        "angles": {
+            "knee_angle": 147.6490300536864,
+            "hip_angle": 142.66977513782672
+        }
+    },
+    {
+        "frame": 429,
+        "angles": {
+            "knee_angle": 147.65049183206162,
+            "hip_angle": 142.67190348113638
+        }
+    },
+    {
+        "frame": 430,
+        "angles": {
+            "knee_angle": 147.65598918403217,
+            "hip_angle": 142.67778485945138
+        }
+    },
+    {
+        "frame": 431,
+        "angles": {
+            "knee_angle": 147.658400979565,
+            "hip_angle": 142.68205191183446
+        }
+    },
+    {
+        "frame": 432,
+        "angles": {
+            "knee_angle": 147.66156305444036,
+            "hip_angle": 142.68739708799563
+        }
+    },
+    {
+        "frame": 433,
+        "angles": {
+            "knee_angle": 147.66169768216747,
+            "hip_angle": 142.68842718074342
+        }
+    },
+    {
+        "frame": 434,
+        "angles": {
+            "knee_angle": 147.66741458821903,
+            "hip_angle": 142.69581734815776
+        }
+    },
+    {
+        "frame": 435,
+        "angles": {
+            "knee_angle": 147.6712553312138,
+            "hip_angle": 142.70083809150725
+        }
+    },
+    {
+        "frame": 436,
+        "angles": {
+            "knee_angle": 147.6697186064408,
+            "hip_angle": 142.70141458560101
+        }
+    },
+    {
+        "frame": 437,
+        "angles": {
+            "knee_angle": 147.67027807086598,
+            "hip_angle": 142.70537528886263
+        }
+    },
+    {
+        "frame": 438,
+        "angles": {
+            "knee_angle": 147.69299006187856,
+            "hip_angle": 142.73829501275299
+        }
+    },
+    {
+        "frame": 439,
+        "angles": {
+            "knee_angle": 147.7406877747043,
+            "hip_angle": 142.7991149635756
+        }
+    },
+    {
+        "frame": 440,
+        "angles": {
+            "knee_angle": 147.7482921857985,
+            "hip_angle": 142.81111598268066
+        }
+    },
+    {
+        "frame": 441,
+        "angles": {
+            "knee_angle": 147.76316198846197,
+            "hip_angle": 142.83438448644327
+        }
+    },
+    {
+        "frame": 442,
+        "angles": {
+            "knee_angle": 147.77139459730796,
+            "hip_angle": 142.84696410599258
+        }
+    },
+    {
+        "frame": 443,
+        "angles": {
+            "knee_angle": 147.7637929091457,
+            "hip_angle": 142.83973709188356
+        }
+    },
+    {
+        "frame": 444,
+        "angles": {
+            "knee_angle": 147.7484013689701,
+            "hip_angle": 142.82581098343277
+        }
+    },
+    {
+        "frame": 445,
+        "angles": {
+            "knee_angle": 147.7123384252339,
+            "hip_angle": 142.7894515262866
+        }
+    },
+    {
+        "frame": 446,
+        "angles": {
+            "knee_angle": 147.6751495224569,
+            "hip_angle": 142.75255751506413
+        }
+    },
+    {
+        "frame": 447,
+        "angles": {
+            "knee_angle": 147.65977310513756,
+            "hip_angle": 142.7381423043172
+        }
+    },
+    {
+        "frame": 448,
+        "angles": {
+            "knee_angle": 147.65039485853177,
+            "hip_angle": 142.7300464244429
+        }
+    },
+    {
+        "frame": 449,
+        "angles": {
+            "knee_angle": 147.63928428221539,
+            "hip_angle": 142.72032006788507
+        }
+    },
+    {
+        "frame": 450,
+        "angles": {
+            "knee_angle": 147.62703669143676,
+            "hip_angle": 142.71024720780636
+        }
+    },
+    {
+        "frame": 451,
+        "angles": {
+            "knee_angle": 147.61463568256042,
+            "hip_angle": 142.69965399405106
+        }
+    },
+    {
+        "frame": 452,
+        "angles": {
+            "knee_angle": 147.62943146611045,
+            "hip_angle": 142.72474981901735
+        }
+    },
+    {
+        "frame": 453,
+        "angles": {
+            "knee_angle": 147.58292262318832,
+            "hip_angle": 142.69087445036425
+        }
+    },
+    {
+        "frame": 454,
+        "angles": {
+            "knee_angle": 147.59716635911033,
+            "hip_angle": 142.7191502975387
+        }
+    },
+    {
+        "frame": 455,
+        "angles": {
+            "knee_angle": 147.49555645791924,
+            "hip_angle": 142.62673288934374
+        }
+    },
+    {
+        "frame": 456,
+        "angles": {
+            "knee_angle": 147.53540461638005,
+            "hip_angle": 142.68822837323881
+        }
+    },
+    {
+        "frame": 457,
+        "angles": {
+            "knee_angle": 147.96066073157863,
+            "hip_angle": 143.12879583089716
+        }
+    },
+    {
+        "frame": 458,
+        "angles": {
+            "knee_angle": 147.36467142434435,
+            "hip_angle": 142.53257041534422
+        }
+    },
+    {
+        "frame": 459,
+        "angles": {
+            "knee_angle": 148.51560253701513,
+            "hip_angle": 143.53600635153026
+        }
+    },
+    {
+        "frame": 460,
+        "angles": {
+            "knee_angle": 151.9111129091347,
+            "hip_angle": 146.61972548827111
+        }
+    },
+    {
+        "frame": 461,
+        "angles": {
+            "knee_angle": 155.110190715199,
+            "hip_angle": 149.3484852307361
+        }
+    },
+    {
+        "frame": 462,
+        "angles": {
+            "knee_angle": 158.06072867382707,
+            "hip_angle": 151.8390781030727
+        }
+    },
+    {
+        "frame": 463,
+        "angles": {
+            "knee_angle": 159.38753314422163,
+            "hip_angle": 153.1469337928036
+        }
+    },
+    {
+        "frame": 464,
+        "angles": {
+            "knee_angle": 160.944412794842,
+            "hip_angle": 154.60383008259853
+        }
+    },
+    {
+        "frame": 465,
+        "angles": {
+            "knee_angle": 162.31752115473543,
+            "hip_angle": 156.12997795968704
+        }
+    },
+    {
+        "frame": 466,
+        "angles": {
+            "knee_angle": 163.42149884391543,
+            "hip_angle": 157.77373351708667
+        }
+    },
+    {
+        "frame": 467,
+        "angles": {
+            "knee_angle": 164.1605012120735,
+            "hip_angle": 159.02629833710725
+        }
+    },
+    {
+        "frame": 468,
+        "angles": {
+            "knee_angle": 164.29478302122143,
+            "hip_angle": 159.39010581510072
+        }
+    },
+    {
+        "frame": 469,
+        "angles": {
+            "knee_angle": 164.20071540015152,
+            "hip_angle": 159.41300405545795
+        }
+    },
+    {
+        "frame": 470,
+        "angles": {
+            "knee_angle": 163.99650521722415,
+            "hip_angle": 159.1326232579505
+        }
+    },
+    {
+        "frame": 471,
+        "angles": {
+            "knee_angle": 163.85981992981638,
+            "hip_angle": 159.00022266473525
+        }
+    },
+    {
+        "frame": 472,
+        "angles": {
+            "knee_angle": 163.7609587234649,
+            "hip_angle": 159.0839881959594
+        }
+    },
+    {
+        "frame": 473,
+        "angles": {
+            "knee_angle": 163.7113579053886,
+            "hip_angle": 159.19115364043043
+        }
+    },
+    {
+        "frame": 474,
+        "angles": {
+            "knee_angle": 163.66482847293463,
+            "hip_angle": 159.1484951333403
+        }
+    },
+    {
+        "frame": 475,
+        "angles": {
+            "knee_angle": 163.6307466902728,
+            "hip_angle": 159.43565692818495
+        }
+    },
+    {
+        "frame": 476,
+        "angles": {
+            "knee_angle": 163.62721930265647,
+            "hip_angle": 159.70637889592751
+        }
+    },
+    {
+        "frame": 477,
+        "angles": {
+            "knee_angle": 163.52078394969072,
+            "hip_angle": 159.86048831680367
+        }
+    },
+    {
+        "frame": 478,
+        "angles": {
+            "knee_angle": 163.4220101893964,
+            "hip_angle": 159.9448753175591
+        }
+    },
+    {
+        "frame": 479,
+        "angles": {
+            "knee_angle": 163.4227406873096,
+            "hip_angle": 160.02883639015397
+        }
+    },
+    {
+        "frame": 480,
+        "angles": {
+            "knee_angle": 163.40526284787646,
+            "hip_angle": 160.03730297266088
+        }
+    },
+    {
+        "frame": 481,
+        "angles": {
+            "knee_angle": 163.38529902301923,
+            "hip_angle": 160.0687470158534
+        }
+    },
+    {
+        "frame": 482,
+        "angles": {
+            "knee_angle": 163.3639157522189,
+            "hip_angle": 160.06816115732795
+        }
+    },
+    {
+        "frame": 483,
+        "angles": {
+            "knee_angle": 163.3419694463133,
+            "hip_angle": 160.0767024619695
+        }
+    },
+    {
+        "frame": 484,
+        "angles": {
+            "knee_angle": 163.31261905109895,
+            "hip_angle": 160.04770990563
+        }
+    },
+    {
+        "frame": 485,
+        "angles": {
+            "knee_angle": 163.25833015307353,
+            "hip_angle": 159.98651140328138
+        }
+    },
+    {
+        "frame": 486,
+        "angles": {
+            "knee_angle": 163.15274012840354,
+            "hip_angle": 159.88215595115176
+        }
+    },
+    {
+        "frame": 487,
+        "angles": {
+            "knee_angle": 163.02104796852336,
+            "hip_angle": 159.69846739383183
+        }
+    },
+    {
+        "frame": 488,
+        "angles": {
+            "knee_angle": 162.92196322095785,
+            "hip_angle": 159.43245306393197
+        }
+    },
+    {
+        "frame": 489,
+        "angles": {
+            "knee_angle": 162.82764666841393,
+            "hip_angle": 159.2030378732414
+        }
+    },
+    {
+        "frame": 490,
+        "angles": {
+            "knee_angle": 162.76200581742305,
+            "hip_angle": 159.06583381985322
+        }
+    },
+    {
+        "frame": 491,
+        "angles": {
+            "knee_angle": 162.70607819708218,
+            "hip_angle": 159.00650536055642
+        }
+    },
+    {
+        "frame": 492,
+        "angles": {
+            "knee_angle": 162.6677441749875,
+            "hip_angle": 158.96803868425158
+        }
+    },
+    {
+        "frame": 493,
+        "angles": {
+            "knee_angle": 162.63076325006034,
+            "hip_angle": 158.92866078423143
+        }
+    },
+    {
+        "frame": 494,
+        "angles": {
+            "knee_angle": 162.60699725775936,
+            "hip_angle": 158.91603802597317
+        }
+    },
+    {
+        "frame": 495,
+        "angles": {
+            "knee_angle": 162.57135724931248,
+            "hip_angle": 158.8945220801948
+        }
+    },
+    {
+        "frame": 496,
+        "angles": {
+            "knee_angle": 162.56872568337096,
+            "hip_angle": 158.91420925726783
+        }
+    },
+    {
+        "frame": 497,
+        "angles": {
+            "knee_angle": 162.55056606355416,
+            "hip_angle": 158.90629384001093
+        }
+    },
+    {
+        "frame": 498,
+        "angles": {
+            "knee_angle": 162.5583091130747,
+            "hip_angle": 158.91643483441857
+        }
+    },
+    {
+        "frame": 499,
+        "angles": {
+            "knee_angle": 162.55929444341515,
+            "hip_angle": 158.92153049914654
+        }
+    },
+    {
+        "frame": 500,
+        "angles": {
+            "knee_angle": 162.5595771035644,
+            "hip_angle": 158.92743639423097
+        }
+    },
+    {
+        "frame": 501,
+        "angles": {
+            "knee_angle": 162.5600954837626,
+            "hip_angle": 158.94159621809254
+        }
+    },
+    {
+        "frame": 502,
+        "angles": {
+            "knee_angle": 162.58088560605145,
+            "hip_angle": 158.96934393983756
+        }
+    },
+    {
+        "frame": 503,
+        "angles": {
+            "knee_angle": 162.57676021479926,
+            "hip_angle": 158.9739436837924
+        }
+    },
+    {
+        "frame": 504,
+        "angles": {
+            "knee_angle": 162.58364645786824,
+            "hip_angle": 158.9852658376049
+        }
+    },
+    {
+        "frame": 505,
+        "angles": {
+            "knee_angle": 162.57518532941523,
+            "hip_angle": 158.98312909251575
+        }
+    },
+    {
+        "frame": 506,
+        "angles": {
+            "knee_angle": 162.56078919677194,
+            "hip_angle": 158.9768482228652
+        }
+    },
+    {
+        "frame": 507,
+        "angles": {
+            "knee_angle": 162.56241111313895,
+            "hip_angle": 158.98921414851765
+        }
+    },
+    {
+        "frame": 508,
+        "angles": {
+            "knee_angle": 162.59419620093783,
+            "hip_angle": 159.0421226509653
+        }
+    },
+    {
+        "frame": 509,
+        "angles": {
+            "knee_angle": 162.61958640416705,
+            "hip_angle": 159.08726808084307
+        }
+    },
+    {
+        "frame": 510,
+        "angles": {
+            "knee_angle": 162.62625149798492,
+            "hip_angle": 159.11255717331917
+        }
+    },
+    {
+        "frame": 511,
+        "angles": {
+            "knee_angle": 162.61817214901936,
+            "hip_angle": 159.12055267763571
+        }
+    },
+    {
+        "frame": 512,
+        "angles": {
+            "knee_angle": 162.59610545246744,
+            "hip_angle": 159.1101456081327
+        }
+    },
+    {
+        "frame": 513,
+        "angles": {
+            "knee_angle": 162.57091570288242,
+            "hip_angle": 159.0916833605096
+        }
+    },
+    {
+        "frame": 514,
+        "angles": {
+            "knee_angle": 162.51503052066707,
+            "hip_angle": 158.94009005542972
+        }
+    },
+    {
+        "frame": 515,
+        "angles": {
+            "knee_angle": 162.46194229474307,
+            "hip_angle": 158.79851505426228
+        }
+    },
+    {
+        "frame": 516,
+        "angles": {
+            "knee_angle": 162.40726395399284,
+            "hip_angle": 158.70956610864545
+        }
+    },
+    {
+        "frame": 517,
+        "angles": {
+            "knee_angle": 162.52595708861455,
+            "hip_angle": 158.6803881759119
+        }
+    },
+    {
+        "frame": 518,
+        "angles": {
+            "knee_angle": 162.81820674491664,
+            "hip_angle": 158.88285866638603
+        }
+    },
+    {
+        "frame": 519,
+        "angles": {
+            "knee_angle": 163.0216287223852,
+            "hip_angle": 159.01419060260963
+        }
+    },
+    {
+        "frame": 520,
+        "angles": {
+            "knee_angle": 163.17152482623135,
+            "hip_angle": 159.09252206968833
+        }
+    },
+    {
+        "frame": 521,
+        "angles": {
+            "knee_angle": 163.2561889777132,
+            "hip_angle": 159.12917633126597
+        }
+    },
+    {
+        "frame": 522,
+        "angles": {
+            "knee_angle": 163.33590291972084,
+            "hip_angle": 159.15654649649696
+        }
+    },
+    {
+        "frame": 523,
+        "angles": {
+            "knee_angle": 163.409177563193,
+            "hip_angle": 159.25395844804814
+        }
+    },
+    {
+        "frame": 524,
+        "angles": {
+            "knee_angle": 163.35121946918787,
+            "hip_angle": 159.21876413373968
+        }
+    },
+    {
+        "frame": 525,
+        "angles": {
+            "knee_angle": 163.21034617134103,
+            "hip_angle": 159.0675594129829
+        }
+    },
+    {
+        "frame": 526,
+        "angles": {
+            "knee_angle": 163.14001459278492,
+            "hip_angle": 159.0185373914698
+        }
+    },
+    {
+        "frame": 527,
+        "angles": {
+            "knee_angle": 163.1534787943698,
+            "hip_angle": 159.0437367214444
+        }
+    },
+    {
+        "frame": 528,
+        "angles": {
+            "knee_angle": 163.74466195119845,
+            "hip_angle": 159.67792910701448
+        }
+    },
+    {
+        "frame": 529,
+        "angles": {
+            "knee_angle": 164.1933610310443,
+            "hip_angle": 160.23217855683268
+        }
+    },
+    {
+        "frame": 530,
+        "angles": {
+            "knee_angle": 164.35664618286845,
+            "hip_angle": 160.42599283111255
+        }
+    },
+    {
+        "frame": 531,
+        "angles": {
+            "knee_angle": 164.63494223522932,
+            "hip_angle": 160.6974401234171
+        }
+    },
+    {
+        "frame": 532,
+        "angles": {
+            "knee_angle": 165.0342877846518,
+            "hip_angle": 161.04218508941028
+        }
+    },
+    {
+        "frame": 533,
+        "angles": {
+            "knee_angle": 165.53932125154253,
+            "hip_angle": 161.46631724097915
+        }
+    },
+    {
+        "frame": 534,
+        "angles": {
+            "knee_angle": 166.1901924402372,
+            "hip_angle": 162.07063833850518
+        }
+    },
+    {
+        "frame": 535,
+        "angles": {
+            "knee_angle": 167.2594701241651,
+            "hip_angle": 163.11577929247107
+        }
+    },
+    {
+        "frame": 536,
+        "angles": {
+            "knee_angle": 168.83278949854116,
+            "hip_angle": 164.85853649431735
+        }
+    },
+    {
+        "frame": 537,
+        "angles": {
+            "knee_angle": 170.263190836677,
+            "hip_angle": 166.3613749652685
+        }
+    },
+    {
+        "frame": 538,
+        "angles": {
+            "knee_angle": 170.87694214446623,
+            "hip_angle": 167.02283160346275
+        }
+    },
+    {
+        "frame": 539,
+        "angles": {
+            "knee_angle": 171.55590998295855,
+            "hip_angle": 167.59844240985504
+        }
+    },
+    {
+        "frame": 540,
+        "angles": {
+            "knee_angle": 172.5824205424209,
+            "hip_angle": 168.4847346493851
+        }
+    },
+    {
+        "frame": 541,
+        "angles": {
+            "knee_angle": 173.44587112842837,
+            "hip_angle": 169.21602303578058
+        }
+    },
+    {
+        "frame": 542,
+        "angles": {
+            "knee_angle": 174.04305762673246,
+            "hip_angle": 169.8030480080956
+        }
+    },
+    {
+        "frame": 543,
+        "angles": {
+            "knee_angle": 174.46956682654226,
+            "hip_angle": 170.20511966768817
+        }
+    },
+    {
+        "frame": 544,
+        "angles": {
+            "knee_angle": 174.90474186214,
+            "hip_angle": 170.61935502064372
+        }
+    },
+    {
+        "frame": 545,
+        "angles": {
+            "knee_angle": 175.0941751044739,
+            "hip_angle": 170.84399692412242
+        }
+    },
+    {
+        "frame": 546,
+        "angles": {
+            "knee_angle": 175.29679688315267,
+            "hip_angle": 171.04403044976726
+        }
+    },
+    {
+        "frame": 547,
+        "angles": {
+            "knee_angle": 175.42773445146332,
+            "hip_angle": 171.2517648302737
+        }
+    },
+    {
+        "frame": 548,
+        "angles": {
+            "knee_angle": 175.44722131901256,
+            "hip_angle": 171.410038935762
+        }
+    },
+    {
+        "frame": 549,
+        "angles": {
+            "knee_angle": 175.60309922605484,
+            "hip_angle": 171.6665110080312
+        }
+    },
+    {
+        "frame": 550,
+        "angles": {
+            "knee_angle": 175.69899241883454,
+            "hip_angle": 171.81922104133875
+        }
+    },
+    {
+        "frame": 551,
+        "angles": {
+            "knee_angle": 175.74830180348889,
+            "hip_angle": 171.90613691092153
+        }
+    },
+    {
+        "frame": 552,
+        "angles": {
+            "knee_angle": 175.7959466574336,
+            "hip_angle": 171.94918238751188
+        }
+    },
+    {
+        "frame": 553,
+        "angles": {
+            "knee_angle": 175.7976136089342,
+            "hip_angle": 171.9057091281428
+        }
+    },
+    {
+        "frame": 554,
+        "angles": {
+            "knee_angle": 175.9492817788518,
+            "hip_angle": 171.94615419276712
+        }
+    },
+    {
+        "frame": 555,
+        "angles": {
+            "knee_angle": 176.03220997098092,
+            "hip_angle": 171.9922401689914
+        }
+    },
+    {
+        "frame": 556,
+        "angles": {
+            "knee_angle": 176.22630348284798,
+            "hip_angle": 172.06043874934105
+        }
+    },
+    {
+        "frame": 557,
+        "angles": {
+            "knee_angle": 176.81788456441024,
+            "hip_angle": 172.2425076544414
+        }
+    },
+    {
+        "frame": 558,
+        "angles": {
+            "knee_angle": 177.20035477044055,
+            "hip_angle": 172.43740893336692
+        }
+    },
+    {
+        "frame": 559,
+        "angles": {
+            "knee_angle": 177.50149623654832,
+            "hip_angle": 172.6000287458114
+        }
+    },
+    {
+        "frame": 560,
+        "angles": {
+            "knee_angle": 177.79943864371612,
+            "hip_angle": 172.73398725830313
+        }
+    },
+    {
+        "frame": 561,
+        "angles": {
+            "knee_angle": 178.2873896163009,
+            "hip_angle": 173.04813994544486
+        }
+    },
+    {
+        "frame": 562,
+        "angles": {
+            "knee_angle": 178.42703694706543,
+            "hip_angle": 173.1229683524484
+        }
+    },
+    {
+        "frame": 563,
+        "angles": {
+            "knee_angle": 178.67897435704742,
+            "hip_angle": 173.22810623982488
+        }
+    },
+    {
+        "frame": 564,
+        "angles": {
+            "knee_angle": 178.9366730559584,
+            "hip_angle": 173.40223833904668
+        }
+    },
+    {
+        "frame": 565,
+        "angles": {
+            "knee_angle": 179.06619866894934,
+            "hip_angle": 173.5039927309986
+        }
+    },
+    {
+        "frame": 566,
+        "angles": {
+            "knee_angle": 179.07898479140093,
+            "hip_angle": 173.5334370761326
+        }
+    },
+    {
+        "frame": 567,
+        "angles": {
+            "knee_angle": 179.12235640011681,
+            "hip_angle": 173.5626341667244
+        }
+    },
+    {
+        "frame": 568,
+        "angles": {
+            "knee_angle": 179.2246558101266,
+            "hip_angle": 173.6058947875625
+        }
+    },
+    {
+        "frame": 569,
+        "angles": {
+            "knee_angle": 179.29948615821644,
+            "hip_angle": 173.60354346342316
+        }
+    },
+    {
+        "frame": 570,
+        "angles": {
+            "knee_angle": 179.35201329392322,
+            "hip_angle": 173.61240542354818
+        }
+    },
+    {
+        "frame": 571,
+        "angles": {
+            "knee_angle": 179.3760285852507,
+            "hip_angle": 173.62087970238608
+        }
+    },
+    {
+        "frame": 572,
+        "angles": {
+            "knee_angle": 179.38833912219843,
+            "hip_angle": 173.62938400807448
+        }
+    },
+    {
+        "frame": 573,
+        "angles": {
+            "knee_angle": 179.39600326798646,
+            "hip_angle": 173.62908896433962
+        }
+    },
+    {
+        "frame": 574,
+        "angles": {
+            "knee_angle": 179.40576717951475,
+            "hip_angle": 173.62263293620157
+        }
+    },
+    {
+        "frame": 575,
+        "angles": {
+            "knee_angle": 179.43096382910488,
+            "hip_angle": 173.60870112068415
+        }
+    },
+    {
+        "frame": 576,
+        "angles": {
+            "knee_angle": 179.4329623592886,
+            "hip_angle": 173.572525060404
+        }
+    },
+    {
+        "frame": 577,
+        "angles": {
+            "knee_angle": 179.41974023411578,
+            "hip_angle": 173.5116172510355
+        }
+    },
+    {
+        "frame": 578,
+        "angles": {
+            "knee_angle": 179.40256792130808,
+            "hip_angle": 173.46085058914704
+        }
+    },
+    {
+        "frame": 579,
+        "angles": {
+            "knee_angle": 179.37085171986047,
+            "hip_angle": 173.40223895179093
+        }
+    },
+    {
+        "frame": 580,
+        "angles": {
+            "knee_angle": 179.32714751681416,
+            "hip_angle": 173.3434799029879
+        }
+    },
+    {
+        "frame": 581,
+        "angles": {
+            "knee_angle": 179.31793716909846,
+            "hip_angle": 173.33239108522085
+        }
+    },
+    {
+        "frame": 582,
+        "angles": {
+            "knee_angle": 179.30283677245617,
+            "hip_angle": 173.33648330800935
+        }
+    },
+    {
+        "frame": 583,
+        "angles": {
+            "knee_angle": 179.26938980931627,
+            "hip_angle": 173.30030674871045
+        }
+    },
+    {
+        "frame": 584,
+        "angles": {
+            "knee_angle": 179.25315143487495,
+            "hip_angle": 173.28910924837777
+        }
+    },
+    {
+        "frame": 585,
+        "angles": {
+            "knee_angle": 179.22604153188496,
+            "hip_angle": 173.26149787020918
+        }
+    },
+    {
+        "frame": 586,
+        "angles": {
+            "knee_angle": 179.20485106831484,
+            "hip_angle": 173.25436182572474
+        }
+    },
+    {
+        "frame": 587,
+        "angles": {
+            "knee_angle": 179.1893690140056,
+            "hip_angle": 173.24911231798296
+        }
+    },
+    {
+        "frame": 588,
+        "angles": {
+            "knee_angle": 179.17621416693225,
+            "hip_angle": 173.24118076400902
+        }
+    },
+    {
+        "frame": 589,
+        "angles": {
+            "knee_angle": 179.17049905059662,
+            "hip_angle": 173.24238976620018
+        }
+    },
+    {
+        "frame": 590,
+        "angles": {
+            "knee_angle": 179.16475556709955,
+            "hip_angle": 173.23475301942875
+        }
+    },
+    {
+        "frame": 591,
+        "angles": {
+            "knee_angle": 179.15684748036395,
+            "hip_angle": 173.2234620416079
+        }
+    },
+    {
+        "frame": 592,
+        "angles": {
+            "knee_angle": 179.15193102772514,
+            "hip_angle": 173.21925257943107
+        }
+    },
+    {
+        "frame": 593,
+        "angles": {
+            "knee_angle": 179.14613748465374,
+            "hip_angle": 173.21569604375165
+        }
+    },
+    {
+        "frame": 594,
+        "angles": {
+            "knee_angle": 179.14190121413745,
+            "hip_angle": 173.2046556212544
+        }
+    },
+    {
+        "frame": 595,
+        "angles": {
+            "knee_angle": 179.1263219543165,
+            "hip_angle": 173.186318639334
+        }
+    },
+    {
+        "frame": 596,
+        "angles": {
+            "knee_angle": 179.12118704492627,
+            "hip_angle": 173.18534499591988
+        }
+    },
+    {
+        "frame": 597,
+        "angles": {
+            "knee_angle": 179.1097606272115,
+            "hip_angle": 173.1675790527661
+        }
+    },
+    {
+        "frame": 598,
+        "angles": {
+            "knee_angle": 179.10175718769656,
+            "hip_angle": 173.15267240836815
+        }
+    },
+    {
+        "frame": 599,
+        "angles": {
+            "knee_angle": 179.0973640134998,
+            "hip_angle": 173.13020399689535
+        }
+    },
+    {
+        "frame": 600,
+        "angles": {
+            "knee_angle": 178.9984659955729,
+            "hip_angle": 173.1518334313746
+        }
+    },
+    {
+        "frame": 601,
+        "angles": {
+            "knee_angle": 178.92584358299405,
+            "hip_angle": 173.14521493184864
+        }
+    },
+    {
+        "frame": 602,
+        "angles": {
+            "knee_angle": 178.87882584069868,
+            "hip_angle": 173.12935055161142
+        }
+    },
+    {
+        "frame": 603,
+        "angles": {
+            "knee_angle": 178.84544168856385,
+            "hip_angle": 173.1155261327095
+        }
+    },
+    {
+        "frame": 604,
+        "angles": {
+            "knee_angle": 178.81843875571002,
+            "hip_angle": 173.1063810632429
+        }
+    },
+    {
+        "frame": 605,
+        "angles": {
+            "knee_angle": 178.7985038257193,
+            "hip_angle": 173.09828920073406
+        }
+    },
+    {
+        "frame": 606,
+        "angles": {
+            "knee_angle": 178.78331774344676,
+            "hip_angle": 173.09421844695368
+        }
+    },
+    {
+        "frame": 607,
+        "angles": {
+            "knee_angle": 178.7717350685695,
+            "hip_angle": 173.0906132863413
+        }
+    },
+    {
+        "frame": 608,
+        "angles": {
+            "knee_angle": 178.76486514037362,
+            "hip_angle": 173.08997123149072
+        }
+    },
+    {
+        "frame": 609,
+        "angles": {
+            "knee_angle": 178.76076497209453,
+            "hip_angle": 173.09148638323322
+        }
+    },
+    {
+        "frame": 610,
+        "angles": {
+            "knee_angle": 178.7550237915549,
+            "hip_angle": 173.09346414981383
+        }
+    },
+    {
+        "frame": 611,
+        "angles": {
+            "knee_angle": 178.74836983948396,
+            "hip_angle": 173.0948606188872
+        }
+    },
+    {
+        "frame": 612,
+        "angles": {
+            "knee_angle": 178.74139875947802,
+            "hip_angle": 173.09946888328898
+        }
+    },
+    {
+        "frame": 613,
+        "angles": {
+            "knee_angle": 178.73710732985563,
+            "hip_angle": 173.10349218520255
+        }
+    },
+    {
+        "frame": 614,
+        "angles": {
+            "knee_angle": 178.73276807994534,
+            "hip_angle": 173.1109843810662
+        }
+    },
+    {
+        "frame": 615,
+        "angles": {
+            "knee_angle": 178.72809792681784,
+            "hip_angle": 173.11917110415447
+        }
+    },
+    {
+        "frame": 616,
+        "angles": {
+            "knee_angle": 178.72392011264037,
+            "hip_angle": 173.12577655423954
+        }
+    },
+    {
+        "frame": 617,
+        "angles": {
+            "knee_angle": 178.7191264989917,
+            "hip_angle": 173.1319238376456
+        }
+    },
+    {
+        "frame": 618,
+        "angles": {
+            "knee_angle": 178.71547577922965,
+            "hip_angle": 173.13545254459822
+        }
+    },
+    {
+        "frame": 619,
+        "angles": {
+            "knee_angle": 178.71308666774516,
+            "hip_angle": 173.1426143125646
+        }
+    },
+    {
+        "frame": 620,
+        "angles": {
+            "knee_angle": 178.7105637525265,
+            "hip_angle": 173.14846343741465
+        }
+    },
+    {
+        "frame": 621,
+        "angles": {
+            "knee_angle": 178.7074108828381,
+            "hip_angle": 173.15874451011797
+        }
+    },
+    {
+        "frame": 622,
+        "angles": {
+            "knee_angle": 178.70485564806532,
+            "hip_angle": 173.16871970204738
+        }
+    },
+    {
+        "frame": 623,
+        "angles": {
+            "knee_angle": 178.70254091672925,
+            "hip_angle": 173.1785106928499
+        }
+    },
+    {
+        "frame": 624,
+        "angles": {
+            "knee_angle": 178.700461259206,
+            "hip_angle": 173.20050619506154
+        }
+    },
+    {
+        "frame": 625,
+        "angles": {
+            "knee_angle": 178.69800417908002,
+            "hip_angle": 173.22404290115387
+        }
+    },
+    {
+        "frame": 626,
+        "angles": {
+            "knee_angle": 178.69648226010074,
+            "hip_angle": 173.23639861882262
+        }
+    },
+    {
+        "frame": 627,
+        "angles": {
+            "knee_angle": 178.69421950668865,
+            "hip_angle": 173.25418951054584
+        }
+    },
+    {
+        "frame": 628,
+        "angles": {
+            "knee_angle": 178.69246169878636,
+            "hip_angle": 173.28369286066368
+        }
+    },
+    {
+        "frame": 629,
+        "angles": {
+            "knee_angle": 178.68963027381866,
+            "hip_angle": 173.314002922502
+        }
+    },
+    {
+        "frame": 630,
+        "angles": {
+            "knee_angle": 178.6859064009196,
+            "hip_angle": 173.33647203862884
+        }
+    },
+    {
+        "frame": 631,
+        "angles": {
+            "knee_angle": 178.6839585068315,
+            "hip_angle": 173.3470624792484
+        }
+    },
+    {
+        "frame": 632,
+        "angles": {
+            "knee_angle": 178.6838913561159,
+            "hip_angle": 173.35370523435986
+        }
+    },
+    {
+        "frame": 633,
+        "angles": {
+            "knee_angle": 178.68761204952776,
+            "hip_angle": 173.35861318806926
+        }
+    },
+    {
+        "frame": 634,
+        "angles": {
+            "knee_angle": 178.6895984152761,
+            "hip_angle": 173.363102583052
+        }
+    },
+    {
+        "frame": 635,
+        "angles": {
+            "knee_angle": 178.69170459178557,
+            "hip_angle": 173.36434755294056
+        }
+    },
+    {
+        "frame": 636,
+        "angles": {
+            "knee_angle": 178.6937503289115,
+            "hip_angle": 173.3656440992863
+        }
+    },
+    {
+        "frame": 637,
+        "angles": {
+            "knee_angle": 178.69614921720824,
+            "hip_angle": 173.36139557505905
+        }
+    },
+    {
+        "frame": 638,
+        "angles": {
+            "knee_angle": 178.69855604939346,
+            "hip_angle": 173.3481575968823
+        }
+    },
+    {
+        "frame": 639,
+        "angles": {
+            "knee_angle": 178.70066550994963,
+            "hip_angle": 173.34212218125884
+        }
+    },
+    {
+        "frame": 640,
+        "angles": {
+            "knee_angle": 178.70115220094308,
+            "hip_angle": 173.3344726115512
+        }
+    },
+    {
+        "frame": 641,
+        "angles": {
+            "knee_angle": 178.70482284471944,
+            "hip_angle": 173.3362465195711
+        }
+    },
+    {
+        "frame": 642,
+        "angles": {
+            "knee_angle": 178.70855527224617,
+            "hip_angle": 173.338474197179
+        }
+    },
+    {
+        "frame": 643,
+        "angles": {
+            "knee_angle": 178.7157825798616,
+            "hip_angle": 173.3436609171363
+        }
+    },
+    {
+        "frame": 644,
+        "angles": {
+            "knee_angle": 178.7198980097681,
+            "hip_angle": 173.34379874531356
+        }
+    },
+    {
+        "frame": 645,
+        "angles": {
+            "knee_angle": 178.72475252492467,
+            "hip_angle": 173.34582326216974
+        }
+    },
+    {
+        "frame": 646,
+        "angles": {
+            "knee_angle": 178.72633552488304,
+            "hip_angle": 173.34652793918517
+        }
+    },
+    {
+        "frame": 647,
+        "angles": {
+            "knee_angle": 178.728147192457,
+            "hip_angle": 173.34991360684842
+        }
+    },
+    {
+        "frame": 648,
+        "angles": {
+            "knee_angle": 178.7291955903652,
+            "hip_angle": 173.35160384554686
+        }
+    },
+    {
+        "frame": 649,
+        "angles": {
+            "knee_angle": 178.7308107652344,
+            "hip_angle": 173.3524064944233
+        }
+    },
+    {
+        "frame": 650,
+        "angles": {
+            "knee_angle": 178.733708438218,
+            "hip_angle": 173.35298953115574
+        }
+    },
+    {
+        "frame": 651,
+        "angles": {
+            "knee_angle": 178.7361001597359,
+            "hip_angle": 173.35555316077355
+        }
+    },
+    {
+        "frame": 652,
+        "angles": {
+            "knee_angle": 178.73876471411074,
+            "hip_angle": 173.35946423908177
+        }
+    },
+    {
+        "frame": 653,
+        "angles": {
+            "knee_angle": 178.74099866772704,
+            "hip_angle": 173.36241502785634
+        }
+    },
+    {
+        "frame": 654,
+        "angles": {
+            "knee_angle": 178.74345438522616,
+            "hip_angle": 173.36940289284902
+        }
+    },
+    {
+        "frame": 655,
+        "angles": {
+            "knee_angle": 178.74455548767705,
+            "hip_angle": 173.373432058872
+        }
+    },
+    {
+        "frame": 656,
+        "angles": {
+            "knee_angle": 178.74520835630213,
+            "hip_angle": 173.37653382530073
+        }
+    },
+    {
+        "frame": 657,
+        "angles": {
+            "knee_angle": 178.74537322773043,
+            "hip_angle": 173.37848537583224
+        }
+    },
+    {
+        "frame": 658,
+        "angles": {
+            "knee_angle": 178.74543817169527,
+            "hip_angle": 173.37941155187352
+        }
+    },
+    {
+        "frame": 659,
+        "angles": {
+            "knee_angle": 178.74509774757576,
+            "hip_angle": 173.37960627627052
+        }
+    },
+    {
+        "frame": 660,
+        "angles": {
+            "knee_angle": 178.74446672951873,
+            "hip_angle": 173.37937648691218
+        }
+    },
+    {
+        "frame": 661,
+        "angles": {
+            "knee_angle": 178.74313124233436,
+            "hip_angle": 173.3776434569357
+        }
+    },
+    {
+        "frame": 662,
+        "angles": {
+            "knee_angle": 178.74184358934897,
+            "hip_angle": 173.37663356722337
+        }
+    },
+    {
+        "frame": 663,
+        "angles": {
+            "knee_angle": 178.74087875073837,
+            "hip_angle": 173.376091630303
+        }
+    },
+    {
+        "frame": 664,
+        "angles": {
+            "knee_angle": 178.73952317946643,
+            "hip_angle": 173.37445376601147
+        }
+    },
+    {
+        "frame": 665,
+        "angles": {
+            "knee_angle": 178.73771686140583,
+            "hip_angle": 173.37249576370075
+        }
+    },
+    {
+        "frame": 666,
+        "angles": {
+            "knee_angle": 178.7369133719761,
+            "hip_angle": 173.37190803511874
+        }
+    },
+    {
+        "frame": 667,
+        "angles": {
+            "knee_angle": 178.73546222434624,
+            "hip_angle": 173.37156573737676
+        }
+    },
+    {
+        "frame": 668,
+        "angles": {
+            "knee_angle": 178.73473024958122,
+            "hip_angle": 173.37136948639855
+        }
+    },
+    {
+        "frame": 669,
+        "angles": {
+            "knee_angle": 178.7323268640741,
+            "hip_angle": 173.36793703124425
+        }
+    },
+    {
+        "frame": 670,
+        "angles": {
+            "knee_angle": 178.72984083410137,
+            "hip_angle": 173.3660006606549
+        }
+    },
+    {
+        "frame": 671,
+        "angles": {
+            "knee_angle": 178.7283658938644,
+            "hip_angle": 173.36609655375634
+        }
+    },
+    {
+        "frame": 672,
+        "angles": {
+            "knee_angle": 178.72743597417056,
+            "hip_angle": 173.37071370210032
+        }
+    },
+    {
+        "frame": 673,
+        "angles": {
+            "knee_angle": 178.72537798236198,
+            "hip_angle": 173.37414284449275
+        }
+    },
+    {
+        "frame": 674,
+        "angles": {
+            "knee_angle": 178.7244940866839,
+            "hip_angle": 173.38095923963812
+        }
+    },
+    {
+        "frame": 675,
+        "angles": {
+            "knee_angle": 178.72217034135528,
+            "hip_angle": 173.39266267927866
+        }
+    },
+    {
+        "frame": 676,
+        "angles": {
+            "knee_angle": 178.71911923682362,
+            "hip_angle": 173.405653382494
+        }
+    },
+    {
+        "frame": 677,
+        "angles": {
+            "knee_angle": 178.7163639490584,
+            "hip_angle": 173.4057775362611
+        }
+    },
+    {
+        "frame": 678,
+        "angles": {
+            "knee_angle": 178.71330205705266,
+            "hip_angle": 173.4050575633915
+        }
+    },
+    {
+        "frame": 679,
+        "angles": {
+            "knee_angle": 178.7090607243229,
+            "hip_angle": 173.40310188811625
+        }
+    },
+    {
+        "frame": 680,
+        "angles": {
+            "knee_angle": 178.70649312528155,
+            "hip_angle": 173.40309187556915
+        }
+    },
+    {
+        "frame": 681,
+        "angles": {
+            "knee_angle": 178.699193339524,
+            "hip_angle": 173.3984510396049
+        }
+    },
+    {
+        "frame": 682,
+        "angles": {
+            "knee_angle": 178.69703519077865,
+            "hip_angle": 173.3977486851294
+        }
+    },
+    {
+        "frame": 683,
+        "angles": {
+            "knee_angle": 178.69625684809287,
+            "hip_angle": 173.39415716730198
+        }
+    },
+    {
+        "frame": 684,
+        "angles": {
+            "knee_angle": 178.69497653349944,
+            "hip_angle": 173.38674265141574
+        }
+    },
+    {
+        "frame": 685,
+        "angles": {
+            "knee_angle": 178.69522213243098,
+            "hip_angle": 173.3716511635435
+        }
+    },
+    {
+        "frame": 686,
+        "angles": {
+            "knee_angle": 178.69064151345725,
+            "hip_angle": 173.36460975803328
+        }
+    },
+    {
+        "frame": 687,
+        "angles": {
+            "knee_angle": 178.68583107156127,
+            "hip_angle": 173.36187583737373
+        }
+    },
+    {
+        "frame": 688,
+        "angles": {
+            "knee_angle": 178.68365443610182,
+            "hip_angle": 173.36475868950396
+        }
+    },
+    {
+        "frame": 689,
+        "angles": {
+            "knee_angle": 178.6821701271652,
+            "hip_angle": 173.36658111028157
+        }
+    },
+    {
+        "frame": 690,
+        "angles": {
+            "knee_angle": 178.67881679075344,
+            "hip_angle": 173.3668748806924
+        }
+    },
+    {
+        "frame": 691,
+        "angles": {
+            "knee_angle": 178.67646546614915,
+            "hip_angle": 173.36651733496143
+        }
+    },
+    {
+        "frame": 692,
+        "angles": {
+            "knee_angle": 178.68217911403275,
+            "hip_angle": 173.3673301491455
+        }
+    },
+    {
+        "frame": 693,
+        "angles": {
+            "knee_angle": 178.67311141364402,
+            "hip_angle": 173.35636028503373
+        }
+    },
+    {
+        "frame": 694,
+        "angles": {
+            "knee_angle": 178.64297968630208,
+            "hip_angle": 173.32985755740975
+        }
+    },
+    {
+        "frame": 695,
+        "angles": {
+            "knee_angle": 178.53786513674802,
+            "hip_angle": 173.22119606144338
+        }
+    },
+    {
+        "frame": 696,
+        "angles": {
+            "knee_angle": 178.37095080363153,
+            "hip_angle": 173.01186713953493
+        }
+    },
+    {
+        "frame": 697,
+        "angles": {
+            "knee_angle": 178.20124438916193,
+            "hip_angle": 172.89823615993467
+        }
+    },
+    {
+        "frame": 698,
+        "angles": {
+            "knee_angle": 177.71410860100366,
+            "hip_angle": 172.56473854782726
+        }
+    },
+    {
+        "frame": 699,
+        "angles": {
+            "knee_angle": 177.19985545932172,
+            "hip_angle": 172.40830808899446
+        }
+    },
+    {
+        "frame": 700,
+        "angles": {
+            "knee_angle": 176.75485458248426,
+            "hip_angle": 172.40616662266962
+        }
+    },
+    {
+        "frame": 701,
+        "angles": {
+            "knee_angle": 176.5644735938355,
+            "hip_angle": 172.29533246705864
+        }
+    },
+    {
+        "frame": 702,
+        "angles": {
+            "knee_angle": 176.18849737512636,
+            "hip_angle": 172.07727969737917
+        }
+    },
+    {
+        "frame": 703,
+        "angles": {
+            "knee_angle": 175.76828129065404,
+            "hip_angle": 171.74021166516025
+        }
+    },
+    {
+        "frame": 704,
+        "angles": {
+            "knee_angle": 175.55284479598814,
+            "hip_angle": 171.51377529833294
+        }
+    },
+    {
+        "frame": 705,
+        "angles": {
+            "knee_angle": 175.33460804229594,
+            "hip_angle": 171.31094909475468
+        }
+    },
+    {
+        "frame": 706,
+        "angles": {
+            "knee_angle": 175.03291003964728,
+            "hip_angle": 171.06825246941992
+        }
+    },
+    {
+        "frame": 707,
+        "angles": {
+            "knee_angle": 174.69033539627495,
+            "hip_angle": 170.8113180759305
+        }
+    },
+    {
+        "frame": 708,
+        "angles": {
+            "knee_angle": 174.37973878133917,
+            "hip_angle": 170.39895470039585
+        }
+    },
+    {
+        "frame": 709,
+        "angles": {
+            "knee_angle": 173.96543182517138,
+            "hip_angle": 169.98204858747005
+        }
+    },
+    {
+        "frame": 710,
+        "angles": {
+            "knee_angle": 173.60134199852246,
+            "hip_angle": 169.5407273758133
+        }
+    },
+    {
+        "frame": 711,
+        "angles": {
+            "knee_angle": 173.3181408045095,
+            "hip_angle": 169.09929906296318
+        }
+    },
+    {
+        "frame": 712,
+        "angles": {
+            "knee_angle": 173.01117324903132,
+            "hip_angle": 168.67292962093248
+        }
+    },
+    {
+        "frame": 713,
+        "angles": {
+            "knee_angle": 172.7187360373766,
+            "hip_angle": 168.29264104226849
+        }
+    },
+    {
+        "frame": 714,
+        "angles": {
+            "knee_angle": 172.57819482219654,
+            "hip_angle": 167.87326327722576
+        }
+    },
+    {
+        "frame": 715,
+        "angles": {
+            "knee_angle": 172.5608113347644,
+            "hip_angle": 167.58868912008538
+        }
+    },
+    {
+        "frame": 716,
+        "angles": {
+            "knee_angle": 172.4518980729074,
+            "hip_angle": 167.28045424629062
+        }
+    },
+    {
+        "frame": 717,
+        "angles": {
+            "knee_angle": 172.28993890649483,
+            "hip_angle": 166.89395930877544
+        }
+    },
+    {
+        "frame": 718,
+        "angles": {
+            "knee_angle": 172.0209008746183,
+            "hip_angle": 166.46373103573993
+        }
+    },
+    {
+        "frame": 719,
+        "angles": {
+            "knee_angle": 172.0112477895743,
+            "hip_angle": 166.24780153050764
+        }
+    },
+    {
+        "frame": 720,
+        "angles": {
+            "knee_angle": 171.9834760835803,
+            "hip_angle": 165.88458272301952
+        }
+    },
+    {
+        "frame": 721,
+        "angles": {
+            "knee_angle": 172.1763192403743,
+            "hip_angle": 165.89476825225597
+        }
+    },
+    {
+        "frame": 722,
+        "angles": {
+            "knee_angle": 172.22683013481372,
+            "hip_angle": 165.76621774260713
+        }
+    },
+    {
+        "frame": 723,
+        "angles": {
+            "knee_angle": 172.61204074562733,
+            "hip_angle": 165.82765131215453
+        }
+    },
+    {
+        "frame": 724,
+        "angles": {
+            "knee_angle": 172.7921360079526,
+            "hip_angle": 165.6604818476018
+        }
+    },
+    {
+        "frame": 725,
+        "angles": {
+            "knee_angle": 172.60803800578483,
+            "hip_angle": 165.33289382935902
+        }
+    },
+    {
+        "frame": 726,
+        "angles": {
+            "knee_angle": 171.9610987990552,
+            "hip_angle": 164.5944294912513
+        }
+    },
+    {
+        "frame": 727,
+        "angles": {
+            "knee_angle": 171.23856957142647,
+            "hip_angle": 163.74635461949296
+        }
+    },
+    {
+        "frame": 728,
+        "angles": {
+            "knee_angle": 169.62461819925662,
+            "hip_angle": 162.19093628146675
+        }
+    },
+    {
+        "frame": 729,
+        "angles": {
+            "knee_angle": 168.4572680561846,
+            "hip_angle": 161.12431803027616
+        }
+    },
+    {
+        "frame": 730,
+        "angles": {
+            "knee_angle": 167.37402086051787,
+            "hip_angle": 159.94110560442613
+        }
+    },
+    {
+        "frame": 731,
+        "angles": {
+            "knee_angle": 166.34286875859857,
+            "hip_angle": 158.79543586972952
+        }
+    },
+    {
+        "frame": 732,
+        "angles": {
+            "knee_angle": 165.08557682123944,
+            "hip_angle": 157.68843026094729
+        }
+    },
+    {
+        "frame": 733,
+        "angles": {
+            "knee_angle": 164.3420653177256,
+            "hip_angle": 156.953334562256
+        }
+    },
+    {
+        "frame": 734,
+        "angles": {
+            "knee_angle": 163.80518441758676,
+            "hip_angle": 156.3385665180838
+        }
+    },
+    {
+        "frame": 735,
+        "angles": {
+            "knee_angle": 162.61137566920368,
+            "hip_angle": 155.0769430622575
+        }
+    },
+    {
+        "frame": 736,
+        "angles": {
+            "knee_angle": 162.26882623055698,
+            "hip_angle": 154.71299590239005
+        }
+    },
+    {
+        "frame": 737,
+        "angles": {
+            "knee_angle": 161.9149771764956,
+            "hip_angle": 154.40952543175177
+        }
+    },
+    {
+        "frame": 738,
+        "angles": {
+            "knee_angle": 161.80025942424356,
+            "hip_angle": 154.31085810979258
+        }
+    },
+    {
+        "frame": 739,
+        "angles": {
+            "knee_angle": 162.04680231211697,
+            "hip_angle": 154.5727431510813
+        }
+    },
+    {
+        "frame": 740,
+        "angles": {
+            "knee_angle": 162.6311631316507,
+            "hip_angle": 155.22605643491855
+        }
+    },
+    {
+        "frame": 741,
+        "angles": {
+            "knee_angle": 162.910724589806,
+            "hip_angle": 155.53654093941688
+        }
+    },
+    {
+        "frame": 742,
+        "angles": {
+            "knee_angle": 163.4274668154641,
+            "hip_angle": 156.11576013832521
+        }
+    },
+    {
+        "frame": 743,
+        "angles": {
+            "knee_angle": 163.91151342398538,
+            "hip_angle": 156.58270685108457
+        }
+    },
+    {
+        "frame": 744,
+        "angles": {
+            "knee_angle": 164.36381781679393,
+            "hip_angle": 156.9546195733075
+        }
+    },
+    {
+        "frame": 745,
+        "angles": {
+            "knee_angle": 164.9529896452908,
+            "hip_angle": 157.4609684481407
+        }
+    },
+    {
+        "frame": 746,
+        "angles": {
+            "knee_angle": 165.55729115877443,
+            "hip_angle": 157.9238751935003
+        }
+    },
+    {
+        "frame": 747,
+        "angles": {
+            "knee_angle": 165.56381578860695,
+            "hip_angle": 157.94354398605836
+        }
+    },
+    {
+        "frame": 748,
+        "angles": {
+            "knee_angle": 165.557142090807,
+            "hip_angle": 157.94281288536632
+        }
+    },
+    {
+        "frame": 749,
+        "angles": {
+            "knee_angle": 165.36144169450776,
+            "hip_angle": 157.91311165190484
+        }
+    },
+    {
+        "frame": 750,
+        "angles": {
+            "knee_angle": 165.02153255006968,
+            "hip_angle": 157.7620436784652
+        }
+    },
+    {
+        "frame": 751,
+        "angles": {
+            "knee_angle": 164.27427307355086,
+            "hip_angle": 157.23195820960103
+        }
+    },
+    {
+        "frame": 752,
+        "angles": {
+            "knee_angle": 163.08619501668252,
+            "hip_angle": 156.25617668358035
+        }
+    },
+    {
+        "frame": 753,
+        "angles": {
+            "knee_angle": 162.7943706237715,
+            "hip_angle": 155.9372214792967
+        }
+    },
+    {
+        "frame": 754,
+        "angles": {
+            "knee_angle": 162.78800326875705,
+            "hip_angle": 155.91595948302864
+        }
+    },
+    {
+        "frame": 755,
+        "angles": {
+            "knee_angle": 163.00785909439344,
+            "hip_angle": 156.15547888050318
+        }
+    },
+    {
+        "frame": 756,
+        "angles": {
+            "knee_angle": 162.95259769263077,
+            "hip_angle": 156.10107853786147
+        }
+    },
+    {
+        "frame": 757,
+        "angles": {
+            "knee_angle": 162.77189856059346,
+            "hip_angle": 155.87045591863586
+        }
+    },
+    {
+        "frame": 758,
+        "angles": {
+            "knee_angle": 162.56393307920817,
+            "hip_angle": 155.74074735576318
+        }
+    },
+    {
+        "frame": 759,
+        "angles": {
+            "knee_angle": 162.36595386140354,
+            "hip_angle": 155.5541339423648
+        }
+    },
+    {
+        "frame": 760,
+        "angles": {
+            "knee_angle": 162.30213264636268,
+            "hip_angle": 155.49905005478573
+        }
+    },
+    {
+        "frame": 761,
+        "angles": {
+            "knee_angle": 162.50148559550323,
+            "hip_angle": 155.69105653203127
+        }
+    },
+    {
+        "frame": 762,
+        "angles": {
+            "knee_angle": 162.6843478600603,
+            "hip_angle": 155.8910408054396
+        }
+    },
+    {
+        "frame": 763,
+        "angles": {
+            "knee_angle": 163.3759650657831,
+            "hip_angle": 156.54246179248372
+        }
+    },
+    {
+        "frame": 764,
+        "angles": {
+            "knee_angle": 163.60430610381957,
+            "hip_angle": 156.7273808409024
+        }
+    },
+    {
+        "frame": 765,
+        "angles": {
+            "knee_angle": 163.15367741021313,
+            "hip_angle": 156.34599810862153
+        }
+    },
+    {
+        "frame": 766,
+        "angles": {
+            "knee_angle": 163.20084514578204,
+            "hip_angle": 156.46155921048486
+        }
+    },
+    {
+        "frame": 767,
+        "angles": {
+            "knee_angle": 162.92938249461838,
+            "hip_angle": 156.28993349683495
+        }
+    },
+    {
+        "frame": 768,
+        "angles": {
+            "knee_angle": 162.00953360587064,
+            "hip_angle": 155.68155589747764
+        }
+    },
+    {
+        "frame": 769,
+        "angles": {
+            "knee_angle": 160.72328968557332,
+            "hip_angle": 154.67276829068976
+        }
+    },
+    {
+        "frame": 770,
+        "angles": {
+            "knee_angle": 159.46633123699348,
+            "hip_angle": 153.57752237351923
+        }
+    },
+    {
+        "frame": 771,
+        "angles": {
+            "knee_angle": 157.72575293160472,
+            "hip_angle": 152.06274564907974
+        }
+    },
+    {
+        "frame": 772,
+        "angles": {
+            "knee_angle": 156.1731465326576,
+            "hip_angle": 150.6130872436818
+        }
+    },
+    {
+        "frame": 773,
+        "angles": {
+            "knee_angle": 155.1462160182157,
+            "hip_angle": 149.66803159969547
+        }
+    },
+    {
+        "frame": 774,
+        "angles": {
+            "knee_angle": 154.25635303919393,
+            "hip_angle": 148.80455617633885
+        }
+    },
+    {
+        "frame": 775,
+        "angles": {
+            "knee_angle": 153.39523545090998,
+            "hip_angle": 148.023774342048
+        }
+    },
+    {
+        "frame": 776,
+        "angles": {
+            "knee_angle": 151.99202634321142,
+            "hip_angle": 146.66848254695043
+        }
+    },
+    {
+        "frame": 777,
+        "angles": {
+            "knee_angle": 150.6754797955452,
+            "hip_angle": 145.40767626104687
+        }
+    },
+    {
+        "frame": 778,
+        "angles": {
+            "knee_angle": 150.22769187056053,
+            "hip_angle": 144.95844121613672
+        }
+    },
+    {
+        "frame": 779,
+        "angles": {
+            "knee_angle": 149.49924336023847,
+            "hip_angle": 144.22385362563304
+        }
+    },
+    {
+        "frame": 780,
+        "angles": {
+            "knee_angle": 148.69258729708915,
+            "hip_angle": 143.41873450559916
+        }
+    },
+    {
+        "frame": 781,
+        "angles": {
+            "knee_angle": 147.9881613878934,
+            "hip_angle": 142.71579082905754
+        }
+    },
+    {
+        "frame": 782,
+        "angles": {
+            "knee_angle": 147.55524937944378,
+            "hip_angle": 142.2797066961355
+        }
+    },
+    {
+        "frame": 783,
+        "angles": {
+            "knee_angle": 147.31099477458451,
+            "hip_angle": 142.03016813639965
+        }
+    },
+    {
+        "frame": 784,
+        "angles": {
+            "knee_angle": 147.43940248616144,
+            "hip_angle": 142.17216785578705
+        }
+    },
+    {
+        "frame": 785,
+        "angles": {
+            "knee_angle": 147.6363333370564,
+            "hip_angle": 142.3909016932744
+        }
+    },
+    {
+        "frame": 786,
+        "angles": {
+            "knee_angle": 149.19159720667892,
+            "hip_angle": 144.1788589964752
+        }
+    },
+    {
+        "frame": 787,
+        "angles": {
+            "knee_angle": 151.455771021989,
+            "hip_angle": 146.93882011283125
+        }
+    },
+    {
+        "frame": 788,
+        "angles": {
+            "knee_angle": 154.39223377566498,
+            "hip_angle": 150.1961111178515
+        }
+    },
+    {
+        "frame": 789,
+        "angles": {
+            "knee_angle": 161.70898788961648,
+            "hip_angle": 157.19215334695082
+        }
+    },
+    {
+        "frame": 790,
+        "angles": {
+            "knee_angle": 165.088501401245,
+            "hip_angle": 160.31100112523887
+        }
+    },
+    {
+        "frame": 791,
+        "angles": {
+            "knee_angle": 167.46936409054783,
+            "hip_angle": 162.23463060441364
+        }
+    },
+    {
+        "frame": 792,
+        "angles": {
+            "knee_angle": 169.49554063650373,
+            "hip_angle": 164.9389835668448
+        }
+    },
+    {
+        "frame": 793,
+        "angles": {
+            "knee_angle": 171.93018671664424,
+            "hip_angle": 170.202890563628
+        }
+    },
+    {
+        "frame": 794,
+        "angles": {}
+    },
+    {
+        "frame": 795,
+        "angles": {
+            "knee_angle": 179.16352954432935,
+            "hip_angle": 178.4051327870758
+        }
+    },
+    {
+        "frame": 796,
+        "angles": {
+            "knee_angle": 179.11977778702285,
+            "hip_angle": 178.3746181927281
+        }
+    },
+    {
+        "frame": 797,
+        "angles": {
+            "knee_angle": 179.08722141542745,
+            "hip_angle": 178.36660179942214
+        }
+    },
+    {
+        "frame": 798,
+        "angles": {
+            "knee_angle": 179.13145642991066,
+            "hip_angle": 178.42938826220023
+        }
+    },
+    {
+        "frame": 799,
+        "angles": {
+            "knee_angle": 179.18791437829915,
+            "hip_angle": 178.56045492652626
+        }
+    },
+    {
+        "frame": 800,
+        "angles": {
+            "knee_angle": 179.27582252167548,
+            "hip_angle": 178.6170345129541
+        }
+    },
+    {
+        "frame": 801,
+        "angles": {
+            "knee_angle": 179.3486785180599,
+            "hip_angle": 178.70573911339196
+        }
+    },
+    {
+        "frame": 802,
+        "angles": {
+            "knee_angle": 179.40614127113128,
+            "hip_angle": 178.75088191989892
+        }
+    },
+    {
+        "frame": 803,
+        "angles": {
+            "knee_angle": 179.4326376830529,
+            "hip_angle": 178.7477203893354
+        }
+    },
+    {
+        "frame": 804,
+        "angles": {
+            "knee_angle": 179.44243990897343,
+            "hip_angle": 178.73122527396714
+        }
+    },
+    {
+        "frame": 805,
+        "angles": {
+            "knee_angle": 179.44453778756002,
+            "hip_angle": 178.71597317394
+        }
+    },
+    {
+        "frame": 806,
+        "angles": {
+            "knee_angle": 179.44903579664438,
+            "hip_angle": 178.70901624645802
+        }
+    },
+    {
+        "frame": 807,
+        "angles": {
+            "knee_angle": 179.4557497141534,
+            "hip_angle": 178.70716228817184
+        }
+    },
+    {
+        "frame": 808,
+        "angles": {
+            "knee_angle": 179.46306511964107,
+            "hip_angle": 178.70832249695215
+        }
+    },
+    {
+        "frame": 809,
+        "angles": {
+            "knee_angle": 179.46729403992012,
+            "hip_angle": 178.70604088617137
+        }
+    },
+    {
+        "frame": 810,
+        "angles": {
+            "knee_angle": 179.47633191865276,
+            "hip_angle": 178.70194867724814
+        }
+    },
+    {
+        "frame": 811,
+        "angles": {
+            "knee_angle": 179.48850953104326,
+            "hip_angle": 178.7034428037889
+        }
+    },
+    {
+        "frame": 812,
+        "angles": {
+            "knee_angle": 179.4995118012751,
+            "hip_angle": 178.70319107907045
+        }
+    },
+    {
+        "frame": 813,
+        "angles": {
+            "knee_angle": 179.51313950755224,
+            "hip_angle": 178.70377292683136
+        }
+    },
+    {
+        "frame": 814,
+        "angles": {
+            "knee_angle": 179.51577159827505,
+            "hip_angle": 178.7006188764815
+        }
+    },
+    {
+        "frame": 815,
+        "angles": {
+            "knee_angle": 179.51705241019462,
+            "hip_angle": 178.69523857612475
+        }
+    },
+    {
+        "frame": 816,
+        "angles": {
+            "knee_angle": 179.51788509633147,
+            "hip_angle": 178.68837057767675
+        }
+    },
+    {
+        "frame": 817,
+        "angles": {
+            "knee_angle": 179.51689114680045,
+            "hip_angle": 178.68242628492845
+        }
+    },
+    {
+        "frame": 818,
+        "angles": {
+            "knee_angle": 179.51703525623907,
+            "hip_angle": 178.6771122282437
+        }
+    },
+    {
+        "frame": 819,
+        "angles": {
+            "knee_angle": 179.51114830892044,
+            "hip_angle": 178.66970239383227
+        }
+    },
+    {
+        "frame": 820,
+        "angles": {
+            "knee_angle": 179.50390624481355,
+            "hip_angle": 178.66563747815002
+        }
+    },
+    {
+        "frame": 821,
+        "angles": {
+            "knee_angle": 179.50187593124204,
+            "hip_angle": 178.6594705183332
+        }
+    },
+    {
+        "frame": 822,
+        "angles": {
+            "knee_angle": 179.5018230445042,
+            "hip_angle": 178.65838463448804
+        }
+    },
+    {
+        "frame": 823,
+        "angles": {
+            "knee_angle": 179.50476880190243,
+            "hip_angle": 178.65927888219647
+        }
+    },
+    {
+        "frame": 824,
+        "angles": {
+            "knee_angle": 179.5092662095162,
+            "hip_angle": 178.65975359967965
+        }
+    },
+    {
+        "frame": 825,
+        "angles": {
+            "knee_angle": 179.5136971468345,
+            "hip_angle": 178.66090945079617
+        }
+    },
+    {
+        "frame": 826,
+        "angles": {
+            "knee_angle": 179.51944788624425,
+            "hip_angle": 178.66142475821422
+        }
+    },
+    {
+        "frame": 827,
+        "angles": {
+            "knee_angle": 179.5301443339236,
+            "hip_angle": 178.67084536478626
+        }
+    },
+    {
+        "frame": 828,
+        "angles": {
+            "knee_angle": 179.53927056930084,
+            "hip_angle": 178.68005232253884
+        }
+    },
+    {
+        "frame": 829,
+        "angles": {
+            "knee_angle": 179.54829307818605,
+            "hip_angle": 178.69119631235114
+        }
+    },
+    {
+        "frame": 830,
+        "angles": {
+            "knee_angle": 179.5551696879963,
+            "hip_angle": 178.6983425743263
+        }
+    },
+    {
+        "frame": 831,
+        "angles": {
+            "knee_angle": 179.5638999847079,
+            "hip_angle": 178.70911936147934
+        }
+    },
+    {
+        "frame": 832,
+        "angles": {
+            "knee_angle": 179.5701202938869,
+            "hip_angle": 178.71667704505376
+        }
+    },
+    {
+        "frame": 833,
+        "angles": {
+            "knee_angle": 179.5773193638157,
+            "hip_angle": 178.7247393027944
+        }
+    },
+    {
+        "frame": 834,
+        "angles": {
+            "knee_angle": 179.58552651597128,
+            "hip_angle": 178.73167933630228
+        }
+    },
+    {
+        "frame": 835,
+        "angles": {
+            "knee_angle": 179.59452143482193,
+            "hip_angle": 178.73773249979067
+        }
+    },
+    {
+        "frame": 836,
+        "angles": {
+            "knee_angle": 179.60650242237867,
+            "hip_angle": 178.74928267701998
+        }
+    },
+    {
+        "frame": 837,
+        "angles": {
+            "knee_angle": 179.61372078947113,
+            "hip_angle": 178.7574364969568
+        }
+    },
+    {
+        "frame": 838,
+        "angles": {
+            "knee_angle": 179.62310140366907,
+            "hip_angle": 178.76973860475275
+        }
+    },
+    {
+        "frame": 839,
+        "angles": {
+            "knee_angle": 179.6468387304899,
+            "hip_angle": 178.79924479044456
+        }
+    },
+    {
+        "frame": 840,
+        "angles": {
+            "knee_angle": 179.65568378152827,
+            "hip_angle": 178.80251355532067
+        }
+    },
+    {
+        "frame": 841,
+        "angles": {
+            "knee_angle": 179.67298430950655,
+            "hip_angle": 178.81669273960836
+        }
+    },
+    {
+        "frame": 842,
+        "angles": {
+            "knee_angle": 179.6915149539276,
+            "hip_angle": 178.83020179864945
+        }
+    },
+    {
+        "frame": 843,
+        "angles": {
+            "knee_angle": 179.71927889523505,
+            "hip_angle": 178.85858683060053
+        }
+    },
+    {
+        "frame": 844,
+        "angles": {
+            "knee_angle": 179.74283265005616,
+            "hip_angle": 178.8725559091748
+        }
+    },
+    {
+        "frame": 845,
+        "angles": {
+            "knee_angle": 179.75619708321662,
+            "hip_angle": 178.87849040961467
+        }
+    },
+    {
+        "frame": 846,
+        "angles": {
+            "knee_angle": 179.76923802775875,
+            "hip_angle": 178.885227969998
+        }
+    },
+    {
+        "frame": 847,
+        "angles": {
+            "knee_angle": 179.78416381160488,
+            "hip_angle": 178.89323116045085
+        }
+    },
+    {
+        "frame": 848,
+        "angles": {
+            "knee_angle": 179.79848534195273,
+            "hip_angle": 178.8989407481477
+        }
+    },
+    {
+        "frame": 849,
+        "angles": {
+            "knee_angle": 179.8103340341292,
+            "hip_angle": 178.90358504010854
+        }
+    },
+    {
+        "frame": 850,
+        "angles": {
+            "knee_angle": 179.82044012812247,
+            "hip_angle": 178.90752131176265
+        }
+    },
+    {
+        "frame": 851,
+        "angles": {
+            "knee_angle": 179.8166522447571,
+            "hip_angle": 178.90581512534692
+        }
+    },
+    {
+        "frame": 852,
+        "angles": {
+            "knee_angle": 179.80995551982275,
+            "hip_angle": 178.89587458326955
+        }
+    },
+    {
+        "frame": 853,
+        "angles": {
+            "knee_angle": 179.8011184246392,
+            "hip_angle": 178.88546372529493
+        }
+    },
+    {
+        "frame": 854,
+        "angles": {
+            "knee_angle": 179.7938023323408,
+            "hip_angle": 178.87638787536508
+        }
+    },
+    {
+        "frame": 855,
+        "angles": {
+            "knee_angle": 179.7910773299609,
+            "hip_angle": 178.87195973720654
+        }
+    },
+    {
+        "frame": 856,
+        "angles": {
+            "knee_angle": 179.78586437201665,
+            "hip_angle": 178.86132398347846
+        }
+    },
+    {
+        "frame": 857,
+        "angles": {
+            "knee_angle": 179.78117178816962,
+            "hip_angle": 178.8519788797468
+        }
+    },
+    {
+        "frame": 858,
+        "angles": {
+            "knee_angle": 179.77294044615508,
+            "hip_angle": 178.8365451362584
+        }
+    },
+    {
+        "frame": 859,
+        "angles": {
+            "knee_angle": 179.74467605019228,
+            "hip_angle": 178.78600303729522
+        }
+    },
+    {
+        "frame": 860,
+        "angles": {
+            "knee_angle": 179.7318041290349,
+            "hip_angle": 178.7643303990208
+        }
+    },
+    {
+        "frame": 861,
+        "angles": {
+            "knee_angle": 179.71603250914134,
+            "hip_angle": 178.73687895549713
+        }
+    },
+    {
+        "frame": 862,
+        "angles": {
+            "knee_angle": 179.7051845107131,
+            "hip_angle": 178.71985151495753
+        }
+    },
+    {
+        "frame": 863,
+        "angles": {
+            "knee_angle": 179.68708551568741,
+            "hip_angle": 178.68940982569583
+        }
+    },
+    {
+        "frame": 864,
+        "angles": {
+            "knee_angle": 179.67790667112752,
+            "hip_angle": 178.67515674972424
+        }
+    },
+    {
+        "frame": 865,
+        "angles": {
+            "knee_angle": 179.66744447080873,
+            "hip_angle": 178.6584840146619
+        }
+    },
+    {
+        "frame": 866,
+        "angles": {
+            "knee_angle": 179.66280994774473,
+            "hip_angle": 178.65282930211507
+        }
+    },
+    {
+        "frame": 867,
+        "angles": {
+            "knee_angle": 179.660039388389,
+            "hip_angle": 178.65023925469183
+        }
+    },
+    {
+        "frame": 868,
+        "angles": {
+            "knee_angle": 179.65615538956968,
+            "hip_angle": 178.64674806352966
+        }
+    },
+    {
+        "frame": 869,
+        "angles": {
+            "knee_angle": 179.6521063152954,
+            "hip_angle": 178.64438511907633
+        }
+    },
+    {
+        "frame": 870,
+        "angles": {
+            "knee_angle": 179.6458700884774,
+            "hip_angle": 178.64101284972057
+        }
+    },
+    {
+        "frame": 871,
+        "angles": {
+            "knee_angle": 179.64005192858463,
+            "hip_angle": 178.63871398580218
+        }
+    },
+    {
+        "frame": 872,
+        "angles": {
+            "knee_angle": 179.63616712721134,
+            "hip_angle": 178.6366903499861
+        }
+    },
+    {
+        "frame": 873,
+        "angles": {
+            "knee_angle": 179.63322330558844,
+            "hip_angle": 178.6362000238739
+        }
+    },
+    {
+        "frame": 874,
+        "angles": {
+            "knee_angle": 179.629986136572,
+            "hip_angle": 178.63528585911968
+        }
+    },
+    {
+        "frame": 875,
+        "angles": {
+            "knee_angle": 179.62568663071997,
+            "hip_angle": 178.63346412375208
+        }
+    },
+    {
+        "frame": 876,
+        "angles": {
+            "knee_angle": 179.6242113432002,
+            "hip_angle": 178.63382983746592
+        }
+    },
+    {
+        "frame": 877,
+        "angles": {
+            "knee_angle": 179.62133579468374,
+            "hip_angle": 178.6332825622153
+        }
+    },
+    {
+        "frame": 878,
+        "angles": {
+            "knee_angle": 179.61794608190223,
+            "hip_angle": 178.63359532459208
+        }
+    },
+    {
+        "frame": 879,
+        "angles": {
+            "knee_angle": 179.61505083808024,
+            "hip_angle": 178.6351020278079
+        }
+    },
+    {
+        "frame": 880,
+        "angles": {
+            "knee_angle": 179.61117946274715,
+            "hip_angle": 178.6314013828818
+        }
+    },
+    {
+        "frame": 881,
+        "angles": {
+            "knee_angle": 179.60449217119765,
+            "hip_angle": 178.6272002598096
+        }
+    },
+    {
+        "frame": 882,
+        "angles": {
+            "knee_angle": 179.60372037135141,
+            "hip_angle": 178.62564937836825
+        }
+    },
+    {
+        "frame": 883,
+        "angles": {
+            "knee_angle": 179.59973959008286,
+            "hip_angle": 178.61825477502538
+        }
+    },
+    {
+        "frame": 884,
+        "angles": {
+            "knee_angle": 179.59470192858083,
+            "hip_angle": 178.6096913198916
+        }
+    },
+    {
+        "frame": 885,
+        "angles": {
+            "knee_angle": 179.59260287012987,
+            "hip_angle": 178.60655957004886
+        }
+    },
+    {
+        "frame": 886,
+        "angles": {
+            "knee_angle": 179.591867905718,
+            "hip_angle": 178.60448901781336
+        }
+    },
+    {
+        "frame": 887,
+        "angles": {
+            "knee_angle": 179.5900770545789,
+            "hip_angle": 178.60216057653756
+        }
+    },
+    {
+        "frame": 888,
+        "angles": {
+            "knee_angle": 179.58894922260916,
+            "hip_angle": 178.59968063080711
+        }
+    },
+    {
+        "frame": 889,
+        "angles": {
+            "knee_angle": 179.5867748872128,
+            "hip_angle": 178.59882158555578
+        }
+    },
+    {
+        "frame": 890,
+        "angles": {
+            "knee_angle": 179.58584589271462,
+            "hip_angle": 178.59989992057842
+        }
+    },
+    {
+        "frame": 891,
+        "angles": {
+            "knee_angle": 179.58484853861552,
+            "hip_angle": 178.6011393696511
+        }
+    },
+    {
+        "frame": 892,
+        "angles": {
+            "knee_angle": 179.5848770774807,
+            "hip_angle": 178.6045842439463
+        }
+    },
+    {
+        "frame": 893,
+        "angles": {
+            "knee_angle": 179.58489822951796,
+            "hip_angle": 178.61009346503553
+        }
+    },
+    {
+        "frame": 894,
+        "angles": {
+            "knee_angle": 179.5872150620149,
+            "hip_angle": 178.6177954384793
+        }
+    },
+    {
+        "frame": 895,
+        "angles": {
+            "knee_angle": 179.5892080785785,
+            "hip_angle": 178.6220097486887
+        }
+    },
+    {
+        "frame": 896,
+        "angles": {
+            "knee_angle": 179.59393736616792,
+            "hip_angle": 178.6314087088443
+        }
+    },
+    {
+        "frame": 897,
+        "angles": {
+            "knee_angle": 179.60845114362832,
+            "hip_angle": 178.65952261570646
+        }
+    },
+    {
+        "frame": 898,
+        "angles": {
+            "knee_angle": 179.62579448582176,
+            "hip_angle": 178.68997664545873
+        }
+    },
+    {
+        "frame": 899,
+        "angles": {
+            "knee_angle": 179.63896132787877,
+            "hip_angle": 178.7141638190551
+        }
+    },
+    {
+        "frame": 900,
+        "angles": {
+            "knee_angle": 179.6610349930247,
+            "hip_angle": 178.75278910077665
+        }
+    },
+    {
+        "frame": 901,
+        "angles": {
+            "knee_angle": 179.67801978948236,
+            "hip_angle": 178.7828694937968
+        }
+    },
+    {
+        "frame": 902,
+        "angles": {
+            "knee_angle": 179.6893184493382,
+            "hip_angle": 178.8022843243258
+        }
+    },
+    {
+        "frame": 903,
+        "angles": {
+            "knee_angle": 179.70657876843777,
+            "hip_angle": 178.83285321314634
+        }
+    },
+    {
+        "frame": 904,
+        "angles": {
+            "knee_angle": 179.71597648778493,
+            "hip_angle": 178.84934052808032
+        }
+    },
+    {
+        "frame": 905,
+        "angles": {
+            "knee_angle": 179.7262818303829,
+            "hip_angle": 178.86390346370936
+        }
+    },
+    {
+        "frame": 906,
+        "angles": {
+            "knee_angle": 179.739855875691,
+            "hip_angle": 178.88371012999977
+        }
+    },
+    {
+        "frame": 907,
+        "angles": {
+            "knee_angle": 179.74977455187286,
+            "hip_angle": 178.89501085325267
+        }
+    },
+    {
+        "frame": 908,
+        "angles": {
+            "knee_angle": 179.76105974102686,
+            "hip_angle": 178.91009986423745
+        }
+    },
+    {
+        "frame": 909,
+        "angles": {
+            "knee_angle": 179.76253123660638,
+            "hip_angle": 178.91211768325635
+        }
+    },
+    {
+        "frame": 910,
+        "angles": {
+            "knee_angle": 179.76774821449322,
+            "hip_angle": 178.9186400946272
+        }
+    },
+    {
+        "frame": 911,
+        "angles": {
+            "knee_angle": 179.76913741319802,
+            "hip_angle": 178.9211713630395
+        }
+    },
+    {
+        "frame": 912,
+        "angles": {
+            "knee_angle": 179.77067366450706,
+            "hip_angle": 178.92328092660233
+        }
+    },
+    {
+        "frame": 913,
+        "angles": {
+            "knee_angle": 179.77373560890678,
+            "hip_angle": 178.92771237932988
+        }
+    },
+    {
+        "frame": 914,
+        "angles": {
+            "knee_angle": 179.7804996679216,
+            "hip_angle": 178.93845423931924
+        }
+    },
+    {
+        "frame": 915,
+        "angles": {
+            "knee_angle": 179.7872424652855,
+            "hip_angle": 178.94697654759844
+        }
+    },
+    {
+        "frame": 916,
+        "angles": {
+            "knee_angle": 179.79425799578712,
+            "hip_angle": 178.96121582815036
+        }
+    },
+    {
+        "frame": 917,
+        "angles": {
+            "knee_angle": 179.80089816954722,
+            "hip_angle": 178.96863112145434
+        }
+    },
+    {
+        "frame": 918,
+        "angles": {
+            "knee_angle": 179.8072447794854,
+            "hip_angle": 178.97607583299003
+        }
+    },
+    {
+        "frame": 919,
+        "angles": {
+            "knee_angle": 179.81208832293208,
+            "hip_angle": 178.97993088622292
+        }
+    },
+    {
+        "frame": 920,
+        "angles": {
+            "knee_angle": 179.82279548295932,
+            "hip_angle": 178.98727096112702
+        }
+    },
+    {
+        "frame": 921,
+        "angles": {
+            "knee_angle": 179.8315399241575,
+            "hip_angle": 178.98982867337622
+        }
+    },
+    {
+        "frame": 922,
+        "angles": {
+            "knee_angle": 179.83673392184446,
+            "hip_angle": 178.99153324135497
+        }
+    },
+    {
+        "frame": 923,
+        "angles": {
+            "knee_angle": 179.84201058723755,
+            "hip_angle": 178.9955195236351
+        }
+    },
+    {
+        "frame": 924,
+        "angles": {
+            "knee_angle": 179.8476604380121,
+            "hip_angle": 178.99998179812246
+        }
+    },
+    {
+        "frame": 925,
+        "angles": {
+            "knee_angle": 179.85208101384632,
+            "hip_angle": 179.0039580112376
+        }
+    },
+    {
+        "frame": 926,
+        "angles": {
+            "knee_angle": 179.855971187264,
+            "hip_angle": 179.00739751343593
+        }
+    },
+    {
+        "frame": 927,
+        "angles": {
+            "knee_angle": 179.859180912717,
+            "hip_angle": 179.01117974961684
+        }
+    },
+    {
+        "frame": 928,
+        "angles": {
+            "knee_angle": 179.8611316003126,
+            "hip_angle": 179.0132960004286
+        }
+    },
+    {
+        "frame": 929,
+        "angles": {
+            "knee_angle": 179.86384914515116,
+            "hip_angle": 179.0156834131016
+        }
+    },
+    {
+        "frame": 930,
+        "angles": {
+            "knee_angle": 179.86600735920493,
+            "hip_angle": 179.01745445100013
+        }
+    },
+    {
+        "frame": 931,
+        "angles": {
+            "knee_angle": 179.86810161195876,
+            "hip_angle": 179.0189099133127
+        }
+    },
+    {
+        "frame": 932,
+        "angles": {
+            "knee_angle": 179.87205310593538,
+            "hip_angle": 179.02274487415195
+        }
+    },
+    {
+        "frame": 933,
+        "angles": {
+            "knee_angle": 179.87524449636015,
+            "hip_angle": 179.02414168273938
+        }
+    },
+    {
+        "frame": 934,
+        "angles": {
+            "knee_angle": 179.8713092110515,
+            "hip_angle": 179.01601977147712
+        }
+    },
+    {
+        "frame": 935,
+        "angles": {
+            "knee_angle": 179.87037051481022,
+            "hip_angle": 179.01046180313168
+        }
+    },
+    {
+        "frame": 936,
+        "angles": {
+            "knee_angle": 179.8699796634718,
+            "hip_angle": 179.00923178901039
+        }
+    },
+    {
+        "frame": 937,
+        "angles": {
+            "knee_angle": 179.87181402366065,
+            "hip_angle": 179.01192622514554
+        }
+    },
+    {
+        "frame": 938,
+        "angles": {
+            "knee_angle": 179.8728016160914,
+            "hip_angle": 179.01060719846402
+        }
+    },
+    {
+        "frame": 939,
+        "angles": {
+            "knee_angle": 179.87312934648364,
+            "hip_angle": 179.00866322003975
+        }
+    },
+    {
+        "frame": 940,
+        "angles": {
+            "knee_angle": 179.87491231117,
+            "hip_angle": 179.00792723125957
+        }
+    },
+    {
+        "frame": 941,
+        "angles": {
+            "knee_angle": 179.87684887118638,
+            "hip_angle": 179.00754174377477
+        }
+    },
+    {
+        "frame": 942,
+        "angles": {
+            "knee_angle": 179.87892858561452,
+            "hip_angle": 179.00775433221398
+        }
+    },
+    {
+        "frame": 943,
+        "angles": {
+            "knee_angle": 179.88002425820852,
+            "hip_angle": 179.00497141616978
+        }
+    },
+    {
+        "frame": 944,
+        "angles": {
+            "knee_angle": 179.87908800941915,
+            "hip_angle": 179.0008906392152
+        }
+    },
+    {
+        "frame": 945,
+        "angles": {
+            "knee_angle": 179.8788532196452,
+            "hip_angle": 178.9988466369356
+        }
+    },
+    {
+        "frame": 946,
+        "angles": {
+            "knee_angle": 179.87772117286448,
+            "hip_angle": 178.99693368672393
+        }
+    },
+    {
+        "frame": 947,
+        "angles": {
+            "knee_angle": 179.87734620183687,
+            "hip_angle": 178.99595976852078
+        }
+    },
+    {
+        "frame": 948,
+        "angles": {
+            "knee_angle": 179.877064843129,
+            "hip_angle": 178.9957933231958
+        }
+    },
+    {
+        "frame": 949,
+        "angles": {
+            "knee_angle": 179.87774974117835,
+            "hip_angle": 178.99700120489504
+        }
+    },
+    {
+        "frame": 950,
+        "angles": {
+            "knee_angle": 179.8773491097395,
+            "hip_angle": 179.00307324727473
+        }
+    },
+    {
+        "frame": 951,
+        "angles": {
+            "knee_angle": 179.8768880958012,
+            "hip_angle": 179.01574936404862
+        }
+    },
+    {
+        "frame": 952,
+        "angles": {
+            "knee_angle": 179.86683833472443,
+            "hip_angle": 179.0450401152835
+        }
+    },
+    {
+        "frame": 953,
+        "angles": {
+            "knee_angle": 179.84004356821777,
+            "hip_angle": 179.10408789739992
+        }
+    },
+    {
+        "frame": 954,
+        "angles": {
+            "knee_angle": 179.75240820381117,
+            "hip_angle": 179.11144884547952
+        }
+    },
+    {
+        "frame": 955,
+        "angles": {
+            "knee_angle": 179.72121322209483,
+            "hip_angle": 179.21857702000142
+        }
+    },
+    {
+        "frame": 956,
+        "angles": {
+            "knee_angle": 179.69997765430423,
+            "hip_angle": 179.33421893587453
+        }
+    },
+    {
+        "frame": 957,
+        "angles": {
+            "knee_angle": 179.73644698529486,
+            "hip_angle": 179.60468209899267
+        }
+    },
+    {
+        "frame": 958,
+        "angles": {
+            "knee_angle": 179.87103019915406,
+            "hip_angle": 179.99330529091344
+        }
+    },
+    {
+        "frame": 959,
+        "angles": {
+            "knee_angle": 179.9916095535253,
+            "hip_angle": 179.67411107346948
+        }
+    },
+    {
+        "frame": 960,
+        "angles": {
+            "knee_angle": 179.8619425748834,
+            "hip_angle": 179.25380607119078
+        }
+    },
+    {
+        "frame": 961,
+        "angles": {
+            "knee_angle": 179.60617922131914,
+            "hip_angle": 178.68874908957312
+        }
+    },
+    {
+        "frame": 962,
+        "angles": {
+            "knee_angle": 179.26735989173613,
+            "hip_angle": 177.9007270843537
+        }
+    },
+    {
+        "frame": 963,
+        "angles": {
+            "knee_angle": 178.72714859035645,
+            "hip_angle": 176.8494747475609
+        }
+    },
+    {
+        "frame": 964,
+        "angles": {
+            "knee_angle": 177.84648958454883,
+            "hip_angle": 175.86977048628285
+        }
+    },
+    {
+        "frame": 965,
+        "angles": {
+            "knee_angle": 176.52361443065132,
+            "hip_angle": 174.16663816798132
+        }
+    },
+    {
+        "frame": 966,
+        "angles": {
+            "knee_angle": 174.89712214738145,
+            "hip_angle": 172.34449617341755
+        }
+    },
+    {
+        "frame": 967,
+        "angles": {
+            "knee_angle": 173.58682927191066,
+            "hip_angle": 170.5771091363573
+        }
+    },
+    {
+        "frame": 968,
+        "angles": {
+            "knee_angle": 172.28941278784473,
+            "hip_angle": 169.3591683492423
+        }
+    },
+    {
+        "frame": 969,
+        "angles": {
+            "knee_angle": 170.4079065645361,
+            "hip_angle": 167.63681528468297
+        }
+    },
+    {
+        "frame": 970,
+        "angles": {
+            "knee_angle": 168.02956000017508,
+            "hip_angle": 165.94060363969234
+        }
+    },
+    {
+        "frame": 971,
+        "angles": {
+            "knee_angle": 165.9269323480496,
+            "hip_angle": 164.15539898126036
+        }
+    },
+    {
+        "frame": 972,
+        "angles": {
+            "knee_angle": 164.21760240810676,
+            "hip_angle": 163.01018265715166
+        }
+    },
+    {
+        "frame": 973,
+        "angles": {
+            "knee_angle": 162.93419490312573,
+            "hip_angle": 162.22694312623233
+        }
+    },
+    {
+        "frame": 974,
+        "angles": {
+            "knee_angle": 161.8044826885197,
+            "hip_angle": 161.38923123295427
+        }
+    },
+    {
+        "frame": 975,
+        "angles": {
+            "knee_angle": 160.96327889280855,
+            "hip_angle": 160.50127116325405
+        }
+    },
+    {
+        "frame": 976,
+        "angles": {
+            "knee_angle": 159.8894775960339,
+            "hip_angle": 159.64503923125997
+        }
+    },
+    {
+        "frame": 977,
+        "angles": {
+            "knee_angle": 158.3522622362011,
+            "hip_angle": 158.20488159938853
+        }
+    },
+    {
+        "frame": 978,
+        "angles": {
+            "knee_angle": 157.5893809794619,
+            "hip_angle": 157.48511732298297
+        }
+    },
+    {
+        "frame": 979,
+        "angles": {
+            "knee_angle": 156.67897443113344,
+            "hip_angle": 156.46246077275012
+        }
+    },
+    {
+        "frame": 980,
+        "angles": {
+            "knee_angle": 155.6991547193814,
+            "hip_angle": 155.34131520935497
+        }
+    },
+    {
+        "frame": 981,
+        "angles": {
+            "knee_angle": 155.19466543718184,
+            "hip_angle": 154.9621375489332
+        }
+    },
+    {
+        "frame": 982,
+        "angles": {
+            "knee_angle": 153.87628769667276,
+            "hip_angle": 154.0652339675086
+        }
+    },
+    {
+        "frame": 983,
+        "angles": {
+            "knee_angle": 153.0097181080623,
+            "hip_angle": 153.49938904402114
+        }
+    },
+    {
+        "frame": 984,
+        "angles": {
+            "knee_angle": 152.4284329835569,
+            "hip_angle": 153.15356873795687
+        }
+    },
+    {
+        "frame": 985,
+        "angles": {
+            "knee_angle": 151.36074140162478,
+            "hip_angle": 152.32440133145462
+        }
+    },
+    {
+        "frame": 986,
+        "angles": {
+            "knee_angle": 150.2332017390506,
+            "hip_angle": 151.3560820801834
+        }
+    },
+    {
+        "frame": 987,
+        "angles": {
+            "knee_angle": 149.35347004019482,
+            "hip_angle": 150.46359347937175
+        }
+    },
+    {
+        "frame": 988,
+        "angles": {
+            "knee_angle": 148.1280949402847,
+            "hip_angle": 149.22450847694526
+        }
+    },
+    {
+        "frame": 989,
+        "angles": {
+            "knee_angle": 146.91859195272286,
+            "hip_angle": 148.24975111108552
+        }
+    },
+    {
+        "frame": 990,
+        "angles": {
+            "knee_angle": 146.41007687081063,
+            "hip_angle": 147.96036195470532
+        }
+    },
+    {
+        "frame": 991,
+        "angles": {
+            "knee_angle": 145.80237750791423,
+            "hip_angle": 147.60211785368767
+        }
+    },
+    {
+        "frame": 992,
+        "angles": {
+            "knee_angle": 145.352297140758,
+            "hip_angle": 147.2887891262495
+        }
+    },
+    {
+        "frame": 993,
+        "angles": {
+            "knee_angle": 145.26638167245804,
+            "hip_angle": 147.18969447988667
+        }
+    },
+    {
+        "frame": 994,
+        "angles": {
+            "knee_angle": 145.082469575437,
+            "hip_angle": 146.9207059608576
+        }
+    },
+    {
+        "frame": 995,
+        "angles": {
+            "knee_angle": 144.8930229215964,
+            "hip_angle": 146.7573191797137
+        }
+    },
+    {
+        "frame": 996,
+        "angles": {
+            "knee_angle": 144.66693552718746,
+            "hip_angle": 146.512989008548
+        }
+    },
+    {
+        "frame": 997,
+        "angles": {
+            "knee_angle": 144.67558145581768,
+            "hip_angle": 146.5812666577476
+        }
+    },
+    {
+        "frame": 998,
+        "angles": {
+            "knee_angle": 144.69642908574573,
+            "hip_angle": 146.6410499424938
+        }
+    },
+    {
+        "frame": 999,
+        "angles": {
+            "knee_angle": 144.71428063321608,
+            "hip_angle": 146.68617251579417
+        }
+    },
+    {
+        "frame": 1000,
+        "angles": {
+            "knee_angle": 144.46461939186355,
+            "hip_angle": 146.23709515492098
+        }
+    },
+    {
+        "frame": 1001,
+        "angles": {
+            "knee_angle": 144.32022081446124,
+            "hip_angle": 146.0302073510236
+        }
+    },
+    {
+        "frame": 1002,
+        "angles": {
+            "knee_angle": 144.17731019422848,
+            "hip_angle": 145.78707484353575
+        }
+    },
+    {
+        "frame": 1003,
+        "angles": {
+            "knee_angle": 144.02822297940278,
+            "hip_angle": 145.55248606207522
+        }
+    },
+    {
+        "frame": 1004,
+        "angles": {
+            "knee_angle": 143.75944292263998,
+            "hip_angle": 145.2997644831375
+        }
+    },
+    {
+        "frame": 1005,
+        "angles": {
+            "knee_angle": 143.60448241934412,
+            "hip_angle": 145.2194571621775
+        }
+    },
+    {
+        "frame": 1006,
+        "angles": {
+            "knee_angle": 143.57314811286324,
+            "hip_angle": 145.24532512847938
+        }
+    },
+    {
+        "frame": 1007,
+        "angles": {
+            "knee_angle": 143.5353203134048,
+            "hip_angle": 145.25609714829795
+        }
+    },
+    {
+        "frame": 1008,
+        "angles": {
+            "knee_angle": 143.50879330718558,
+            "hip_angle": 145.2801585806016
+        }
+    },
+    {
+        "frame": 1009,
+        "angles": {
+            "knee_angle": 143.5161284519808,
+            "hip_angle": 145.305299734772
+        }
+    },
+    {
+        "frame": 1010,
+        "angles": {
+            "knee_angle": 143.53918793701934,
+            "hip_angle": 145.33480346972243
+        }
+    },
+    {
+        "frame": 1011,
+        "angles": {
+            "knee_angle": 143.557962245839,
+            "hip_angle": 145.35750673437875
+        }
+    },
+    {
+        "frame": 1012,
+        "angles": {
+            "knee_angle": 143.55759543033767,
+            "hip_angle": 145.35553618725655
+        }
+    },
+    {
+        "frame": 1013,
+        "angles": {
+            "knee_angle": 143.57011985345048,
+            "hip_angle": 145.36135720697698
+        }
+    },
+    {
+        "frame": 1014,
+        "angles": {
+            "knee_angle": 143.57950215506526,
+            "hip_angle": 145.36357930961586
+        }
+    },
+    {
+        "frame": 1015,
+        "angles": {
+            "knee_angle": 143.58670005813616,
+            "hip_angle": 145.34915422475592
+        }
+    },
+    {
+        "frame": 1016,
+        "angles": {
+            "knee_angle": 143.5836845834358,
+            "hip_angle": 145.32399985496883
+        }
+    },
+    {
+        "frame": 1017,
+        "angles": {
+            "knee_angle": 143.58288692208203,
+            "hip_angle": 145.3037802568526
+        }
+    },
+    {
+        "frame": 1018,
+        "angles": {
+            "knee_angle": 143.5878473117067,
+            "hip_angle": 145.3021342184114
+        }
+    },
+    {
+        "frame": 1019,
+        "angles": {
+            "knee_angle": 143.58127646263708,
+            "hip_angle": 145.30500277703263
+        }
+    },
+    {
+        "frame": 1020,
+        "angles": {
+            "knee_angle": 143.57035676794024,
+            "hip_angle": 145.31172276413415
+        }
+    },
+    {
+        "frame": 1021,
+        "angles": {
+            "knee_angle": 143.57681505651354,
+            "hip_angle": 145.35215650956684
+        }
+    },
+    {
+        "frame": 1022,
+        "angles": {
+            "knee_angle": 143.57737573429742,
+            "hip_angle": 145.39236181646248
+        }
+    },
+    {
+        "frame": 1023,
+        "angles": {
+            "knee_angle": 143.57371606748066,
+            "hip_angle": 145.44913757161075
+        }
+    },
+    {
+        "frame": 1024,
+        "angles": {
+            "knee_angle": 143.64424413488516,
+            "hip_angle": 145.51150715983613
+        }
+    },
+    {
+        "frame": 1025,
+        "angles": {
+            "knee_angle": 143.82854664221034,
+            "hip_angle": 145.6768322845586
+        }
+    },
+    {
+        "frame": 1026,
+        "angles": {
+            "knee_angle": 144.50697794984032,
+            "hip_angle": 146.17421062301744
+        }
+    },
+    {
+        "frame": 1027,
+        "angles": {
+            "knee_angle": 145.50311206856415,
+            "hip_angle": 146.81244219542592
+        }
+    },
+    {
+        "frame": 1028,
+        "angles": {
+            "knee_angle": 146.64103986024418,
+            "hip_angle": 147.74220090256293
+        }
+    },
+    {
+        "frame": 1029,
+        "angles": {
+            "knee_angle": 148.1737209509981,
+            "hip_angle": 148.95738325498357
+        }
+    },
+    {
+        "frame": 1030,
+        "angles": {
+            "knee_angle": 149.81830831552125,
+            "hip_angle": 150.24232305966905
+        }
+    },
+    {
+        "frame": 1031,
+        "angles": {
+            "knee_angle": 151.44324404680972,
+            "hip_angle": 151.51261145075154
+        }
+    },
+    {
+        "frame": 1032,
+        "angles": {
+            "knee_angle": 153.22174908263077,
+            "hip_angle": 153.39455185082858
+        }
+    },
+    {
+        "frame": 1033,
+        "angles": {
+            "knee_angle": 154.730091079043,
+            "hip_angle": 155.3836102258195
+        }
+    },
+    {
+        "frame": 1034,
+        "angles": {
+            "knee_angle": 156.3073507471696,
+            "hip_angle": 157.34681602340285
+        }
+    },
+    {
+        "frame": 1035,
+        "angles": {
+            "knee_angle": 158.31358467613734,
+            "hip_angle": 159.53570853465047
+        }
+    },
+    {
+        "frame": 1036,
+        "angles": {
+            "knee_angle": 159.48461174419643,
+            "hip_angle": 160.73207200952186
+        }
+    },
+    {
+        "frame": 1037,
+        "angles": {
+            "knee_angle": 160.97666417064286,
+            "hip_angle": 162.0920662640224
+        }
+    },
+    {
+        "frame": 1038,
+        "angles": {
+            "knee_angle": 162.346330582831,
+            "hip_angle": 163.25200378178496
+        }
+    },
+    {
+        "frame": 1039,
+        "angles": {
+            "knee_angle": 163.56185346491733,
+            "hip_angle": 164.57516117192114
+        }
+    },
+    {
+        "frame": 1040,
+        "angles": {
+            "knee_angle": 165.449599741694,
+            "hip_angle": 166.31272188196562
+        }
+    },
+    {
+        "frame": 1041,
+        "angles": {
+            "knee_angle": 166.73069833355672,
+            "hip_angle": 167.73380448160785
+        }
+    },
+    {
+        "frame": 1042,
+        "angles": {
+            "knee_angle": 168.42353328630657,
+            "hip_angle": 169.29748948688794
+        }
+    },
+    {
+        "frame": 1043,
+        "angles": {
+            "knee_angle": 169.7051514807867,
+            "hip_angle": 170.3729226258492
+        }
+    },
+    {
+        "frame": 1044,
+        "angles": {
+            "knee_angle": 170.8675295004403,
+            "hip_angle": 171.4211327300717
+        }
+    },
+    {
+        "frame": 1045,
+        "angles": {
+            "knee_angle": 172.08749578409422,
+            "hip_angle": 172.58129315171408
+        }
+    },
+    {
+        "frame": 1046,
+        "angles": {
+            "knee_angle": 174.06348965591596,
+            "hip_angle": 173.8819446978766
+        }
+    },
+    {
+        "frame": 1047,
+        "angles": {
+            "knee_angle": 174.84588137337468,
+            "hip_angle": 174.70960166084706
+        }
+    },
+    {
+        "frame": 1048,
+        "angles": {
+            "knee_angle": 175.735297281345,
+            "hip_angle": 175.75741471134458
+        }
+    },
+    {
+        "frame": 1049,
+        "angles": {
+            "knee_angle": 176.30527301496144,
+            "hip_angle": 176.3105927572417
+        }
+    },
+    {
+        "frame": 1050,
+        "angles": {
+            "knee_angle": 176.95523548643706,
+            "hip_angle": 177.10803402814977
+        }
+    },
+    {
+        "frame": 1051,
+        "angles": {
+            "knee_angle": 177.42045357197821,
+            "hip_angle": 177.54541027881143
+        }
+    },
+    {
+        "frame": 1052,
+        "angles": {
+            "knee_angle": 177.82462528273456,
+            "hip_angle": 177.69795253797386
+        }
+    },
+    {
+        "frame": 1053,
+        "angles": {
+            "knee_angle": 178.338581058316,
+            "hip_angle": 178.1464401813792
+        }
+    },
+    {
+        "frame": 1054,
+        "angles": {
+            "knee_angle": 178.95235957010044,
+            "hip_angle": 178.50555693742314
+        }
+    },
+    {
+        "frame": 1055,
+        "angles": {
+            "knee_angle": 179.7211518564479,
+            "hip_angle": 179.18744736749846
+        }
+    },
+    {
+        "frame": 1056,
+        "angles": {
+            "knee_angle": 179.91263942292034,
+            "hip_angle": 179.3669756713092
+        }
+    },
+    {
+        "frame": 1057,
+        "angles": {
+            "knee_angle": 179.16110515924473,
+            "hip_angle": 179.90582575885801
+        }
+    },
+    {
+        "frame": 1058,
+        "angles": {
+            "knee_angle": 178.7260547254447,
+            "hip_angle": 179.55972806643967
+        }
+    },
+    {
+        "frame": 1059,
+        "angles": {
+            "knee_angle": 178.6466686012075,
+            "hip_angle": 179.54988459313887
+        }
+    },
+    {
+        "frame": 1060,
+        "angles": {
+            "knee_angle": 178.64186968252147,
+            "hip_angle": 179.54061097532468
+        }
+    },
+    {
+        "frame": 1061,
+        "angles": {
+            "knee_angle": 178.62097881405734,
+            "hip_angle": 179.54910339956956
+        }
+    },
+    {
+        "frame": 1062,
+        "angles": {
+            "knee_angle": 178.53896466980467,
+            "hip_angle": 179.4822423644456
+        }
+    },
+    {
+        "frame": 1063,
+        "angles": {
+            "knee_angle": 178.37383511462207,
+            "hip_angle": 179.25232472521745
+        }
+    },
+    {
+        "frame": 1064,
+        "angles": {
+            "knee_angle": 178.2983064029377,
+            "hip_angle": 179.09163660334536
+        }
+    },
+    {
+        "frame": 1065,
+        "angles": {
+            "knee_angle": 178.28380309058625,
+            "hip_angle": 178.95636671998565
+        }
+    },
+    {
+        "frame": 1066,
+        "angles": {
+            "knee_angle": 178.30162157090194,
+            "hip_angle": 178.87053949285078
+        }
+    },
+    {
+        "frame": 1067,
+        "angles": {
+            "knee_angle": 178.25258529738687,
+            "hip_angle": 178.79563578222277
+        }
+    },
+    {
+        "frame": 1068,
+        "angles": {
+            "knee_angle": 178.15520254430686,
+            "hip_angle": 178.72541894079342
+        }
+    },
+    {
+        "frame": 1069,
+        "angles": {
+            "knee_angle": 178.052510877243,
+            "hip_angle": 178.65710682854956
+        }
+    },
+    {
+        "frame": 1070,
+        "angles": {
+            "knee_angle": 177.99345613320028,
+            "hip_angle": 178.6004752651668
+        }
+    },
+    {
+        "frame": 1071,
+        "angles": {
+            "knee_angle": 178.0043420795652,
+            "hip_angle": 178.57917625974875
+        }
+    },
+    {
+        "frame": 1072,
+        "angles": {
+            "knee_angle": 178.04708788745714,
+            "hip_angle": 178.5859891006163
+        }
+    },
+    {
+        "frame": 1073,
+        "angles": {
+            "knee_angle": 178.0664567846751,
+            "hip_angle": 178.58610074180677
+        }
+    },
+    {
+        "frame": 1074,
+        "angles": {
+            "knee_angle": 178.08558763779092,
+            "hip_angle": 178.57469117002097
+        }
+    },
+    {
+        "frame": 1075,
+        "angles": {
+            "knee_angle": 178.08009939051175,
+            "hip_angle": 178.55910890369304
+        }
+    },
+    {
+        "frame": 1076,
+        "angles": {
+            "knee_angle": 178.07387029107917,
+            "hip_angle": 178.5489397422817
+        }
+    },
+    {
+        "frame": 1077,
+        "angles": {
+            "knee_angle": 178.09661482013294,
+            "hip_angle": 178.59446738220947
+        }
+    },
+    {
+        "frame": 1078,
+        "angles": {
+            "knee_angle": 178.10703629500773,
+            "hip_angle": 178.61182352360564
+        }
+    },
+    {
+        "frame": 1079,
+        "angles": {
+            "knee_angle": 178.12505506948534,
+            "hip_angle": 178.62506507684444
+        }
+    },
+    {
+        "frame": 1080,
+        "angles": {
+            "knee_angle": 178.12979078053593,
+            "hip_angle": 178.61452413226087
+        }
+    },
+    {
+        "frame": 1081,
+        "angles": {
+            "knee_angle": 178.13450003111578,
+            "hip_angle": 178.6023027446684
+        }
+    },
+    {
+        "frame": 1082,
+        "angles": {
+            "knee_angle": 178.1404471092002,
+            "hip_angle": 178.6052556686135
+        }
+    },
+    {
+        "frame": 1083,
+        "angles": {
+            "knee_angle": 178.15258372088726,
+            "hip_angle": 178.61413479422455
+        }
+    },
+    {
+        "frame": 1084,
+        "angles": {
+            "knee_angle": 178.1583381873689,
+            "hip_angle": 178.61713215537458
+        }
+    },
+    {
+        "frame": 1085,
+        "angles": {
+            "knee_angle": 178.1636165164397,
+            "hip_angle": 178.61249386284913
+        }
+    },
+    {
+        "frame": 1086,
+        "angles": {
+            "knee_angle": 178.1841838545859,
+            "hip_angle": 178.61748064583
+        }
+    },
+    {
+        "frame": 1087,
+        "angles": {
+            "knee_angle": 178.20552564549388,
+            "hip_angle": 178.62201441381382
+        }
+    },
+    {
+        "frame": 1088,
+        "angles": {
+            "knee_angle": 178.23817510045927,
+            "hip_angle": 178.6376040152193
+        }
+    },
+    {
+        "frame": 1089,
+        "angles": {
+            "knee_angle": 178.28446720015324,
+            "hip_angle": 178.65960234766288
+        }
+    },
+    {
+        "frame": 1090,
+        "angles": {
+            "knee_angle": 178.3086806708001,
+            "hip_angle": 178.67049329074663
+        }
+    },
+    {
+        "frame": 1091,
+        "angles": {
+            "knee_angle": 178.32448021628366,
+            "hip_angle": 178.67821830919954
+        }
+    },
+    {
+        "frame": 1092,
+        "angles": {
+            "knee_angle": 178.34599993393405,
+            "hip_angle": 178.68944746774625
+        }
+    },
+    {
+        "frame": 1093,
+        "angles": {
+            "knee_angle": 178.3633003435063,
+            "hip_angle": 178.6925125341692
+        }
+    },
+    {
+        "frame": 1094,
+        "angles": {
+            "knee_angle": 178.37922282816922,
+            "hip_angle": 178.69344528058554
+        }
+    },
+    {
+        "frame": 1095,
+        "angles": {
+            "knee_angle": 178.39604703084484,
+            "hip_angle": 178.70064101583662
+        }
+    },
+    {
+        "frame": 1096,
+        "angles": {
+            "knee_angle": 178.15643359699152,
+            "hip_angle": 177.491930515266
+        }
+    },
+    {
+        "frame": 1097,
+        "angles": {
+            "knee_angle": 178.13415311459084,
+            "hip_angle": 176.9405610351048
+        }
+    },
+    {
+        "frame": 1098,
+        "angles": {
+            "knee_angle": 178.45137854031,
+            "hip_angle": 176.8300845320549
+        }
+    },
+    {
+        "frame": 1099,
+        "angles": {
+            "knee_angle": 178.8001726466944,
+            "hip_angle": 177.0524506661957
+        }
+    },
+    {
+        "frame": 1100,
+        "angles": {
+            "knee_angle": 179.29987731432433,
+            "hip_angle": 177.7210262556764
+        }
+    },
+    {
+        "frame": 1101,
+        "angles": {
+            "knee_angle": 179.72970002776214,
+            "hip_angle": 178.21248799371628
+        }
+    },
+    {
+        "frame": 1102,
+        "angles": {
+            "knee_angle": 175.97896391360177,
+            "hip_angle": 179.0515456603076
+        }
+    },
+    {
+        "frame": 1103,
+        "angles": {
+            "knee_angle": 173.17974681144977,
+            "hip_angle": 177.50415191861418
+        }
+    },
+    {
+        "frame": 1104,
+        "angles": {
+            "knee_angle": 170.17984511222906,
+            "hip_angle": 176.9302929624597
+        }
+    },
+    {
+        "frame": 1105,
+        "angles": {
+            "knee_angle": 176.01901415233436,
+            "hip_angle": 177.2067820293684
+        }
+    },
+    {
+        "frame": 1106,
+        "angles": {
+            "knee_angle": 169.54966904559646,
+            "hip_angle": 174.72077427033375
+        }
+    },
+    {
+        "frame": 1107,
+        "angles": {}
+    },
+    {
+        "frame": 1108,
+        "angles": {}
+    },
+    {
+        "frame": 1109,
+        "angles": {}
+    },
+    {
+        "frame": 1110,
+        "angles": {}
+    },
+    {
+        "frame": 1111,
+        "angles": {}
+    },
+    {
+        "frame": 1112,
+        "angles": {}
+    },
+    {
+        "frame": 1113,
+        "angles": {}
+    },
+    {
+        "frame": 1114,
+        "angles": {}
+    },
+    {
+        "frame": 1115,
+        "angles": {}
+    },
+    {
+        "frame": 1116,
+        "angles": {}
+    },
+    {
+        "frame": 1117,
+        "angles": {}
+    },
+    {
+        "frame": 1118,
+        "angles": {}
+    },
+    {
+        "frame": 1119,
+        "angles": {}
+    },
+    {
+        "frame": 1120,
+        "angles": {}
+    },
+    {
+        "frame": 1121,
+        "angles": {}
+    },
+    {
+        "frame": 1122,
+        "angles": {}
+    },
+    {
+        "frame": 1123,
+        "angles": {}
+    },
+    {
+        "frame": 1124,
+        "angles": {}
+    },
+    {
+        "frame": 1125,
+        "angles": {}
+    },
+    {
+        "frame": 1126,
+        "angles": {}
+    },
+    {
+        "frame": 1127,
+        "angles": {}
+    },
+    {
+        "frame": 1128,
+        "angles": {}
+    },
+    {
+        "frame": 1129,
+        "angles": {}
+    },
+    {
+        "frame": 1130,
+        "angles": {}
+    },
+    {
+        "frame": 1131,
+        "angles": {}
+    },
+    {
+        "frame": 1132,
+        "angles": {}
+    },
+    {
+        "frame": 1133,
+        "angles": {}
+    },
+    {
+        "frame": 1134,
+        "angles": {}
+    },
+    {
+        "frame": 1135,
+        "angles": {}
+    },
+    {
+        "frame": 1136,
+        "angles": {}
+    },
+    {
+        "frame": 1137,
+        "angles": {}
+    },
+    {
+        "frame": 1138,
+        "angles": {}
+    },
+    {
+        "frame": 1139,
+        "angles": {}
+    },
+    {
+        "frame": 1140,
+        "angles": {}
+    },
+    {
+        "frame": 1141,
+        "angles": {}
+    },
+    {
+        "frame": 1142,
+        "angles": {}
+    },
+    {
+        "frame": 1143,
+        "angles": {}
+    },
+    {
+        "frame": 1144,
+        "angles": {}
+    },
+    {
+        "frame": 1145,
+        "angles": {}
+    },
+    {
+        "frame": 1146,
+        "angles": {}
+    },
+    {
+        "frame": 1147,
+        "angles": {}
+    },
+    {
+        "frame": 1148,
+        "angles": {}
+    },
+    {
+        "frame": 1149,
+        "angles": {}
+    },
+    {
+        "frame": 1150,
+        "angles": {}
+    },
+    {
+        "frame": 1151,
+        "angles": {}
+    },
+    {
+        "frame": 1152,
+        "angles": {}
+    },
+    {
+        "frame": 1153,
+        "angles": {}
+    },
+    {
+        "frame": 1154,
+        "angles": {}
+    },
+    {
+        "frame": 1155,
+        "angles": {}
+    },
+    {
+        "frame": 1156,
+        "angles": {}
+    },
+    {
+        "frame": 1157,
+        "angles": {}
+    },
+    {
+        "frame": 1158,
+        "angles": {}
+    },
+    {
+        "frame": 1159,
+        "angles": {}
+    },
+    {
+        "frame": 1160,
+        "angles": {}
+    },
+    {
+        "frame": 1161,
+        "angles": {}
+    },
+    {
+        "frame": 1162,
+        "angles": {}
+    },
+    {
+        "frame": 1163,
+        "angles": {}
+    },
+    {
+        "frame": 1164,
+        "angles": {}
+    },
+    {
+        "frame": 1165,
+        "angles": {}
+    },
+    {
+        "frame": 1166,
+        "angles": {}
+    },
+    {
+        "frame": 1167,
+        "angles": {}
+    },
+    {
+        "frame": 1168,
+        "angles": {}
+    },
+    {
+        "frame": 1169,
+        "angles": {}
+    },
+    {
+        "frame": 1170,
+        "angles": {}
+    },
+    {
+        "frame": 1171,
+        "angles": {}
+    },
+    {
+        "frame": 1172,
+        "angles": {}
+    },
+    {
+        "frame": 1173,
+        "angles": {}
+    },
+    {
+        "frame": 1174,
+        "angles": {}
+    },
+    {
+        "frame": 1175,
+        "angles": {}
+    },
+    {
+        "frame": 1176,
+        "angles": {}
+    },
+    {
+        "frame": 1177,
+        "angles": {}
+    },
+    {
+        "frame": 1178,
+        "angles": {}
+    },
+    {
+        "frame": 1179,
+        "angles": {}
+    },
+    {
+        "frame": 1180,
+        "angles": {}
+    },
+    {
+        "frame": 1181,
+        "angles": {}
+    },
+    {
+        "frame": 1182,
+        "angles": {}
+    },
+    {
+        "frame": 1183,
+        "angles": {}
+    },
+    {
+        "frame": 1184,
+        "angles": {}
+    },
+    {
+        "frame": 1185,
+        "angles": {}
+    },
+    {
+        "frame": 1186,
+        "angles": {}
+    },
+    {
+        "frame": 1187,
+        "angles": {}
+    },
+    {
+        "frame": 1188,
+        "angles": {}
+    },
+    {
+        "frame": 1189,
+        "angles": {}
+    },
+    {
+        "frame": 1190,
+        "angles": {}
+    },
+    {
+        "frame": 1191,
+        "angles": {}
+    },
+    {
+        "frame": 1192,
+        "angles": {}
+    },
+    {
+        "frame": 1193,
+        "angles": {}
+    },
+    {
+        "frame": 1194,
+        "angles": {}
+    },
+    {
+        "frame": 1195,
+        "angles": {}
+    },
+    {
+        "frame": 1196,
+        "angles": {}
+    },
+    {
+        "frame": 1197,
+        "angles": {}
+    },
+    {
+        "frame": 1198,
+        "angles": {}
+    },
+    {
+        "frame": 1199,
+        "angles": {}
+    },
+    {
+        "frame": 1200,
+        "angles": {}
+    },
+    {
+        "frame": 1201,
+        "angles": {}
+    },
+    {
+        "frame": 1202,
+        "angles": {}
+    },
+    {
+        "frame": 1203,
+        "angles": {}
+    },
+    {
+        "frame": 1204,
+        "angles": {}
+    },
+    {
+        "frame": 1205,
+        "angles": {}
+    },
+    {
+        "frame": 1206,
+        "angles": {}
+    },
+    {
+        "frame": 1207,
+        "angles": {}
+    },
+    {
+        "frame": 1208,
+        "angles": {}
+    },
+    {
+        "frame": 1209,
+        "angles": {}
+    },
+    {
+        "frame": 1210,
+        "angles": {}
+    },
+    {
+        "frame": 1211,
+        "angles": {}
+    },
+    {
+        "frame": 1212,
+        "angles": {}
+    },
+    {
+        "frame": 1213,
+        "angles": {}
+    },
+    {
+        "frame": 1214,
+        "angles": {}
+    },
+    {
+        "frame": 1215,
+        "angles": {}
+    },
+    {
+        "frame": 1216,
+        "angles": {}
+    },
+    {
+        "frame": 1217,
+        "angles": {}
+    },
+    {
+        "frame": 1218,
+        "angles": {}
+    },
+    {
+        "frame": 1219,
+        "angles": {}
+    },
+    {
+        "frame": 1220,
+        "angles": {}
+    },
+    {
+        "frame": 1221,
+        "angles": {}
+    },
+    {
+        "frame": 1222,
+        "angles": {}
+    },
+    {
+        "frame": 1223,
+        "angles": {}
+    },
+    {
+        "frame": 1224,
+        "angles": {}
+    },
+    {
+        "frame": 1225,
+        "angles": {}
+    },
+    {
+        "frame": 1226,
+        "angles": {}
+    },
+    {
+        "frame": 1227,
+        "angles": {}
+    },
+    {
+        "frame": 1228,
+        "angles": {}
+    },
+    {
+        "frame": 1229,
+        "angles": {}
+    },
+    {
+        "frame": 1230,
+        "angles": {}
+    },
+    {
+        "frame": 1231,
+        "angles": {}
+    },
+    {
+        "frame": 1232,
+        "angles": {}
+    },
+    {
+        "frame": 1233,
+        "angles": {}
+    },
+    {
+        "frame": 1234,
+        "angles": {}
+    },
+    {
+        "frame": 1235,
+        "angles": {}
+    },
+    {
+        "frame": 1236,
+        "angles": {}
+    },
+    {
+        "frame": 1237,
+        "angles": {}
+    },
+    {
+        "frame": 1238,
+        "angles": {}
+    },
+    {
+        "frame": 1239,
+        "angles": {}
+    },
+    {
+        "frame": 1240,
+        "angles": {}
+    },
+    {
+        "frame": 1241,
+        "angles": {}
+    },
+    {
+        "frame": 1242,
+        "angles": {}
+    },
+    {
+        "frame": 1243,
+        "angles": {}
+    },
+    {
+        "frame": 1244,
+        "angles": {}
+    },
+    {
+        "frame": 1245,
+        "angles": {}
+    },
+    {
+        "frame": 1246,
+        "angles": {}
+    },
+    {
+        "frame": 1247,
+        "angles": {}
+    },
+    {
+        "frame": 1248,
+        "angles": {}
+    },
+    {
+        "frame": 1249,
+        "angles": {}
+    },
+    {
+        "frame": 1250,
+        "angles": {}
+    },
+    {
+        "frame": 1251,
+        "angles": {}
+    },
+    {
+        "frame": 1252,
+        "angles": {}
+    },
+    {
+        "frame": 1253,
+        "angles": {}
+    },
+    {
+        "frame": 1254,
+        "angles": {}
+    },
+    {
+        "frame": 1255,
+        "angles": {}
+    },
+    {
+        "frame": 1256,
+        "angles": {}
+    },
+    {
+        "frame": 1257,
+        "angles": {}
+    },
+    {
+        "frame": 1258,
+        "angles": {}
+    },
+    {
+        "frame": 1259,
+        "angles": {}
+    },
+    {
+        "frame": 1260,
+        "angles": {}
+    },
+    {
+        "frame": 1261,
+        "angles": {}
+    },
+    {
+        "frame": 1262,
+        "angles": {}
+    },
+    {
+        "frame": 1263,
+        "angles": {}
+    },
+    {
+        "frame": 1264,
+        "angles": {}
+    },
+    {
+        "frame": 1265,
+        "angles": {}
+    },
+    {
+        "frame": 1266,
+        "angles": {}
+    },
+    {
+        "frame": 1267,
+        "angles": {}
+    },
+    {
+        "frame": 1268,
+        "angles": {}
+    },
+    {
+        "frame": 1269,
+        "angles": {}
+    },
+    {
+        "frame": 1270,
+        "angles": {}
+    },
+    {
+        "frame": 1271,
+        "angles": {}
+    },
+    {
+        "frame": 1272,
+        "angles": {}
+    },
+    {
+        "frame": 1273,
+        "angles": {}
+    },
+    {
+        "frame": 1274,
+        "angles": {}
+    },
+    {
+        "frame": 1275,
+        "angles": {}
+    },
+    {
+        "frame": 1276,
+        "angles": {}
+    },
+    {
+        "frame": 1277,
+        "angles": {}
+    },
+    {
+        "frame": 1278,
+        "angles": {}
+    },
+    {
+        "frame": 1279,
+        "angles": {}
+    },
+    {
+        "frame": 1280,
+        "angles": {}
+    },
+    {
+        "frame": 1281,
+        "angles": {}
+    },
+    {
+        "frame": 1282,
+        "angles": {}
+    },
+    {
+        "frame": 1283,
+        "angles": {}
+    },
+    {
+        "frame": 1284,
+        "angles": {}
+    },
+    {
+        "frame": 1285,
+        "angles": {}
+    },
+    {
+        "frame": 1286,
+        "angles": {}
+    },
+    {
+        "frame": 1287,
+        "angles": {}
+    },
+    {
+        "frame": 1288,
+        "angles": {}
+    },
+    {
+        "frame": 1289,
+        "angles": {}
+    },
+    {
+        "frame": 1290,
+        "angles": {}
+    },
+    {
+        "frame": 1291,
+        "angles": {}
+    },
+    {
+        "frame": 1292,
+        "angles": {}
+    }
+]

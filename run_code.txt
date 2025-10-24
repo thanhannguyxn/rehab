@@ -1,0 +1,1 @@
+.\.venv\Scripts\python.exe .\elderly_rehab_system.py

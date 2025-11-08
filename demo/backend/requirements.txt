@@ -5,3 +5,4 @@ opencv-python==4.8.1.78
 mediapipe==0.10.21
 numpy==1.26.2
 pyjwt==2.8.0
+mysql-connector-python==8.2.0

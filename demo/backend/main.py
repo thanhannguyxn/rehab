@@ -7,6 +7,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Depe
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+import mysql.connector
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -23,8 +24,12 @@ from pathlib import Path
 # Config
 SECRET_KEY = "your-secret-key-change-in-production"
 ALGORITHM = "HS256"
-DB_PATH = Path("rehab_v3.db")
-
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root", # use your MySQL username
+    "password": "ducanh", # use your MySQL password
+    "database": "rehab_v3"
+    }
 app = FastAPI(title="Rehab System V3")
 
 app.add_middleware(
@@ -52,21 +57,21 @@ def hash_password(password: str) -> str:
 
 def init_db():
     """Initialize database with complete schema"""
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     # Users table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            role TEXT NOT NULL CHECK(role IN ('patient', 'doctor')),
-            full_name TEXT,
-            age INTEGER,
-            gender TEXT,
-            created_at TEXT NOT NULL,
-            doctor_id INTEGER,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            role ENUM('patient', 'doctor') NOT NULL,
+            full_name VARCHAR(255),
+            age INT,
+            gender VARCHAR(10),
+            created_at DATETIME NOT NULL,
+            doctor_id INT,
             FOREIGN KEY (doctor_id) REFERENCES users(id)
         )
     """)
@@ -74,28 +79,29 @@ def init_db():
     # Sessions table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            patient_id INTEGER NOT NULL,
-            exercise_name TEXT NOT NULL,
-            start_time TEXT NOT NULL,
-            end_time TEXT,
-            total_reps INTEGER DEFAULT 0,
-            correct_reps INTEGER DEFAULT 0,
-            accuracy REAL DEFAULT 0,
-            duration_seconds INTEGER DEFAULT 0,
-            avg_heart_rate INTEGER,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            patient_id INT NOT NULL,
+            exercise_name VARCHAR(255) NOT NULL,
+            start_time DATETIME NOT NULL,
+            end_time DATETIME,
+            total_reps INT DEFAULT 0,
+            correct_reps INT DEFAULT 0,
+            accuracy FLOAT DEFAULT 0,
+            duration_seconds INT DEFAULT 0,
+            avg_heart_rate INT,
             notes TEXT,
             FOREIGN KEY (patient_id) REFERENCES users(id)
         )
     """)
 
+
     # Session frames table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS session_frames (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id INTEGER NOT NULL,
-            timestamp TEXT NOT NULL,
-            rep_count INTEGER,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            session_id INT NOT NULL,
+            timestamp DATETIME NOT NULL,
+            rep_count INT,
             angles TEXT,
             errors TEXT,
             FOREIGN KEY (session_id) REFERENCES sessions(id)
@@ -105,11 +111,11 @@ def init_db():
     # Errors table (aggregated)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS session_errors (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id INTEGER NOT NULL,
-            error_name TEXT NOT NULL,
-            count INTEGER DEFAULT 0,
-            severity TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            session_id INT NOT NULL,
+            error_name VARCHAR(255) NOT NULL,
+            count INT DEFAULT 0,
+            severity VARCHAR(50),
             FOREIGN KEY (session_id) REFERENCES sessions(id)
         )
     """)
@@ -122,8 +128,8 @@ def init_db():
         # Default doctor
         cursor.execute("""
             INSERT INTO users (username, password_hash, role, full_name, created_at)
-            VALUES (?, ?, ?, ?, ?)
-        """, ('doctor1', hash_password('doctor123'), 'doctor', 'BS. Nguyễn Văn A', datetime.now().isoformat()))
+            VALUES (%s, %s, %s, %s, %s)
+        """, ('doctor1', hash_password('doctor123'), 'doctor', 'Dr. John Doe', datetime.now()))
 
         doctor_id = cursor.lastrowid
 
@@ -133,11 +139,49 @@ def init_db():
             ('patient2', 'patient123', 'Lê Văn C', 70, 'Nam'),
         ]
 
-        for username, password, name, age, gender in patients:
+        for username, password, full_name, age, gender in patients:
             cursor.execute("""
                 INSERT INTO users (username, password_hash, role, full_name, age, gender, created_at, doctor_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (username, hash_password(password), 'patient', name, age, gender, datetime.now().isoformat(), doctor_id))
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (username, hash_password(password), 'patient', full_name, age, gender, datetime.now(), doctor_id))
+
+        # Insert example sessions
+        sessions = [
+            (1, 'squat', datetime.now(), datetime.now() + timedelta(minutes=10), 20, 18, 90.0, 600, 120, 'Good session'),
+            (2, 'arm_raise', datetime.now(), datetime.now() + timedelta(minutes=15), 30, 25, 83.3, 900, 110, 'Needs improvement'),
+            (3, 'squat', datetime.now(), datetime.now() + timedelta(minutes=8), 15, 12, 80.0, 480, 115, 'Short session'),
+            (4, 'arm_raise', datetime.now(), datetime.now() + timedelta(minutes=20), 40, 35, 87.5, 1200, 105, 'Great effort'),
+        ]
+        for patient_id, exercise_name, start_time, end_time, total_reps, correct_reps, accuracy, duration_seconds, avg_heart_rate, notes in sessions:
+            cursor.execute("""
+                INSERT INTO sessions (patient_id, exercise_name, start_time, end_time, total_reps, correct_reps, accuracy, duration_seconds, avg_heart_rate, notes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (patient_id, exercise_name, start_time, end_time, total_reps, correct_reps, accuracy, duration_seconds, avg_heart_rate, notes))
+
+        # Insert example session frames
+        session_frames = [
+            (1, datetime.now(), 1, '{"left_knee": 90, "right_knee": 95}', '[]'),
+            (1, datetime.now(), 2, '{"left_knee": 85, "right_knee": 92}', '[{"name": "knees_forward", "severity": "low"}]'),
+            (2, datetime.now(), 1, '{"left_shoulder": 150, "right_shoulder": 145}', '[]'),
+            (3, datetime.now(), 1, '{"left_knee": 100, "right_knee": 105}', '[{"name": "not_deep", "severity": "medium"}]'),
+        ]
+        for session_id, timestamp, rep_count, angles, errors in session_frames:
+            cursor.execute("""
+                INSERT INTO session_frames (session_id, timestamp, rep_count, angles, errors)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (session_id, timestamp, rep_count, angles, errors))
+
+        # Insert example session errors
+        session_errors = [
+            (1, 'knees_forward', 3, 'low'),
+            (2, 'arms_bent', 2, 'medium'),
+            (3, 'not_deep', 1, 'high'),
+        ]
+        for session_id, error_name, count, severity in session_errors:
+            cursor.execute("""
+                INSERT INTO session_errors (session_id, error_name, count, severity)
+                VALUES (%s, %s, %s, %s)
+            """, (session_id, error_name, count, severity))
 
         conn.commit()
 
@@ -349,12 +393,12 @@ class SessionManager:
         self.frame_data = []
 
     def start_session(self, patient_id: int, exercise_name: str):
-        conn = sqlite3.connect(DB_PATH)
+        conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
         cursor.execute("""
             INSERT INTO sessions (patient_id, exercise_name, start_time)
-            VALUES (?, ?, ?)
+            VALUES (%s, %s, %s)
         """, (patient_id, exercise_name, datetime.now().isoformat()))
 
         session_id = cursor.lastrowid
@@ -385,11 +429,11 @@ class SessionManager:
         if not self.current_session:
             return None
 
-        conn = sqlite3.connect(DB_PATH)
+        conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
         # Get session start time
-        cursor.execute("SELECT start_time FROM sessions WHERE id = ?", (self.current_session['id'],))
+        cursor.execute("SELECT start_time FROM sessions WHERE id = %s", (self.current_session['id'],))
         start_time_str = cursor.fetchone()[0]
         start_time = datetime.fromisoformat(start_time_str)
 
@@ -405,8 +449,8 @@ class SessionManager:
         # Update session
         cursor.execute("""
             UPDATE sessions
-            SET end_time = ?, total_reps = ?, correct_reps = ?, accuracy = ?, duration_seconds = ?
-            WHERE id = ?
+            SET end_time = %s, total_reps = %s, correct_reps = %s, accuracy = %s, duration_seconds = %s
+            WHERE id = %s
         """, (end_time.isoformat(), total_reps, correct_reps, accuracy, duration, self.current_session['id']))
 
         # Save error stats
@@ -421,7 +465,7 @@ class SessionManager:
         for error_name, info in error_counts.items():
             cursor.execute("""
                 INSERT INTO session_errors (session_id, error_name, count, severity)
-                VALUES (?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s)
             """, (self.current_session['id'], error_name, info['count'], info['severity']))
 
         conn.commit()
@@ -449,12 +493,12 @@ session_manager = SessionManager()
 
 @app.post("/api/auth/login")
 async def login(request: LoginRequest):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, username, role, full_name, age, gender, doctor_id
-        FROM users WHERE username = ? AND password_hash = ?
+        FROM users WHERE username = %s AND password_hash = %s
     """, (request.username, hash_password(request.password)))
 
     user = cursor.fetchone()
@@ -483,13 +527,13 @@ async def login(request: LoginRequest):
 
 @app.post("/api/auth/register")
 async def register(request: RegisterRequest):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     try:
         cursor.execute("""
             INSERT INTO users (username, password_hash, role, full_name, age, gender, created_at, doctor_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             request.username,
             hash_password(request.password),
@@ -545,15 +589,15 @@ async def end_session(session_id: int, current_user = Depends(get_current_user))
 
 @app.get("/api/sessions/my-history")
 async def get_my_history(limit: int = 20, current_user = Depends(get_current_user)):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, exercise_name, start_time, total_reps, correct_reps, accuracy, duration_seconds
         FROM sessions
-        WHERE patient_id = ?
+        WHERE patient_id = %s
         ORDER BY start_time DESC
-        LIMIT ?
+        LIMIT %s
     """, (current_user['user_id'], limit))
 
     sessions = []
@@ -577,13 +621,13 @@ async def get_my_patients(current_user = Depends(get_current_user)):
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, username, full_name, age, gender, created_at
         FROM users
-        WHERE role = 'patient' AND doctor_id = ?
+        WHERE role = 'patient' AND doctor_id = %s
         ORDER BY full_name
     """, (current_user['user_id'],))
 
@@ -593,7 +637,7 @@ async def get_my_patients(current_user = Depends(get_current_user)):
         cursor.execute("""
             SELECT start_time, exercise_name, accuracy
             FROM sessions
-            WHERE patient_id = ?
+            WHERE patient_id = %s
             ORDER BY start_time DESC
             LIMIT 1
         """, (row[0],))
@@ -623,15 +667,15 @@ async def get_patient_history(patient_id: int, limit: int = 20, current_user = D
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, exercise_name, start_time, total_reps, correct_reps, accuracy, duration_seconds
         FROM sessions
-        WHERE patient_id = ?
+        WHERE patient_id = %s
         ORDER BY start_time DESC
-        LIMIT ?
+        LIMIT %s
     """, (patient_id, limit))
 
     sessions = []
@@ -640,7 +684,7 @@ async def get_patient_history(patient_id: int, limit: int = 20, current_user = D
         cursor.execute("""
             SELECT error_name, count, severity
             FROM session_errors
-            WHERE session_id = ?
+            WHERE session_id = %s
         """, (row[0],))
 
         errors = [{'name': e[0], 'count': e[1], 'severity': e[2]} for e in cursor.fetchall()]

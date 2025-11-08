@@ -27,7 +27,7 @@ ALGORITHM = "HS256"
 DB_CONFIG = {
     "host": "localhost",
     "user": "root", # use your MySQL username
-    "password": "ducanh", # use your MySQL password
+    "password": "password", # use your MySQL password
     "database": "rehab_v3"
     }
 app = FastAPI(title="Rehab System V3")
@@ -787,3 +787,4 @@ if __name__ == "__main__":
     print("   Patient: patient1 / patient123")
     print("=" * 60)
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

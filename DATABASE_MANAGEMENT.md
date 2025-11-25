@@ -1,14 +1,14 @@
-# 🗄️ Database Management Guide
+# Database Management Guide
 
 ## Quản lý Database SQLite của Rehab System V3
 
-### 📌 Database Location
+### Database Location
 - **File:** `backend/rehab_v3.db`
 - **Type:** SQLite3 database
 
 ---
 
-## 🔧 Cách 1: Sử dụng Python Management Tool (Khuyên dùng)
+## Cách 1: Sử dụng Python Management Tool (Khuyên dùng)
 
 ### Chạy tool:
 ```bash
@@ -17,25 +17,25 @@ python manage_db.py
 ```
 
 ### Tính năng:
-✅ **Xem dữ liệu:**
+**Xem dữ liệu:**
 - View all tables (tất cả bảng)
 - View users (người dùng)
 - View sessions (buổi tập)
 - View errors (lỗi)
 - Database statistics (thống kê)
 
-✅ **Xóa dữ liệu:**
+**Xóa dữ liệu:**
 - Delete user (xóa người dùng + tất cả sessions)
 - Delete session (xóa 1 buổi tập cụ thể)
 - Clear all sessions (xóa tất cả sessions, giữ users)
 
-✅ **Advanced:**
+**Advanced:**
 - Execute custom SQL query (chạy SQL tùy chỉnh)
 - Backup database (sao lưu)
 
 ---
 
-## 🗂️ Cách 2: Sử dụng DB Browser for SQLite (GUI)
+## Cách 2: Sử dụng DB Browser for SQLite (GUI)
 
 ### Download & Install:
 1. Tải về: https://sqlitebrowser.org/dl/
@@ -43,15 +43,15 @@ python manage_db.py
 3. Mở file: `backend/rehab_v3.db`
 
 ### Tính năng DB Browser:
-- ✅ Xem/sửa/xóa data bằng GUI
-- ✅ Browse Data tab: xem nội dung bảng
-- ✅ Execute SQL tab: chạy queries
-- ✅ Database Structure: xem cấu trúc bảng
-- ✅ Export/Import data
+- Xem/sửa/xóa data bằng GUI
+- Browse Data tab: xem nội dung bảng
+- Execute SQL tab: chạy queries
+- Database Structure: xem cấu trúc bảng
+- Export/Import data
 
 ---
 
-## 💻 Cách 3: Sử dụng SQLite Command Line
+## Cách 3: Sử dụng SQLite Command Line
 
 ### Windows:
 ```powershell
@@ -81,7 +81,7 @@ SELECT AVG(accuracy) FROM sessions;
 
 ---
 
-## 🏗️ Database Schema
+## Database Schema
 
 ### 1. **users** - Người dùng
 ```
@@ -141,7 +141,7 @@ SELECT AVG(accuracy) FROM sessions;
 
 ---
 
-## 📝 Useful SQL Queries
+## Useful SQL Queries
 
 ### Xem sessions gần nhất của 1 user:
 ```sql
@@ -198,7 +198,7 @@ DELETE FROM sessions WHERE accuracy < 50;
 
 ---
 
-## 💾 Backup & Restore
+## Backup & Restore
 
 ### Tạo backup bằng Python tool:
 ```bash
@@ -227,7 +227,7 @@ cp rehab_v3_backup_20250107.db rehab_v3.db
 
 ---
 
-## ⚠️ Important Notes
+## Important Notes
 
 1. **Luôn backup trước khi xóa data hoặc chạy UPDATE/DELETE queries!**
 
@@ -246,7 +246,7 @@ cp rehab_v3_backup_20250107.db rehab_v3.db
 
 ---
 
-## 🔐 Tạo User Mới
+## Tạo User Mới
 
 ### Thông qua Python:
 ```python
@@ -267,7 +267,7 @@ def create_user(username, password, role='patient', full_name=''):
     
     conn.commit()
     conn.close()
-    print(f"✅ User '{username}' created!")
+    print(f"User '{username}' created!")
 
 # Example:
 create_user('patient3', 'patient123', 'patient', 'Nguyễn Văn D')
@@ -287,7 +287,7 @@ VALUES (
 
 ---
 
-## 📞 Support
+## Support
 
 Nếu gặp vấn đề:
 1. Check database file exists: `backend/rehab_v3.db`
@@ -297,7 +297,7 @@ Nếu gặp vấn đề:
 
 ---
 
-## 🎯 Quick Commands Cheat Sheet
+## Quick Commands Cheat Sheet
 
 ```bash
 # View database
@@ -315,5 +315,3 @@ SELECT * FROM users;          # Query
 ```
 
 ---
-
-**Happy Database Managing! 🚀**

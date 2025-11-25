@@ -1,6 +1,6 @@
-# 🤖 AI Personalization Feature Guide
+# AI Personalization Feature Guide
 
-## 📋 Tổng Quan
+## Tổng Quan
 
 Hệ thống AI Personalization Engine điều chỉnh các bài tập phục hồi chức năng dựa trên:
 - **Độ tuổi** (age)
@@ -11,7 +11,7 @@ Hệ thống AI Personalization Engine điều chỉnh các bài tập phục h�
 
 ---
 
-## 🎯 Cách Hoạt Động
+## Cách Hoạt Động
 
 ### **1. Input (User Profile)**
 ```json
@@ -45,19 +45,19 @@ Engine tính toán 5 factors:
   "rest_seconds": 60, // Thay vì 30 (nghỉ lâu hơn)
   "difficulty_score": 0.49,
   "warnings": [
-    "⚠️ Có vấn đề đầu gối - Không gập quá sâu",
-    "⚠️ Nên tập với ghế hỗ trợ"
+    "Có vấn đề đầu gối - Không gập quá sâu",
+    "Nên tập với ghế hỗ trợ"
   ],
   "recommendations": [
-    "💡 Khởi động kỹ 5-10 phút trước khi tập",
-    "💡 Nghỉ ngơi đầy đủ giữa các set"
+    "Khởi động kỹ 5-10 phút trước khi tập",
+    "Nghỉ ngơi đầy đủ giữa các set"
   ]
 }
 ```
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### **1. Cập nhật Profile**
 ```http
@@ -128,21 +128,21 @@ Response:
   "mobility_factor": 0.70,
   "pain_factor": 0.85,
   "warnings": [
-    "⚠️ Có vấn đề đầu gối - Không gập quá sâu",
-    "⚠️ Dừng ngay nếu cảm thấy đau đầu gối"
+    "Có vấn đề đầu gối - Không gập quá sâu",
+    "Dừng ngay nếu cảm thấy đau đầu gối"
   ],
   "recommendations": [
-    "💡 Bắt đầu chậm, tập trung vào tư thế đúng",
-    "💡 Khởi động kỹ 5-10 phút trước khi tập",
-    "💡 Giữ lưng thẳng, đầu gối không vượt qua mũi chân",
-    "💡 Có thể tập với ghế hỗ trợ phía sau"
+    "Bắt đầu chậm, tập trung vào tư thế đúng",
+    "Khởi động kỹ 5-10 phút trước khi tập",
+    "Giữ lưng thẳng, đầu gối không vượt qua mũi chân",
+    "Có thể tập với ghế hỗ trợ phía sau"
   ]
 }
 ```
 
 ---
 
-## 📊 Ví Dụ Thực Tế
+## Ví Dụ Thực Tế
 
 ### **Case 1: Bà Lan - 72 tuổi, viêm khớp gối**
 ```
@@ -160,13 +160,13 @@ Squat Parameters:
   difficulty_score: 0.49 (dễ hơn 51%)
 
 Warnings:
-  ⚠️ Có vấn đề đầu gối - Không gập quá sâu
-  ⚠️ Nên tập với ghế hỗ trợ
+  Có vấn đề đầu gối - Không gập quá sâu
+  Nên tập với ghế hỗ trợ
 
 Recommendations:
-  💡 Khởi động kỹ 5-10 phút
-  💡 Có thể tập với ghế hỗ trợ phía sau
-  💡 Dừng ngay nếu đau đầu gối
+  Khởi động kỹ 5-10 phút
+  Có thể tập với ghế hỗ trợ phía sau
+  Dừng ngay nếu đau đầu gối
 ```
 
 ### **Case 2: Anh Minh - 35 tuổi, béo phì**
@@ -185,13 +185,13 @@ Squat Parameters:
   difficulty_score: 0.68
 
 Warnings:
-  ⚠️ BMI cao - Hạn chế độ sâu để bảo vệ đầu gối
-  ⚠️ Nên tập trên bề mặt mềm (thảm tập)
+  BMI cao - Hạn chế độ sâu để bảo vệ đầu gối
+  Nên tập trên bề mặt mềm (thảm tập)
 
 Recommendations:
-  💡 Có thể chia nhỏ thành nhiều set ngắn
-  💡 Tập nhẹ nhưng đều đặn mỗi ngày
-  💡 Giữ lưng thẳng, đầu gối không vượt qua mũi chân
+  Có thể chia nhỏ thành nhiều set ngắn
+  Tập nhẹ nhưng đều đặn mỗi ngày
+  Giữ lưng thẳng, đầu gối không vượt qua mũi chân
 ```
 
 ### **Case 3: Chị Hoa - 28 tuổi, khỏe mạnh**
@@ -212,12 +212,12 @@ Squat Parameters:
 Warnings: (không có)
 
 Recommendations:
-  💡 Giữ lưng thẳng, đầu gối không vượt qua mũi chân
+  Giữ lưng thẳng, đầu gối không vượt qua mũi chân
 ```
 
 ---
 
-## 🧮 Công Thức Tính Toán
+## Công Thức Tính Toán
 
 ### **Age Factor**
 ```python
@@ -278,7 +278,7 @@ Example:
 
 ---
 
-## 🎨 Frontend Integration (Next Step)
+## Frontend Integration (Next Step)
 
 ### **Tạo User Profile Form**
 ```typescript
@@ -338,7 +338,7 @@ useEffect(() => {
 
 ---
 
-## ✅ Testing
+## Testing
 
 ### **Test với Postman/Thunder Client**
 
@@ -381,19 +381,19 @@ Body: {
 
 ---
 
-## 🚀 Next Steps
+## Next Steps
 
-1. ✅ **Database schema** - DONE
-2. ✅ **AI engine** - DONE
-3. ✅ **Backend API** - DONE
-4. ⏳ **Frontend profile form** - TODO
-5. ⏳ **Display personalized params** - TODO
-6. ⏳ **Integrate với WebSocket** - TODO
-7. ⏳ **Testing với real users** - TODO
+1. **Database schema** - DONE
+2. **AI engine** - DONE
+3. **Backend API** - DONE
+4. **Frontend profile form** - TODO
+5. **Display personalized params** - TODO
+6. **Integrate với WebSocket** - TODO
+7. **Testing với real users** - TODO
 
 ---
 
-## 📝 Notes
+## Notes
 
 - BMI được tự động tính từ height & weight
 - Medical conditions lưu dưới dạng JSON string: `"[\"condition1\", \"condition2\"]"`
@@ -403,7 +403,7 @@ Body: {
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 **Q: Backend không start được?**
 ```bash

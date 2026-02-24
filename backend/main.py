@@ -32,7 +32,7 @@ from ai_models import PersonalizationEngine, BiometricFeatures
 SECRET_KEY = "your-secret-key-change-in-production"
 ALGORITHM = "HS256"
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "mysql",
     "user": "root", # use your MySQL username
     "password": "123456", # use your MySQL password
     "database": "rehab_v3"

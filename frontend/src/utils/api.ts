@@ -1,7 +1,6 @@
 import axios from 'axios';
 import type { LoginResponse, Exercise, Session, Patient, ErrorAnalyticsResponse } from './types';
-
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './config';
 
 // Get token from localStorage
 const getToken = () => localStorage.getItem('token');

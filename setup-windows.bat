@@ -1,4 +1,5 @@
 @echo off
+setlocal
 echo ====================================
 echo Rehab System V3 - Setup for Windows
 echo ====================================
@@ -23,25 +24,65 @@ if errorlevel 1 (
 )
 
 echo [1/4] Setting up Backend...
-cd backend
+cd /d %~dp0backend
 
-echo Creating virtual environment...
-python -m venv venv
+if not exist venv (
+    echo Creating virtual environment...
+    python -m venv venv
+)
 
 echo Activating virtual environment...
 call venv\Scripts\activate.bat
 
-echo Installing Python dependencies...
-pip install fastapi uvicorn[standard] websockets opencv-python mediapipe numpy pyjwt
+echo Installing Python dependencies from requirements.txt...
+pip install -r requirements.txt
+if errorlevel 1 (
+    echo ERROR: Failed to install backend dependencies.
+    pause
+    exit /b 1
+)
+
+if not exist .env (
+    if exist .env.example (
+        copy /Y .env.example .env >nul
+        echo Created backend/.env from .env.example
+    ) else (
+        echo WARNING: backend/.env.example not found. Please create backend/.env manually.
+    )
+)
 
 echo.
 echo [2/4] Setting up Frontend...
-cd ..\frontend
+cd /d %~dp0frontend
 
-echo Installing Node.js dependencies...
-call npm install
+if exist package-lock.json (
+    echo Installing Node.js dependencies with npm ci...
+    call npm ci
+) else (
+    echo Installing Node.js dependencies with npm install...
+    call npm install
+)
+if errorlevel 1 (
+    echo ERROR: Failed to install frontend dependencies.
+    pause
+    exit /b 1
+)
+
+if not exist .env (
+    if exist .env.example (
+        copy /Y .env.example .env >nul
+        echo Created frontend/.env from .env.example
+    ) else (
+        echo WARNING: frontend/.env.example not found. Please create frontend/.env manually.
+    )
+)
 
 echo.
+echo [3/4] Setup Summary
+echo - backend/.env: ready
+echo - frontend/.env: ready
+echo.
+echo [4/4] Done
 echo ====================================
 echo Setup Complete!
 echo ====================================

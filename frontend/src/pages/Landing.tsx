@@ -3,10 +3,12 @@ import { Navbar } from '../components/Navbar';
 import { useRef } from 'react';
 import { useInView } from '../hooks/useInView';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export const Landing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
   
   // Handler for CTA buttons
   const handleGetStarted = () => {
@@ -56,20 +58,20 @@ export const Landing = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
             </span>
-            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">Công nghệ AI Tiên tiến</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{t("landing.heroBadge")}</span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
-            <span className="block text-gray-900 dark:text-white mb-2">Phục Hồi Chức Năng</span>
+            <span className="block text-gray-900 dark:text-white mb-2">{t("landing.heroTitle1")}</span>
             <span className="block bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
-              Tự Động & Thông Minh
+              {t("landing.heroTitle2")}
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Theo dõi tập luyện tự động với AI. Không cần video. Chỉ cần máy ảnh và hệ thống sẽ đếm số lần thực hiện, phát hiện lỗi ngay lập tức.
+            {t("landing.heroSubtitle")}
           </p>
 
           {/* CTA Buttons */}
@@ -78,7 +80,7 @@ export const Landing = () => {
               onClick={handleGetStarted}
               className="group bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-xl shadow-teal-500/30 hover:shadow-2xl hover:shadow-teal-500/40 transform hover:scale-105"
             >
-              Bắt Đầu Ngay
+              {t("landing.getStarted")}
               <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <a
@@ -87,7 +89,7 @@ export const Landing = () => {
               rel="noopener noreferrer"
               className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-bold text-lg transition"
             >
-              Xem Hướng Dẫn
+              {t("landing.watchTutorial")}
             </a>
           </div>
 
@@ -97,19 +99,19 @@ export const Landing = () => {
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
                 4+
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">Bài Tập</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats1Title")}</div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
                 95%+
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">Độ Chính Xác</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats2Title")}</div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
-                Tức Thì
+                {t("landing.stats3Subtitle")}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">Phản Hồi</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats3Title")}</div>
             </div>
           </div>
         </div>
@@ -134,10 +136,10 @@ export const Landing = () => {
           {/* Section Header */}
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
-              Công Nghệ AI Đột Phá
+              {t("landing.featuresTitle")}
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Hệ thống theo dõi tập luyện tự động sử dụng AI tiên tiến, không cần thiết bị đeo
+              {t("landing.featuresSubtitle")}
             </p>
           </div>
 
@@ -151,9 +153,9 @@ export const Landing = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Phát Hiện Tự Động</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t("landing.gridTitle1")}</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                AI tự động phát hiện bài tập và đếm số lần tập mà không cần bạn nhập thủ công
+                {t("landing.gridSubtitle1")}
               </p>
             </div>
 
@@ -164,9 +166,9 @@ export const Landing = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Phản Hồi Tức Thì</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t("landing.gridTitle2")}</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Nhận cảnh báo ngay lập tức khi phát hiện tư thế không đúng
+                {t("landing.gridSubtitle2")}
               </p>
             </div>
 
@@ -177,9 +179,9 @@ export const Landing = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Thống Kê Chi Tiết</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t("landing.gridTitle3")}</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Theo dõi tiến độ với biểu đồ và phân tích lỗi chi tiết
+                {t("landing.gridSubtitle3")}
               </p>
             </div>
 
@@ -190,9 +192,9 @@ export const Landing = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">An Toàn Tối Đa</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t("landing.gridTitle4")}</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Phát hiện lỗi tư thế giúp tránh chấn thương khi tập luyện
+                {t("landing.gridSubtitle4")}
               </p>
             </div>
           </div>
@@ -214,10 +216,10 @@ export const Landing = () => {
           {/* Section Header */}
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
-              Cách Hoạt Động
+              {t("landing.howItWorks")}
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Chỉ 3 bước đơn giản để bắt đầu hành trình phục hồi của bạn
+              {t("landing.howItWorksSubtitle")}
             </p>
           </div>
 
@@ -232,9 +234,9 @@ export const Landing = () => {
                 <div className="bg-gradient-to-br from-teal-500 to-cyan-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-teal-500/50">
                   1
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Chọn Bài Tập</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step1Title")}</h3>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Chọn từ 4+ bài tập phục hồi được thiết kế cho người cao tuổi
+                  {t("landing.step1Subtitle")}
                 </p>
               </div>
             </div>
@@ -245,9 +247,9 @@ export const Landing = () => {
                 <div className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-cyan-500/50">
                   2
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">AI Theo Dõi</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step2Title")}</h3>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  AI tự động đếm số lần tập và phát hiện lỗi tư thế ngay lập tức
+                  {t("landing.step2Subtitle")}
                 </p>
               </div>
             </div>
@@ -258,9 +260,9 @@ export const Landing = () => {
                 <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-blue-500/50">
                   3
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Xem Báo Cáo</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step3Title")}</h3>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Nhận phân tích chi tiết và theo dõi tiến độ phục hồi
+                  {t("landing.step3Subtitle")}
                 </p>
               </div>
             </div>
@@ -279,20 +281,20 @@ export const Landing = () => {
           {/* Section Header */}
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
-              Bài Tập Phục Hồi
+              {t("landing.exercisesTitle")}
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Các bài tập được thiết kế đặc biệt cho người cao tuổi
+              {t("landing.exercisesSubtitle")}
             </p>
           </div>
 
           {/* Exercise Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { name: 'Squat (Gập Gối)', desc: 'Tăng cường cơ chân và khả năng di chuyển' },
-              { name: 'Nâng Tay', desc: 'Cải thiện sức mạnh vai và độ linh hoạt' },
-              { name: 'Đứng 1 Chân', desc: 'Rèn luyện thăng bằng và ổn định' },
-              { name: 'Nâng Gót Chân', desc: 'Tăng cường cơ bắp chân' },
+              { name: t("landing.exercise1Title"), desc: t("landing.exercise1Subtitle") },
+              { name: t("landing.exercise2Title"), desc: t("landing.exercise2Subtitle") },
+              { name: t("landing.exercise3Title"), desc: t("landing.exercise3Subtitle") },
+              { name: t("landing.exercise4Title"), desc: t("landing.exercise4Subtitle") },
             ].map((exercise, idx) => (
               <div key={idx} className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-teal-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-300 cursor-pointer">
                 <div className="flex items-center gap-4 mb-4">
@@ -302,7 +304,7 @@ export const Landing = () => {
                   </div>
                 </div>
                 <div className="flex items-center text-teal-500 dark:text-teal-400 font-semibold group-hover:translate-x-2 transition-transform">
-                  Tìm hiểu thêm →
+                  {t("landing.findOutMore")} →
                 </div>
               </div>
             ))}
@@ -322,16 +324,16 @@ export const Landing = () => {
         
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
-            Bắt Đầu Hành Trình Phục Hồi
+            {t("landing.ctaTitle")}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
-            Tham gia ngay hôm nay và trải nghiệm công nghệ AI tiên tiến
+            {t("landing.ctaSubtitle")}
           </p>
           <button
             onClick={handleGetStarted}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-10 py-5 rounded-xl font-bold text-xl transition shadow-2xl shadow-teal-500/40 hover:shadow-teal-500/60 transform hover:scale-105"
           >
-            Bắt Đầu Miễn Phí
+            {t("landing.ctaButton")}
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>

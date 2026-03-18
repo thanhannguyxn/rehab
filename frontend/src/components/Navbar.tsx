@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from './ThemeToggle';
 import { useState } from 'react';
+import { LanguageToggle } from './LanguageToggle';
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -59,6 +60,7 @@ export const Navbar = () => {
 
           {/* Right Side: Theme Toggle + User Actions */}
           <div className="flex items-center gap-3">
+            <LanguageToggle />
             <ThemeToggle />
             
             {user ? (

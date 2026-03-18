@@ -12,6 +12,7 @@ import { PatientHistory } from './pages/PatientHistory';
 import { DoctorDashboard } from './pages/DoctorDashboard';
 import { PatientDetail } from './pages/PatientDetail';
 import { UserProfile } from './pages/UserProfile';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function AppRoutes() {
   const { user, isLoading } = useAuth();
@@ -93,7 +94,9 @@ function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <AppRoutes />
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

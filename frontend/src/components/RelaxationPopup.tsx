@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
+import { STATIC_BASE_URL } from '../utils/config';
 
 interface RelaxationPopupProps {
   isOpen: boolean;
@@ -225,7 +226,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
           preload="auto"
         >
           {/* Using local relaxation music from backend */}
-          <source src="http://localhost:8000/static/music_relax.mp3" type="audio/mpeg" />
+          <source src={`${STATIC_BASE_URL}/music_relax.mp3`} type="audio/mpeg" />
         </audio>
       </div>
 

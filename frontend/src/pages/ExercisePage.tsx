@@ -8,6 +8,7 @@ import { AngleDisplay } from '../components/AngleDisplay';
 import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
+import { API_URL } from '../utils/config';
 
 interface PersonalizedParams {
   down_angle?: number;
@@ -49,7 +50,8 @@ export const ExercisePage = () => {
   const { isConnected, analysisData, sendFrame, resetCounter } = useWebSocket(
     selectedExercise || 'squat',
     isExercising,
-    customThresholds
+    customThresholds,
+    sessionId
   );
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export const ExercisePage = () => {
     setLoadingParams(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/personalized-params', {
+      const response = await fetch(`${API_URL}/personalized-params`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,18 +1,17 @@
 @echo off
+setlocal
 echo ============================================================
 echo   HE THONG PHUC HOI CHUC NANG V3 - QUICK START
 echo ============================================================
 echo.
 
 echo [1/2] Starting Backend...
-cd backend
-start cmd /k "python -m venv venv && venv\Scripts\activate && pip install -r requirements.txt && python main.py"
+start cmd /k "cd /d %~dp0 && call start-backend.bat"
 timeout /t 5
 
 echo.
 echo [2/2] Starting Frontend...
-cd ..\frontend
-start cmd /k "npm install && npm run dev"
+start cmd /k "cd /d %~dp0 && call start-frontend.bat"
 
 echo.
 echo ============================================================

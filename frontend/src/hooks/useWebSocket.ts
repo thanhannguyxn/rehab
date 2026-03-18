@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { AnalysisResult } from '../types';
+import { WS_BASE_URL } from '../utils/config';
 
 interface CustomThresholds {
   down_angle?: number;
@@ -10,7 +11,8 @@ interface CustomThresholds {
 export const useWebSocket = (
   exerciseType: string,
   isActive: boolean,
-  customThresholds?: CustomThresholds
+  customThresholds?: CustomThresholds,
+  sessionId?: number | null
 ) => {
   const [isConnected, setIsConnected] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
@@ -24,9 +26,9 @@ export const useWebSocket = (
   }, [customThresholds]);
 
   const connect = useCallback(() => {
-    if (!isActive || wsRef.current) return;
+    if (!isActive || !sessionId || wsRef.current) return;
 
-    const wsUrl = `ws://localhost:8000/ws/exercise/${exerciseType}`;
+    const wsUrl = `${WS_BASE_URL}/ws/exercise/${exerciseType}?session_id=${sessionId}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
@@ -65,7 +67,7 @@ export const useWebSocket = (
     };
 
     wsRef.current = ws;
-  }, [exerciseType, isActive]);
+  }, [exerciseType, isActive, sessionId]);
 
   const disconnect = useCallback(() => {
     if (wsRef.current) {

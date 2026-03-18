@@ -1,69 +1,119 @@
-# Hệ Thống Phục Hồi Chức Năng Rehab AI - Full Stack
+# Rehab AI - Full Stack
 
-Hệ thống AI phục hồi chức năng hoàn chỉnh cho người cao tuổi với MediaPipe Pose tracking.
+Hệ thống AI phục hồi chức năng cho người cao tuổi với FastAPI, React, MediaPipe Pose tracking, WebSocket realtime, và phân quyền bác sĩ/bệnh nhân.
 
-## Tính Năng Chính
+## Công Nghệ
+- Backend: FastAPI, SQLAlchemy, Alembic, MySQL, JWT
+- Frontend: React + TypeScript + Vite
 
-### Bệnh Nhân
-- Tập luyện với AI tracking real-time
-- Skeleton overlay trực quan
-- Feedback tức thì
-- Lịch sử và biểu đồ tiến độ
-- UI thân thiện (font 18px+, nút lớn, tương phản cao)
+## Yêu Cầu Môi Trường
+- Python 3.10+
+- Node.js 18+
+- MySQL 8+
 
-###  Bác Sĩ
--  Dashboard quản lý bệnh nhân
--  Xem chi tiết tiến độ từng bệnh nhân
--  Biểu đồ phân tích
--  Xuất báo cáo PDF
--  Theo dõi lỗi thường gặp
+## Cấu Hình Biến Môi Trường
 
-##  Cài Đặt Database (Windows)
-- Follow this clip to install MySQL in your device (if necessary):
-https://www.youtube.com/watch?v=hiS_mWZmmI0
-- Create database for MySQL:
+### Backend
+File mẫu: `backend/.env.example`
+
+Biến chính:
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `JWT_ALGORITHM`
+- `ACCESS_TOKEN_EXPIRE_DAYS`
+
+### Frontend
+File mẫu: `frontend/.env.example`
+
+Biến chính:
+- `VITE_API_BASE_URL`
+- `VITE_WS_BASE_URL`
+
+## Cài Đặt Nhanh (Windows)
+
+1. Tạo database MySQL:
+```sql
+CREATE DATABASE rehab_v3;
+```
+
+2. Chạy script setup (tự tạo `.env` từ file mẫu nếu chưa có):
 ```cmd
-Create database rehab_v3;
-```   
-- Change username and password of your MySQL to your own in "check_db.py", "main.py", "manage_db.py" and "migrate_db.py":
+setup-windows.bat
+```
+
+3. Mở backend:
 ```cmd
-DB_CONFIG = {
-    "host": "localhost",
-    "user": "root", # use your MySQL username
-    "password": "ducanh", # use your MySQL password
-    "database": "rehab_v3"
-    }
-```   
-##  Cài Đặt Nhanh (Windows)
- 
-### Bước 2: Cài Backend
+start-backend.bat
+```
+
+4. Mở frontend:
+```cmd
+start-frontend.bat
+```
+
+5. Truy cập:
+- Frontend: http://localhost:3000
+- Backend docs: http://localhost:8000/docs
+
+## Cài Đặt Thủ Công
+
+### Backend
 ```cmd
 cd backend
 python -m venv venv
-venv\Scripts\activate (source venv/Scripts/activate if using git bash)
+```
+
+Kích hoạt môi trường ảo:
+
+- PowerShell:
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+- CMD:
+```cmd
+venv\Scripts\activate.bat
+```
+
+- Git Bash:
+```bash
+source venv/Scripts/activate
+```
+
+Sau khi đã kích hoạt venv:
+
+```cmd
 pip install -r requirements.txt
-python migrate_db.py 
+copy .env.example .env
+python migrate_db.py
 python main.py
 ```
- Backend: http://localhost:8000
 
-### Bước 3: Cài Frontend
+### Frontend
 ```cmd
 cd frontend
-npm install
+npm ci
+copy .env.example .env
 npm run dev
 ```
- Frontend: http://localhost:3000
 
-### Bước 4: Đăng Nhập
-- Bác sĩ: doctor1 / doctor123
-- Bệnh nhân: patient1 / patient123
+## Tài Khoản Mặc Định
+- Bác sĩ: `doctor1 / doctor123`
+- Bệnh nhân: `patient1 / patient123`
 
-##  Tech Stack
-- Backend: FastAPI + SQLite + MediaPipe + JWT
-- Frontend: React + TypeScript + Tailwind + Recharts
+## Lưu Ý Cho Team Khi Pull
+- Không commit `venv`, `.venv`, `node_modules`, `.env`, file database local.
+- Luôn update từ `*.example` thành `.env` trên máy local.
+- Khi backend thay đổi schema, chạy lại `python migrate_db.py`.
+- Ưu tiên `npm ci` (khi có lock file) để đồng bộ version frontend.
 
-##  Documentation
-Chi tiết xem trong thư mục frontend/README.md
+## Troubleshooting
+- Lỗi `RuntimeError: 'cryptography' package is required...`:
+	- Kích hoạt đúng venv backend.
+	- Chạy lại `pip install -r requirements.txt`.
+	- Nếu vẫn lỗi, chạy thêm `pip install cryptography`.
 
----
+## Tài Liệu Bổ Sung
+- `Guide_alembic.md`
+- `DATABASE_MANAGEMENT.md`
+- `TECHNICAL_DOCUMENTATION.md`

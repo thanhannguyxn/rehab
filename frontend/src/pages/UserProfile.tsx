@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/config';
 
 interface ProfileData {
   age: number | '';
@@ -13,7 +13,6 @@ interface ProfileData {
 }
 
 export const UserProfile = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -57,7 +56,7 @@ export const UserProfile = () => {
   const loadProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/profile/me', {
+      const response = await fetch(`${API_URL}/profile/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -114,7 +113,7 @@ export const UserProfile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/profile/update', {
+      const response = await fetch(`${API_URL}/profile/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

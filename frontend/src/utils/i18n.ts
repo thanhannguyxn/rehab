@@ -230,6 +230,17 @@ const resources = {
           other: "Khác"
         },
 
+        medicalConditions: {
+          arthritis: "Viêm khớp gối",
+          shoulderPain: "Đau vai",
+          backPain: "Đau lưng",
+          osteoporosis: "Loãng xương",
+          diabetes: "Tiểu đường",
+          heartDisease: "Bệnh tim",
+          hypertension: "Cao huyết áp",
+          strokeRecovery: "Phục hồi sau đột quỵ"
+        },
+
         bmi: {
           label: "Chỉ số BMI của bạn",
           category: "Phân loại",
@@ -495,6 +506,17 @@ const resources = {
           male: "Male",
           female: "Female",
           other: "Other"
+        },
+
+        medicalConditions: {
+          arthritis: "Arthritis",
+          shoulderPain: "Shoulder pain",
+          backPain: "Back pain",
+          osteoporosis: "Osteoporosis",
+          diabetes: "Diabetes",
+          heartDisease: "Heart disease",
+          hypertension: "Hypertension",
+          strokeRecovery: "Stroke recovery"
         },
 
         bmi: {

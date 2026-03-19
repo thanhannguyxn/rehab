@@ -290,6 +290,105 @@ const resources = {
         patientList: "Danh Sách Bệnh Nhân",
         loading: "Đang tải...",
         empty: "Chưa có bệnh nhân nào"
+      },
+
+      exercisePage: {
+        exercises: {
+          difficulty: {
+            easy: "Dễ",
+            medium: "Trung bình",
+            hard: "Khó",
+          },
+
+          description: {
+            squat: "Bài tập tăng cường cơ chân và hông",
+            armRaise: "Bài tập vai và tay",
+            singleLegStand: "Bài tập cân bằng và cơ chân",
+            calfRaise: "Bài tập tăng cường cơ bắp chân",
+          },
+
+          instructions: {
+            squat: [
+              "Đứng thẳng, hai tay duỗi thẳng hai bên",
+              "Từ từ hạ thấp cơ thể xuống như ngồi ghế",
+              "Giữ lưng thẳng trong suốt động tác",
+              "Hạ tay từ từ về tư thế ban đầu",
+            ],
+            armRaise: [
+              "Đứng thẳng, hai tay duỗi thẳng hai bên",
+              "Từ từ nâng tay lên cao qua đầu",
+              "Giữ tay thẳng trong suốt động tác",
+              "Hạ tay từ từ về tư thế ban đầu",
+            ],
+            singleLegStand: [
+              "Đứng cạnh ghế, tay phải nắm thành ghế",
+              "Co chân trái lên cao, đầu gối nâng cao",
+              "Tay trái giữ chân trái ở vị trí đó",
+              "Giữ 10 giây, sau đó hạ chân xuống",
+              "Đổi bên: tay trái nắm ghế, co chân phải",
+              "Tay phải giữ chân phải, giữ 10 giây",
+            ],
+            calfRaise: [
+              "Đứng thẳng, hai chân rộng bằng vai",
+              "Tay có thể đỡ vào tường để giữ thăng bằng",
+              "Từ từ nâng gót lên cao (đứng bằng mũi chân)",
+              "Giữ 1-2 giây ở trên",
+              "Từ từ hạ gót xuống về tư thế ban đầu",
+              "Lặp lại động tác",
+            ],
+          },
+        },
+
+        title: "Bài Tập Phục Hồi",
+        selectExercise: "Chọn Bài Tập",
+        cameraPlaceholder: "Camera sẽ bật khi bạn bắt đầu",
+        cameraNote: "Đảm bảo có đủ ánh sáng và không gian",
+
+        start: "Bắt Đầu",
+        pause: "Tạm Dừng",
+        reset: "Đặt Lại Bộ Đếm",
+        voiceSettings: "Cài Đặt Giọng Nói",
+
+        instructions: "Hướng Dẫn",
+        steps: "Các bước thực hiện",
+        videoGuide: "Video Hướng Dẫn",
+        noVideoSupport: "Trình duyệt của bạn không hỗ trợ video.",
+        noVideo: "Chưa có video hướng dẫn cho bài tập này",
+        selectToWatch: "Chọn bài tập để xem video hướng dẫn",
+
+        progress: "Tiến độ Bài Tập",
+        target: "Mục tiêu",
+        targetReps: "lần trong",
+        minute: "phút",
+        time: "Thời gian",
+        reps: "Lần lặp",
+        connected: "Đang kết nối",
+        disconnected: "Mất kết nối",
+
+        personalized: "Tùy Chỉnh Cá Nhân",
+        difficulty: "Độ khó",
+        angle: "Góc",
+        rest: "Nghỉ",
+        warnings: "Lưu ý",
+        recommendations: "Gợi ý",
+
+        noProfile: "Chưa có thông tin",
+        fillProfile: "Điền thông tin để nhận bài tập phù hợp",
+        fillNow: "Điền thông tin",
+
+        completed: "Hoàn Thành!",
+        timeout: "Hết Giờ!",
+        completedDesc: "Bạn đã hoàn thành bài tập trong thời gian quy định",
+        timeoutDesc: "Bạn chưa hoàn thành bài tập trong thời gian quy định",
+
+        accuracy: "Độ chính xác",
+        totalReps: "Tổng số lần",
+        correctReps: "Đúng kỹ thuật",
+        duration: "Thời gian",
+
+        commonErrors: "Lỗi cần cải thiện",
+        continue: "Tập Tiếp",
+        backHome: "Về Trang Chủ"
       }
     }
   },
@@ -582,6 +681,104 @@ const resources = {
         patientList: "Patient List",
         loading: "Loading...",
         empty: "No patients yet"
+      },
+
+      exercisePage: {
+        exercises: {
+          difficulty: {
+            easy: "Easy",
+            medium: "Medium",
+            hard: "Hard",
+          },
+
+          description: {
+            squat: "Exercise to strengthen legs and hips",
+            armRaise: "Shoulder and arm exercise",
+            singleLegStand: "Balance and leg strengthening exercise",
+            calfRaise: "Exercise to strengthen calf muscles",
+          },
+
+          instructions: {
+            squat: [
+              "Stand straight with arms extended at your sides",
+              "Slowly lower your body as if sitting on a chair",
+              "Keep your back straight throughout the movement",
+              "Return to the starting position",
+            ],
+            armRaise: [
+              "Stand straight with arms extended at your sides",
+              "Slowly raise your arms overhead",
+              "Keep your arms straight throughout the movement",
+              "Lower your arms back to the starting position",
+            ],
+            singleLegStand: [
+              "Stand next to a chair and hold it with your right hand",
+              "Lift your left leg up with the knee raised",
+              "Use your left hand to hold the leg in position",
+              "Hold for 10 seconds, then lower your leg",
+              "Switch sides: hold chair with left hand and lift right leg",
+              "Hold for 10 seconds",
+            ],
+            calfRaise: [
+              "Stand straight with feet shoulder-width apart",
+              "You may hold a wall for balance",
+              "Slowly raise your heels (stand on your toes)",
+              "Hold for 1–2 seconds at the top",
+              "Slowly lower your heels back down",
+              "Repeat the movement",
+            ],
+          },
+        },
+
+        title: "Rehabilitation Exercises",
+        selectExercise: "Select Exercise",
+        cameraPlaceholder: "Camera will turn on when you start",
+        cameraNote: "Ensure proper lighting and space",
+
+        start: "Start",
+        pause: "Pause",
+        reset: "Reset Counter",
+        voiceSettings: "Voice Settings",
+
+        instructions: "Instructions",
+        steps: "Steps",
+        videoGuide: "Instruction Video",
+        noVideo: "No instruction video available for this exercise",
+        selectToWatch: "Select an exercise to watch the video",
+
+        progress: "Exercise Progress",
+        target: "Target",
+        targetReps: "reps in",
+        minute: "minutes",
+        time: "Time",
+        reps: "Reps",
+        connected: "Connected",
+        disconnected: "Disconnected",
+
+        personalized: "Personalized Settings",
+        difficulty: "Difficulty",
+        angle: "Angle",
+        rest: "Rest",
+        warnings: "Warnings",
+        recommendations: "Recommendations",
+
+        noProfile: "No profile data",
+        fillProfile: "Fill in your profile to get personalized exercises",
+        fillNow: "Fill now",
+
+        completed: "Completed!",
+        timeout: "Time's Up!",
+        completedDesc: "You completed the exercise within the time limit",
+        timeoutDesc: "You did not complete the exercise in time",
+
+        accuracy: "Accuracy",
+        totalReps: "Total Reps",
+        correctReps: "Correct Reps",
+        duration: "Duration",
+
+        commonErrors: "Errors to Improve",
+        continue: "Continue",
+        backHome: "Back to Home"
       }
     }
   }

@@ -276,6 +276,20 @@ const resources = {
         success: "Cập nhật thông tin thành công!",
         error: "Có lỗi xảy ra, vui lòng thử lại",
         serverError: "Không thể kết nối đến server"
+      },
+
+      doctorDashboard: {
+        title: "Dashboard Bác Sĩ",
+        greeting: "Xin chào",
+        logout: "Đăng Xuất",
+
+        totalPatients: "Tổng bệnh nhân",
+        todaySessions: "Tập hôm nay",
+        avgAccuracy: "Độ chính xác TB",
+
+        patientList: "Danh Sách Bệnh Nhân",
+        loading: "Đang tải...",
+        empty: "Chưa có bệnh nhân nào"
       }
     }
   },
@@ -554,6 +568,20 @@ const resources = {
         success: "Profile updated successfully!",
         error: "Something went wrong. Please try again.",
         serverError: "Cannot connect to server"
+      },
+
+      doctorDashboard: {
+        title: "Doctor Dashboard",
+        greeting: "Hello",
+        logout: "Logout",
+
+        totalPatients: "Total Patients",
+        todaySessions: "Today's Sessions",
+        avgAccuracy: "Average Accuracy",
+
+        patientList: "Patient List",
+        loading: "Loading...",
+        empty: "No patients yet"
       }
     }
   }

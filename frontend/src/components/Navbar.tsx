@@ -3,12 +3,14 @@ import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from './ThemeToggle';
 import { useState } from 'react';
 import { LanguageToggle } from './LanguageToggle';
+import { useTranslation } from 'react-i18next';
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const { t } = useTranslation();
 
   // Helper function to check if link is active
   const isActive = (path: string) => {
@@ -40,13 +42,13 @@ export const Navbar = () => {
             {user && user.role === 'patient' && (
               <>
                 <Link to="/" className={getLinkClasses('/')}>
-                  Trang Chủ
+                  {t("navbar.home")}
                 </Link>
                 <Link to="/exercise" className={getLinkClasses('/exercise')}>
-                  Bài Tập
+                  {t("navbar.exercise")}
                 </Link>
                 <Link to="/history" className={getLinkClasses('/history')}>
-                  Lịch Sử
+                  {t("navbar.history")}
                 </Link>
               </>
             )}
@@ -81,7 +83,7 @@ export const Navbar = () => {
                   <div className="absolute top-full right-0 pt-2">
                     <div className="w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Xin chào,</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t("navbar.greeting")},</p>
                         <p className="text-base font-semibold text-gray-900 dark:text-white truncate">{user.full_name}</p>
                       </div>
                       {user.role === 'patient' && (
@@ -92,7 +94,7 @@ export const Navbar = () => {
                           }}
                           className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-gray-700 hover:text-teal-600 dark:hover:text-teal-400 transition font-medium flex items-center gap-2"
                         >
-                          Thông Tin Cá Nhân
+                          {t("navbar.profile")}
                         </button>
                       )}
                       <button
@@ -103,7 +105,7 @@ export const Navbar = () => {
                         }}
                         className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition font-medium flex items-center gap-2 border-t border-gray-100 dark:border-gray-700"
                       >
-                        Đăng Xuất
+                        {t("navbar.logout")}
                       </button>
                     </div>
                   </div>
@@ -114,7 +116,7 @@ export const Navbar = () => {
                 to="/login-choice"
                 className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-6 py-2.5 rounded-lg font-semibold transition shadow-lg shadow-teal-500/30"
               >
-                Đăng Nhập
+                {t("navbar.login")}
               </Link>
             )}
           </div>

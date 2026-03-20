@@ -1,4 +1,5 @@
 import type { PoseAngles } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface AngleDisplayProps {
   angles?: PoseAngles;
@@ -7,6 +8,8 @@ interface AngleDisplayProps {
 }
 
 export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayProps) => {
+  const { t } = useTranslation();
+
   const getAngleColor = (angle: number, target: number, direction: 'up' | 'down') => {
     if (direction === 'up') {
       if (angle >= target) return 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30';
@@ -27,36 +30,34 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
     }
   };
 
-
-
   // Determine which angles to display based on exercise type
   const angleConfigs: Array<{ key: string; label: string; target: number; direction: 'up' | 'down' }> = [];
 
   if (exerciseType === 'arm_raise') {
     angleConfigs.push(
-      { key: 'left_shoulder', label: 'Vai trái', target: 160, direction: 'up' },
-      { key: 'right_shoulder', label: 'Vai phải', target: 160, direction: 'up' }
+      { key: 'left_shoulder', label: t("angleDisplay.labels.leftShoulder"), target: 160, direction: 'up' },
+      { key: 'right_shoulder', label: t("angleDisplay.labels.rightShoulder"), target: 160, direction: 'up' }
     );
   } else if (exerciseType === 'squat') {
     angleConfigs.push(
-      { key: 'left_knee', label: 'Gối trái', target: 90, direction: 'down' },
-      { key: 'right_knee', label: 'Gối phải', target: 90, direction: 'down' }
+      { key: 'left_knee', label: t("angleDisplay.labels.leftKnee"), target: 90, direction: 'down' },
+      { key: 'right_knee', label: t("angleDisplay.labels.rightKnee"), target: 90, direction: 'down' }
     );
   } else if (exerciseType === 'single_leg_stand') {
     angleConfigs.push(
-        { key: 'left_knee', label: 'Gối trái', target: 90, direction: 'down' },
-        { key: 'right_knee', label: 'Gối phải', target: 90, direction: 'down' }
+        { key: 'left_knee', label: t("angleDisplay.labels.leftKnee"), target: 90, direction: 'down' },
+        { key: 'right_knee', label: t("angleDisplay.labels.rightKnee"), target: 90, direction: 'down' }
     );
   } else if (exerciseType === 'calf_raise') {
     angleConfigs.push(
-        { key: 'left_ankle', label: 'Mắt cá trái', target: 140, direction: 'up' },
-        { key: 'right_ankle', label: 'Mắt cá phải', target: 140, direction: 'up' }
+        { key: 'left_ankle', label: t("angleDisplay.labels.leftAnkle"), target: 140, direction: 'up' },
+        { key: 'right_ankle', label: t("angleDisplay.labels.rightAnkle"), target: 140, direction: 'up' }
     );
   }
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        Góc Khớp
+        {t("angleDisplay.title")}
       </h3>
 
       {!isDetected ? (
@@ -64,17 +65,17 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
         <div className="text-center py-8">
           <div className="text-6xl mb-4">🎥</div>
           <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Đứng vào trước camera
+            {t("angleDisplay.notDetected.title")}
           </p>
           <p className="text-base text-gray-600 dark:text-gray-400">
-            để bắt đầu bài tập
+            {t("angleDisplay.notDetected.subtitle")}
           </p>
         </div>
       ) : !angles ? (
         // Đang detect nhưng chưa có angles
         <div className="text-center py-8">
           <div className="animate-pulse">
-            <p className="text-lg text-gray-700 dark:text-gray-300">Đang phân tích...</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300">{t("angleDisplay.analyzing")}</p>
           </div>
         </div>
       ) : (
@@ -111,8 +112,8 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
                 </div>
                 
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>Hiện tại: {Math.round(angleValue)}°</span>
-                  <span>Mục tiêu: {config.target}°</span>
+                  <span>{t("angleDisplay.current")}: {Math.round(angleValue)}°</span>
+                  <span>{t("angleDisplay.target")}: {config.target}°</span>
                 </div>
               </div>
             );
@@ -122,13 +123,13 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-700 dark:text-gray-400 italic">
                 {exerciseType === 'arm_raise' 
-                ? 'Nâng tay thẳng lên cao, giữ khuỷu tay thẳng'
+                ? t("angleDisplay.tips.armRaise")
                 : exerciseType === 'squat'
-                ? 'Gập gối xuống sâu, giữ lưng thẳng'
+                ? t("angleDisplay.tips.squat")
                 : exerciseType === 'single_leg_stand'
-                ? 'Nâng đầu gối cao, giữ thăng bằng, nhìn thẳng phía trước'
+                ? t("angleDisplay.tips.singleLegStand")
                 : exerciseType === 'calf_raise' 
-                ? 'Nâng gót cao lên, giữ chân thẳng, hạ từ từ'
+                ? t("angleDisplay.tips.calfRaise")
                 : ''
                 }
             </p>

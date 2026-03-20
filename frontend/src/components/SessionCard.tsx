@@ -1,4 +1,5 @@
 import type { Session } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface SessionCardProps {
   session: Session;
@@ -6,6 +7,8 @@ interface SessionCardProps {
 }
 
 export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
+  const { t } = useTranslation();
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('vi-VN', {
@@ -20,7 +23,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}p ${secs}s`;
+    return `${mins}` + t("sessionCard.time.minute") + ` ${secs}s`;
   };
 
   const getAccuracyColor = (accuracy: number) => {
@@ -32,24 +35,24 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
   const getPerformanceBadge = (accuracy: number) => {
     if (accuracy >= 90) {
       return {
-        text: 'Xuất sắc',
+        text: t("sessionCard.performance.excellent"),
         className: 'bg-yellow-400 text-yellow-900'
       };
     }
     if (accuracy >= 80) {
       return {
-        text: 'Tốt',
+        text: t("sessionCard.performance.good"),
         className: 'bg-green-400 text-green-900'
       };
     }
     if (accuracy >= 60) {
       return {
-        text: 'Trung bình',
+        text: t("sessionCard.performance.average"),
         className: 'bg-blue-400 text-blue-900'
       };
     }
     return {
-      text: 'Cần cải thiện',
+      text: t("sessionCard.performance.needImprovement"),
       className: 'bg-orange-400 text-orange-900'
     };
   };
@@ -93,21 +96,21 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
       {/* Main Stats */}
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-lg text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Tổng số lần</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.totalReps")}</p>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{session.total_reps}</p>
         </div>
         <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-lg text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Đúng kỹ thuật</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.correctReps")}</p>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400">{session.correct_reps}</p>
         </div>
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-lg text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Thời gian</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.duration")}</p>
           <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
             {formatDuration(session.duration_seconds)}
           </p>
         </div>
         <div className="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30 p-4 rounded-lg text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Độ chính xác</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.accuracy")}</p>
           <p className={`text-2xl font-bold ${getAccuracyColor(session.accuracy)}`}>
             {session.accuracy.toFixed(1)}%
           </p>
@@ -118,7 +121,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
       {top3Errors.length > 0 && (
         <div className="mb-4 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-            <span>Lỗi phổ biến nhất:</span>
+            <span>{t("sessionCard.errors.title")}</span>
           </p>
           <div className="space-y-2">
             {top3Errors.map((error, index) => (
@@ -137,7 +140,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
       {comparison && (
         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-            <span>So với lần trước:</span>
+            <span>{t("sessionCard.comparison.title")}</span>
           </p>
           <div className="flex gap-4 flex-wrap">
             {/* Accuracy comparison */}
@@ -145,18 +148,18 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
               {comparison.accuracyDiff > 0 ? (
                 <>
                   <span className="text-sm text-green-600 dark:text-green-400">
-                    Độ chính xác +{comparison.accuracyDiff.toFixed(1)}%
+                    {t("sessionCard.comparison.accuracyIncrease")} +{comparison.accuracyDiff.toFixed(1)}%
                   </span>
                 </>
               ) : comparison.accuracyDiff < 0 ? (
                 <>
                   <span className="text-sm text-red-600 dark:text-red-400">
-                    Độ chính xác {comparison.accuracyDiff.toFixed(1)}%
+                    {t("sessionCard.comparison.accuracyDecrease")} {comparison.accuracyDiff.toFixed(1)}%
                   </span>
                 </>
               ) : (
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Độ chính xác không đổi
+                  {t("sessionCard.comparison.accuracySame")}
                 </span>
               )}
             </div>
@@ -167,18 +170,18 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
                 <>
                   <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
                   <span className="text-sm text-green-600 dark:text-green-400">
-                    Giảm {Math.abs(comparison.errorDiff)} lỗi
+                    {t("sessionCard.comparison.decrease")} {Math.abs(comparison.errorDiff)} {t("sessionCard.comparison.error")}
                   </span>
                 </>
               ) : comparison.errorDiff > 0 ? (
                 <>
                   <span className="text-sm text-orange-600 dark:text-orange-400">
-                    Tăng {comparison.errorDiff} lỗi
+                    {t("sessionCard.comparison.increase")} {comparison.errorDiff} {t("sessionCard.comparison.error")}
                   </span>
                 </>
               ) : (
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Số lỗi không đổi
+                  {t("sessionCard.comparison.errorSame")}
                 </span>
               )}
             </div>

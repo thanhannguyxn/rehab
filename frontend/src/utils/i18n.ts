@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   vi: {
     translation: {
+      /* Translations for pages */
       landing: {
           heroBadge: "Công nghệ AI Tiên tiến",
           heroTitle1: "Phục Hồi Chức Năng",
@@ -389,12 +390,309 @@ const resources = {
         commonErrors: "Lỗi cần cải thiện",
         continue: "Tập Tiếp",
         backHome: "Về Trang Chủ"
+      },
+
+      /* Translations for components */
+      navbar: {
+        home: "Trang Chủ",
+        exercise: "Bài Tập",
+        history: "Lịch Sử",
+        dashboard: "Dashboard",
+
+        greeting: "Xin chào",
+        profile: "Thông Tin Cá Nhân",
+        logout: "Đăng Xuất",
+
+        login: "Đăng Nhập"
+      },
+
+      angleDisplay: {
+        title: "Góc Khớp",
+
+        notDetected: {
+          title: "Đứng vào trước camera",
+          subtitle: "để bắt đầu bài tập"
+        },
+
+        analyzing: "Đang phân tích...",
+
+        labels: {
+          leftShoulder: "Vai trái",
+          rightShoulder: "Vai phải",
+          leftKnee: "Gối trái",
+          rightKnee: "Gối phải",
+          leftAnkle: "Mắt cá trái",
+          rightAnkle: "Mắt cá phải"
+        },
+
+        current: "Hiện tại",
+        target: "Mục tiêu",
+
+        tips: {
+          armRaise: "Nâng tay thẳng lên cao, giữ khuỷu tay thẳng",
+          squat: "Gập gối xuống sâu, giữ lưng thẳng",
+          singleLegStand: "Nâng đầu gối cao, giữ thăng bằng, nhìn thẳng phía trước",
+          calfRaise: "Nâng gót cao lên, giữ chân thẳng, hạ từ từ"
+        }
+      },
+
+      errorAnalytics: {
+        title: "Phân Tích Lỗi Theo Bài Tập",
+        commonErrors: "Lỗi Thường Gặp Theo Bài Tập",
+
+        loading: "Đang tải...",
+        noData: "Chưa có dữ liệu lỗi",
+        noErrors: "Chưa có lỗi cho bài tập này",
+
+        chartTitle: "Biểu đồ thống kê lỗi",
+        errorDetails: "Chi tiết lỗi",
+
+        tooltip: {
+          total: "Tổng",
+          average: "TB",
+          sessions: "Xuất hiện"
+        },
+
+        labels: {
+          count: "Số lần",
+          totalCount: "Tổng số lần",
+          avgPerSession: "Trung bình/buổi",
+          sessionCount: "Xuất hiện"
+        },
+
+        data: {
+          reps: "lần",
+          rps: "lần/buổi",
+          sessions: "buổi"
+        }
+      },
+
+      errorFallback: {
+        title: "Đã xảy ra lỗi",
+        message: "Vui lòng tải lại trang."
+      },
+
+      footer: {
+        brandTitle: "Hệ Thống Phục Hồi Chức Năng Rehab AI",
+        description: "Hệ thống phục hồi chức năng sử dụng AI để theo dõi và phân tích chuyển động, giúp bác sĩ và bệnh nhân quản lý quá trình điều trị hiệu quả hơn",
+        contact: "Dự án của sinh viên Swinburne",
+      },
+
+      heatmap: {
+        title: "Tiến độ tập luyện",
+
+        filters: {
+          last7Days: "7 ngày qua",
+          last1Month: "1 tháng qua",
+          last3Months: "3 tháng qua",
+          all: "Tất cả",
+        },
+
+        stats: {
+          totalSessions: "Tổng số buổi tập",
+          averagePerDay: "Trung bình mỗi ngày",
+          averagePerWeek: "Trung bình mỗi tuần",
+          bestDay: "Ngày tốt nhất",
+          bestWeek: "Tuần tốt nhất",
+          sessions: "buổi",
+        },
+
+        empty: {
+          noData: "Chưa có dữ liệu tập luyện",
+          startNow: "Hãy bắt đầu buổi tập đầu tiên của bạn!",
+          noDataInRange: "Không có dữ liệu trong khoảng thời gian này",
+          tryAnotherRange: "Thử chọn khoảng thời gian khác",
+          noExercise: "Chưa tập",
+        },
+
+        labels: {
+          day: "Ngày",
+          week: "Tuần",
+        },
+
+        legend: {
+          excellent: "80%: Xuất sắc",
+          good: "60%: Tốt",
+          average: "40%: Khá",
+          poor: "40%: Cần cố gắng",
+        }
+      },
+
+      patientCard: {
+        age: "tuổi",
+        lastSession: "Buổi tập gần nhất:",
+        noSession: "Chưa có buổi tập nào",
+
+        time: {
+          justNow: "Vừa xong",
+          hoursAgo: "giờ trước",
+          yesterday: "Hôm qua",
+          daysAgo: "ngày trước",
+        }
+      },
+
+      progressChart: {
+        title: "Tiến Độ Tập Luyện",
+
+        legend: {
+          accuracy: "Độ chính xác (%)",
+          reps: "Số lần tập",
+        },
+
+        tooltip: {
+          accuracy: "Độ chính xác",
+          reps: "Số lần tập",
+          session: "Buổi",
+        }
+      },
+
+      relaxation: {
+        title: "Nghỉ Thư Giãn",
+        subtitle: "Hãy thả lỏng cơ thể và hít thở sâu",
+
+        timer: {
+          remaining: "còn lại"
+        },
+
+        breathing: {
+          inhale: "Hít vào",
+          exhale: "Thở ra",
+          rhythm: "Đều đặn và chậm rãi"
+        },
+
+        tips: {
+          title: "Hướng dẫn thư giãn:",
+          tip1: "Ngồi hoặc nằm ở tư thế thoải mái",
+          tip2: "Hít thở sâu và đều đặn",
+          tip3: "Thả lỏng tất cả các cơ trong cơ thể",
+          tip4: "Đóng mắt và tập trung vào hơi thở"
+        },
+
+        controls: {
+          musicOn: "Bật Nhạc",
+          musicOff: "Tắt Nhạc",
+          skip: "Bỏ Qua"
+        }
+      },
+
+      sessionCard: {
+        stats: {
+          totalReps: "Tổng số lần",
+          correctReps: "Đúng kỹ thuật",
+          duration: "Thời gian",
+          accuracy: "Độ chính xác"
+        },
+
+        performance: {
+          excellent: "Xuất sắc",
+          good: "Tốt",
+          average: "Trung bình",
+          needImprovement: "Cần cải thiện"
+        },
+
+        errors: {
+          title: "Lỗi phổ biến nhất:"
+        },
+
+        comparison: {
+          title: "So với lần trước:",
+          accuracyIncrease: "Độ chính xác",
+          accuracyDecrease: "Độ chính xác",
+          accuracySame: "Độ chính xác không đổi",
+
+          error: "lỗi",
+          increase: "Tăng",
+          decrease: "Giảm",
+          errorSame: "Số lỗi không đổi"
+        },
+
+        time: {
+          minute: "p",
+          justNow: "Vừa xong",
+          hoursAgo: "{{value}} giờ trước",
+          yesterday: "Hôm qua",
+          daysAgo: "{{value}} ngày trước"
+        }
+      },
+
+      smartRecommendations: {
+        title: "Gợi ý thông minh",
+
+        performance: {
+          excellentTitle: "Hiệu suất xuất sắc!",
+          excellentMessage: "Độ chính xác trung bình của bạn rất tốt. Hãy tiếp tục duy trì!",
+          lowTitle: "Cần cải thiện kỹ thuật",
+          lowMessage: "Độ chính xác còn thấp. Hãy xem lại các lỗi phổ biến và tập chậm hơn để đúng tư thế."
+        },
+
+        variety: {
+          title: "Đa dạng hóa bài tập",
+          message: "Bạn chỉ tập 1 loại bài. Hãy thử thêm các bài tập khác để phát triển toàn diện!"
+        },
+
+        consistency: {
+          inactiveTitle: "Đã lâu rồi không tập",
+          inactiveMessage: "ngày kể từ buổi tập cuối. Hãy quay lại tập luyện để duy trì tiến bộ!",
+          todayTitle: "Tuyệt vời!",
+          todayMessage: "Bạn đã tập hôm nay. Hãy nghỉ ngơi hợp lý để cơ thể phục hồi."
+        },
+
+        errors: {
+          title: "Lỗi thường gặp",
+          message: "Lỗi \"{{error}}\" xuất hiện {{count}} lần. Hãy tập trung cải thiện điểm này."
+        },
+
+        progress: {
+          title: "Sức mạnh tăng lên!",
+          message: "Số lần tập của bạn tăng {{percent}}% so với trước. Tuyệt vời!"
+        },
+
+        rest: {
+          title: "Nghỉ ngơi là quan trọng",
+          message: "Bạn đã tập rất chăm chỉ tuần này! Đừng quên dành thời gian nghỉ ngơi cho cơ thể."
+        }
+      },
+
+      voiceSettings: {
+        title: "Cài Đặt Giọng Nói",
+
+        toggle: {
+          title: "Bật hướng dẫn giọng nói",
+          description: "Hệ thống sẽ đọc hướng dẫn và phản hồi"
+        },
+
+        rate: {
+          label: "Tốc độ đọc",
+          slow: "Chậm",
+          normal: "Bình thường",
+          fast: "Nhanh"
+        },
+
+        volume: {
+          label: "Âm lượng",
+          low: "Nhỏ",
+          medium: "Vừa",
+          high: "Lớn"
+        },
+
+        actions: {
+          test: "Thử Giọng Nói",
+          close: "Đóng"
+        },
+
+        tip: {
+          title: "Mẹo:",
+          content: "Giọng nói sẽ hướng dẫn bạn trong suốt bài tập, bao gồm động viên, cảnh báo lỗi và thông báo tiến độ."
+        },
+
+        testMessage: "Xin chào! Tôi sẽ hướng dẫn bạn tập luyện."
       }
     }
   },
 
   en: {
     translation: {
+      /* Translations for pages */
       landing: {
           heroBadge: "Advanced AI Technology",
           heroTitle1: "Rehabilitation",
@@ -779,6 +1077,307 @@ const resources = {
         commonErrors: "Errors to Improve",
         continue: "Continue",
         backHome: "Back to Home"
+      },
+
+      /* Translations for components */
+      navbar: {
+        home: "Home",
+        exercise: "Exercises",
+        history: "History",
+        dashboard: "Dashboard",
+
+        greeting: "Hello",
+        profile: "Profile",
+        logout: "Logout",
+
+        login: "Login"
+      },
+
+      angleDisplay: {
+        title: "Joint Angles",
+
+        notDetected: {
+          title: "Stand in front of the camera",
+          subtitle: "to start the exercise"
+        },
+
+        analyzing: "Analyzing...",
+
+        labels: {
+          leftShoulder: "Left Shoulder",
+          rightShoulder: "Right Shoulder",
+          leftKnee: "Left Knee",
+          rightKnee: "Right Knee",
+          leftAnkle: "Left Ankle",
+          rightAnkle: "Right Ankle"
+        },
+
+        current: "Current",
+        target: "Target",
+
+        tips: {
+          armRaise: "Raise your arms straight overhead, keep elbows straight",
+          squat: "Lower your body deeply, keep your back straight",
+          singleLegStand: "Lift your knee high, maintain balance, look forward",
+          calfRaise: "Raise your heels high, keep legs straight, lower slowly"
+        }
+      },
+
+      errorAnalytics: {
+        title: "Error Analysis by Exercise",
+        commonErrors: "Common Errors by Exercise",
+
+        loading: "Loading...",
+        noData: "No error data available",
+        noErrors: "No errors for this exercise",
+
+        chartTitle: "Error Statistics Chart",
+        errorDetails: "Error Details",
+
+        tooltip: {
+          total: "Total",
+          average: "Avg",
+          sessions: "Appeared"
+        },
+
+        labels: {
+          count: "Count",
+          totalCount: "Total Count",
+          avgPerSession: "Avg per Session",
+          sessionCount: "Sessions"
+        },
+
+        data: {
+          reps: "reps",
+          rps: "reps/session",
+          sessions: "sessions"
+        },
+
+        errorBoundary: {
+          title: "Something went wrong",
+          message: "Please refresh the page."
+        }
+      },
+
+      errorFallback: {
+        title: "Something went wrong",
+        message: "Please refresh the page."
+      },
+
+      footer: {
+        brandTitle: "Rehab AI Rehabilitation System",
+        description: "An AI-powered rehabilitation system that tracks and analyzes movement, helping doctors and patients manage treatment more effectively",
+        contact: "A project by Swinburne students",
+      },
+
+      heatmap: {
+        title: "Workout Progress",
+
+        filters: {
+          last7Days: "Last 7 days",
+          last1Month: "Last 1 month",
+          last3Months: "Last 3 months",
+          all: "All time",
+        },
+
+        stats: {
+          totalSessions: "Total sessions",
+          averagePerDay: "Average per day",
+          averagePerWeek: "Average per week",
+          bestDay: "Best day",
+          bestWeek: "Best week",
+          sessions: "sessions",
+        },
+
+        empty: {
+          noData: "No workout data yet",
+          startNow: "Start your first workout session!",
+          noDataInRange: "No data in this time range",
+          tryAnotherRange: "Try selecting a different time range",
+          noExercise: "No activity",
+        },
+
+        labels: {
+          day: "Day",
+          week: "Week",
+        },
+
+        legend: {
+          excellent: "80%: Excellent",
+          good: "60%: Good",
+          average: "40%: Average",
+          poor: "40%: Needs improvement",
+        }
+      },
+
+      patientCard: {
+        age: "years old",
+        lastSession: "Last session:",
+        noSession: "No sessions yet",
+
+        time: {
+          justNow: "Just now",
+          hoursAgo: "hours ago",
+          yesterday: "Yesterday",
+          daysAgo: "days ago",
+        }
+      },
+
+      progressChart: {
+        title: "Workout Progress",
+
+        legend: {
+          accuracy: "Accuracy (%)",
+          reps: "Repetitions",
+        },
+
+        tooltip: {
+          accuracy: "Accuracy",
+          reps: "Repetitions",
+          session: "Session",
+        }
+      },
+
+      relaxation: {
+        title: "Relaxation Break",
+        subtitle: "Relax your body and take deep breaths",
+
+        timer: {
+          remaining: "remaining"
+        },
+
+        breathing: {
+          inhale: "Inhale",
+          exhale: "Exhale",
+          rhythm: "Slow and steady"
+        },
+
+        tips: {
+          title: "Relaxation tips:",
+          tip1: "Sit or lie down in a comfortable position",
+          tip2: "Breathe deeply and steadily",
+          tip3: "Relax all muscles in your body",
+          tip4: "Close your eyes and focus on your breathing"
+        },
+
+        controls: {
+          musicOn: "Play Music",
+          musicOff: "Pause Music",
+          skip: "Skip"
+        }
+      },
+
+      sessionCard: {
+        stats: {
+          totalReps: "Total reps",
+          correctReps: "Correct reps",
+          duration: "Duration",
+          accuracy: "Accuracy"
+        },
+
+        performance: {
+          excellent: "Excellent",
+          good: "Good",
+          average: "Average",
+          needImprovement: "Needs improvement"
+        },
+
+        errors: {
+          title: "Most common errors:"
+        },
+
+        comparison: {
+          title: "Compared to previous session:",
+          accuracyIncrease: "Accuracy +{{value}}%",
+          accuracyDecrease: "Accuracy {{value}}%",
+          accuracySame: "Accuracy unchanged",
+
+          error: "errors",
+          increase: "Increased",
+          decrease: "Decreased",
+          errorSame: "Errors unchanged"
+        },
+
+        time: {
+          minute: "m",
+          justNow: "Just now",
+          hoursAgo: "{{value}} hours ago",
+          yesterday: "Yesterday",
+          daysAgo: "{{value}} days ago"
+        }
+      },
+
+      smartRecommendations: {
+        title: "Smart Recommendations",
+
+        performance: {
+          excellentTitle: "Excellent performance!",
+          excellentMessage: "Your average accuracy is very high. Keep up the great work!",
+          lowTitle: "Technique needs improvement",
+          lowMessage: "Your accuracy is still low. Review common mistakes and practice slower for better form."
+        },
+
+        variety: {
+          title: "Diversify your exercises",
+          message: "You are only doing one type of exercise. Try adding more for balanced development!"
+        },
+
+        consistency: {
+          inactiveTitle: "It's been a while",
+          inactiveMessage: "{{days}} days since your last session. Get back to training to maintain progress!",
+          todayTitle: "Great job!",
+          todayMessage: "You've trained today. Make sure to rest properly for recovery."
+        },
+
+        errors: {
+          title: "Most common mistake",
+          message: "The error \"{{error}}\" occurred {{count}} times. Focus on improving this."
+        },
+
+        progress: {
+          title: "Strength improved!",
+          message: "Your reps increased by {{percent}}% compared to before. Great job!"
+        },
+
+        rest: {
+          title: "Rest is important",
+          message: "You've trained very hard this week! Don't forget to give your body time to recover."
+        }
+      },
+
+      voiceSettings: {
+        title: "Voice Settings",
+
+        toggle: {
+          title: "Enable voice guidance",
+          description: "The system will read instructions and provide feedback"
+        },
+
+        rate: {
+          label: "Speech rate",
+          slow: "Slow",
+          normal: "Normal",
+          fast: "Fast"
+        },
+
+        volume: {
+          label: "Volume",
+          low: "Low",
+          medium: "Medium",
+          high: "High"
+        },
+
+        actions: {
+          test: "Test Voice",
+          close: "Close"
+        },
+
+        tip: {
+          title: "Tip:",
+          content: "Voice guidance will assist you throughout the exercise, including encouragement, error warnings, and progress updates."
+        },
+
+        testMessage: "Hello! I will guide you through your exercise."
       }
     }
   }

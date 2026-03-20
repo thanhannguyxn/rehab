@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { voiceService } from '../utils/voiceService';
+import { useTranslation } from 'react-i18next';
 
 interface VoiceSettingsProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
   const [enabled, setEnabled] = useState(voiceService.isEnabled());
   const [rate, setRate] = useState(voiceService.getRate());
   const [volume, setVolume] = useState(voiceService.getVolume());
+  const { t } = useTranslation();
 
   useEffect(() => {
     setEnabled(voiceService.isEnabled());
@@ -45,7 +47,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Cài Đặt Giọng Nói
+              {t("voiceSettings.title")}
             </h2>
           </div>
           <button
@@ -61,10 +63,10 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-semibold text-gray-900 dark:text-white">
-                Bật hướng dẫn giọng nói
+                {t("voiceSettings.toggle.title")}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Hệ thống sẽ đọc hướng dẫn và phản hồi
+                {t("voiceSettings.toggle.description")}
               </p>
             </div>
             <button
@@ -88,7 +90,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
         <div className="mb-6">
           <label className="block mb-2">
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
-              Tốc độ đọc: {rate.toFixed(2)}x
+              {t("voiceSettings.rate.label")}: {rate.toFixed(2)}x
             </span>
           </label>
           <input
@@ -102,9 +104,9 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
             className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500 disabled:opacity-50"
           />
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-            <span>Chậm</span>
-            <span>Bình thường</span>
-            <span>Nhanh</span>
+            <span>{t("voiceSettings.rate.slow")}</span>
+            <span>{t("voiceSettings.rate.normal")}</span>
+            <span>{t("voiceSettings.rate.fast")}</span>
           </div>
         </div>
 
@@ -112,7 +114,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
         <div className="mb-6">
           <label className="block mb-2">
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
-              Âm lượng: {Math.round(volume * 100)}%
+              {t("voiceSettings.volume.label")}: {Math.round(volume * 100)}%
             </span>
           </label>
           <input
@@ -126,9 +128,9 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
             className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500 disabled:opacity-50"
           />
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-            <span>Nhỏ</span>
-            <span>Vừa</span>
-            <span>Lớn</span>
+            <span>{t("voiceSettings.volume.low")}</span>
+            <span>{t("voiceSettings.volume.medium")}</span>
+            <span>{t("voiceSettings.volume.high")}</span>
           </div>
         </div>
 
@@ -138,7 +140,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
           disabled={!enabled}
           className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition mb-4"
         >
-          Thử Giọng Nói
+          {t("voiceSettings.actions.test")}
         </button>
 
         {/* Close Button */}
@@ -146,14 +148,13 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
           onClick={onClose}
           className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition"
         >
-          Đóng
+          {t("voiceSettings.actions.close")}
         </button>
 
         {/* Info */}
         <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className="text-xs text-blue-800 dark:text-blue-300">
-            <strong>Mẹo:</strong> Giọng nói sẽ hướng dẫn bạn trong suốt bài tập,
-            bao gồm động viên, cảnh báo lỗi và thông báo tiến độ.
+            <strong>{t("voiceSettings.tip.title")}</strong> {t("voiceSettings.tip.content")}
           </p>
         </div>
       </div>

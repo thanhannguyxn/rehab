@@ -1,10 +1,12 @@
 import type { Session } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface SmartRecommendationsProps {
   sessions: Session[];
 }
 
 export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) => {
+  const { t } = useTranslation();
   const getRecommendations = () => {
     if (sessions.length === 0) return [];
 
@@ -22,15 +24,15 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
     if (avgAccuracy >= 85) {
       recommendations.push({
         type: 'success',
-        title: 'Hiệu suất xuất sắc!',
-        message: 'Độ chính xác trung bình của bạn rất tốt. Hãy tiếp tục duy trì!',
+        title: t("smartRecommendations.performance.excellentTitle"),
+        message: t("smartRecommendations.performance.excellentMessage"),
         icon: ''
       });
     } else if (avgAccuracy < 60) {
       recommendations.push({
         type: 'warning',
-        title: 'Cần cải thiện kỹ thuật',
-        message: 'Độ chính xác còn thấp. Hãy xem lại các lỗi phổ biến và tập chậm hơn để đúng tư thế.',
+        title: t("smartRecommendations.performance.lowTitle"),
+        message: t("smartRecommendations.performance.lowMessage"),
         icon: ''
       });
     }
@@ -40,8 +42,8 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
     if (exerciseTypes.size === 1) {
       recommendations.push({
         type: 'tip',
-        title: 'Đa dạng hóa bài tập',
-        message: 'Bạn chỉ tập 1 loại bài. Hãy thử thêm các bài tập khác để phát triển toàn diện!',
+        title: t("smartRecommendations.variety.title"),
+        message: t("smartRecommendations.variety.message"),
         icon: ''
       });
     }
@@ -54,15 +56,15 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
     if (daysSinceLastSession > 3) {
       recommendations.push({
         type: 'info',
-        title: 'Đã lâu rồi không tập',
-        message: `${daysSinceLastSession} ngày kể từ buổi tập cuối. Hãy quay lại tập luyện để duy trì tiến bộ!`,
+        title: t("smartRecommendations.consistency.inactiveTitle"),
+        message: `${daysSinceLastSession} ` + t("smartRecommendations.consistency.inactiveMessage"),
         icon: ''
       });
     } else if (daysSinceLastSession === 0) {
       recommendations.push({
         type: 'success',
-        title: 'Tuyệt vời!',
-        message: 'Bạn đã tập hôm nay. Hãy nghỉ ngơi hợp lý để cơ thể phục hồi.',
+        title: t("smartRecommendations.consistency.todayTitle"),
+        message: t("smartRecommendations.consistency.todayMessage"),
         icon: ''
       });
     }
@@ -79,8 +81,11 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
     if (sortedErrors.length > 0 && sortedErrors[0][1] > 10) {
       recommendations.push({
         type: 'tip',
-        title: 'Lỗi thường gặp',
-        message: `Lỗi "${sortedErrors[0][0]}" xuất hiện ${sortedErrors[0][1]} lần. Hãy tập trung cải thiện điểm này.`,
+        title: t("smartRecommendations.errors.title"),
+        message: t("smartRecommendations.errors.message", {
+          error: sortedErrors[0][0],
+          count: sortedErrors[0][1]
+        }),
         icon: ''
       });
     }
@@ -95,8 +100,10 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
       if (recentAvgReps > prevAvgReps * 1.2) {
         recommendations.push({
           type: 'success',
-          title: 'Sức mạnh tăng lên!',
-          message: `Số lần tập của bạn tăng ${((recentAvgReps - prevAvgReps) / prevAvgReps * 100).toFixed(0)}% so với trước. Tuyệt vời!`,
+          title: t("smartRecommendations.progress.title"),
+          message: t("smartRecommendations.progress.message", {
+            percent: ((recentAvgReps - prevAvgReps) / prevAvgReps * 100).toFixed(0)
+          }),
           icon: ''
         });
       }
@@ -113,8 +120,8 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
     if (sessionsThisWeek.length >= 6) {
       recommendations.push({
         type: 'info',
-        title: 'Nghỉ ngơi là quan trọng',
-        message: 'Bạn đã tập rất chăm chỉ tuần này! Đừng quên dành thời gian nghỉ ngơi cho cơ thể.',
+        title: t("smartRecommendations.rest.title"),
+        message: t("smartRecommendations.rest.message"),
         icon: ''
       });
     }
@@ -146,7 +153,7 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
       <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-        <span>Gợi ý thông minh</span>
+        <span>{t("smartRecommendations.title")}</span>
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {recommendations.map((rec, index) => (

@@ -385,7 +385,7 @@ export const ExercisePage = () => {
                           )}
                         </div>
                         <div>
-                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{exercise.name}</h3>
+                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{t(`exercisePage.exercises.names.${exercise.id}`)}</h3>
                           <span className={`text-xs px-2 py-1 rounded-full ${
                             details?.difficulty === t("exercisePage.exercises.difficulty.easy") ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
                             details?.difficulty === t("exercisePage.exercises.difficulty.medium") ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400' :

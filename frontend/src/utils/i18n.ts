@@ -295,6 +295,13 @@ const resources = {
 
       exercisePage: {
         exercises: {
+          names: {
+            squat: "Squat (Gập gối)",
+            arm_raise: "Nâng Tay",
+            single_leg_stand: "Đứng 1 Chân",
+            calf_raise: "Nâng Gót Chân"
+          },
+
           difficulty: {
             easy: "Dễ",
             medium: "Trung bình",
@@ -983,6 +990,13 @@ const resources = {
 
       exercisePage: {
         exercises: {
+          names: {
+            squat: "Squat",
+            arm_raise: "Arm Raise",
+            single_leg_stand: "Single Leg Stand",
+            calf_raise: "Calf Raise"
+          },
+
           difficulty: {
             easy: "Easy",
             medium: "Medium",

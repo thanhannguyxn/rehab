@@ -155,38 +155,31 @@ export const ExercisePage = () => {
           setCompletionStatus('completed');
           // Voice: Completed
           voiceService.speak(VoiceMessages.complete, true);
-          // Voice: Transition to relaxation
-          setTimeout(() => {
-            voiceService.speak('Bây giờ chúng ta sẽ nghỉ thư giãn ba phút.', true);
-          }, 3000);
-          // Show relaxation popup after completing exercise
+          // Show relaxation popup after completing exercise (allow initial voice to finish)
           setTimeout(() => {
             setShowRelaxation(true);
-          }, 5000);
+          }, 2000);
         } else if (status === 'timeout') {
           setCompletionStatus('timeout');
           // Voice: Timeout
           voiceService.speak(VoiceMessages.timeout, true);
+          setShowSummary(true);
         } else {
           // Manual stop - check if target was reached
-          const targetReached = currentExercise && analysisData?.rep_count &&
-                                analysisData.rep_count >= currentExercise.target_reps;
+          const targetReached = targetReps && analysisData?.rep_count &&
+                                analysisData.rep_count >= targetReps;
           setCompletionStatus(targetReached ? 'completed' : 'timeout');
 
           // Show relaxation if target reached
           if (targetReached) {
             voiceService.speak(VoiceMessages.complete, true);
-            // Voice: Transition to relaxation
-            setTimeout(() => {
-              voiceService.speak('Bây giờ chúng ta sẽ nghỉ thư giãn ba phút.', true);
-            }, 3000);
             setTimeout(() => {
               setShowRelaxation(true);
-            }, 5000);
+            }, 2000);
+          } else {
+            setShowSummary(true);
           }
         }
-
-        setShowSummary(true);
       } catch (error) {
         console.error('Failed to end session:', error);
       }

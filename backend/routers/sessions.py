@@ -82,14 +82,24 @@ async def end_session(request: Request, session_id: int, current_user = Depends(
     # Calculate session stats
     frames = db.query(SessionFrame).filter(SessionFrame.session_id == session_id).all()
 
-    duration = (datetime.utcnow() - session.start_time).total_seconds() if session.start_time else 0
+    start_time_dt = session.start_time
+    if isinstance(start_time_dt, str):
+        # Handle string parsing correctly
+        start_time_dt = datetime.fromisoformat(start_time_dt.replace('Z', '+00:00')).replace(tzinfo=None)
+
+    duration = (datetime.utcnow() - start_time_dt).total_seconds() if start_time_dt else 0
     total_reps = 0
     correct_reps = 0
     accuracy = 0.0
 
     if frames:
         total_reps = max((frame.rep_count for frame in frames), default=0)
-        duration = (frames[-1].timestamp - session.start_time).total_seconds()
+        
+        last_frame_dt = frames[-1].timestamp
+        if isinstance(last_frame_dt, str):
+            last_frame_dt = datetime.fromisoformat(last_frame_dt.replace('Z', '+00:00')).replace(tzinfo=None)
+            
+        duration = (last_frame_dt - start_time_dt).total_seconds()
 
         # Calculate accuracy based on error frames
         error_frames = [f for f in frames if f.errors and f.errors != '[]']
@@ -148,7 +158,7 @@ async def end_session(request: Request, session_id: int, current_user = Depends(
 
 @router.get("/my-history")
 @limiter.limit("30/minute")
-async def get_my_history(request: Request, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_my_history(request: Request, limit: int = 50, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     sessions_query = db.query(DBSession).filter(
         DBSession.patient_id == current_user['user_id']
     ).order_by(DBSession.start_time.desc()).limit(limit).all()

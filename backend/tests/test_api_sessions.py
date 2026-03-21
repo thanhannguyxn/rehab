@@ -24,9 +24,8 @@ def test_start_and_end_session_with_live_stats(client, seed_patient):
     assert payload["total_reps"] == 5
     assert payload["correct_reps"] == 4
     assert payload["accuracy"] == 80.0
+    
     assert payload["common_errors"]["Gập gối chưa đủ"]["count"] == 2
-
-
 def test_my_history_and_error_analytics(client, seed_patient, seed_session_data):
     token = create_token(seed_patient.id, seed_patient.username, "patient")
     headers = {"Authorization": f"Bearer {token}"}

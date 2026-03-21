@@ -25,15 +25,18 @@ from models import (  # noqa: E402
     UserRole,
     hash_password,
 )
-from routers import auth, sessions  # noqa: E402
+from routers import auth, sessions, doctor, profile, websocket  # noqa: E402
 from services import session_runtime  # noqa: E402
 
 TEST_DB_URL = "sqlite:///./test_rehab.db"
 engine = create_engine(TEST_DB_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)   
 app = FastAPI()
 app.include_router(auth.router, prefix="/api/auth")
 app.include_router(sessions.router, prefix="/api/sessions")
+app.include_router(doctor.router, prefix="/api/doctor")
+app.include_router(profile.router, prefix="/api/profile")
+app.include_router(websocket.router, prefix="/ws/exercise")
 
 
 @pytest.fixture(autouse=True)

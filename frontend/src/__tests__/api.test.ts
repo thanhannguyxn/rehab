@@ -22,6 +22,7 @@ describe('api utilities', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.resetModules();
     sessionStorage.clear();
     mockedAxios.create = vi.fn(() => instance);
     mockedAxios.post = vi.fn();

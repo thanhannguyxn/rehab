@@ -119,6 +119,7 @@ async def end_session(session_id: int, current_user = Depends(get_current_user),
                 count=count,
                 severity='medium'
             ))
+        db.flush()
 
     errors = db.query(SessionError).filter(SessionError.session_id == session_id).all()
 

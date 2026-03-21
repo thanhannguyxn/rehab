@@ -10,6 +10,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from limiter import limiter
+
 if sys.platform == "win32":
     # Avoid noisy Proactor transport connection-reset tracebacks on Windows.
     policy_factory = getattr(asyncio, "WindowsSelectorEventLoopPolicy", None)
@@ -26,6 +30,8 @@ from db.connection import init_db
 init_db()
 
 app = FastAPI(title="Rehab System V3")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Mount static files directory for music and assets
 app.mount("/static", StaticFiles(directory="."), name="static")

@@ -1,5 +1,5 @@
 # Profile router
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -8,6 +8,7 @@ from typing import Optional
 from models import User, Gender, MobilityLevel, UserExerciseLimits, get_db
 from routers.auth import verify_token
 from ai_models import PersonalizationEngine
+from limiter import limiter
 
 router = APIRouter()
 
@@ -27,8 +28,10 @@ class PersonalizedParamsRequest(BaseModel):
     exercise_type: str
 
 @router.post("/update")
+@limiter.limit("10/minute")
 async def update_profile(
-    request: UpdateProfileRequest,
+    request: Request,
+    profile_req: UpdateProfileRequest,
     credentials = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
@@ -41,33 +44,33 @@ async def update_profile(
 
     # Calculate BMI if height and weight provided
     bmi = None
-    if request.height_cm and request.weight_kg:
-        bmi = request.weight_kg / ((request.height_cm / 100) ** 2)
+    if profile_req.height_cm and profile_req.weight_kg:
+        bmi = profile_req.weight_kg / ((profile_req.height_cm / 100) ** 2)
 
     # Update user profile
-    if request.age is not None:
-        user.age = request.age
+    if profile_req.age is not None:
+        user.age = profile_req.age
 
-    if request.gender:
-        user.gender = Gender(request.gender)
+    if profile_req.gender:
+        user.gender = Gender(profile_req.gender)
 
-    if request.height_cm is not None:
-        user.height_cm = request.height_cm
+    if profile_req.height_cm is not None:
+        user.height_cm = profile_req.height_cm
 
-    if request.weight_kg is not None:
-        user.weight_kg = request.weight_kg
+    if profile_req.weight_kg is not None:
+        user.weight_kg = profile_req.weight_kg
 
     if bmi is not None:
         user.bmi = bmi
 
-    if request.medical_conditions is not None:
-        user.medical_conditions = request.medical_conditions
+    if profile_req.medical_conditions is not None:
+        user.medical_conditions = profile_req.medical_conditions
 
-    if request.mobility_level:
-        user.mobility_level = MobilityLevel(request.mobility_level)
+    if profile_req.mobility_level:
+        user.mobility_level = MobilityLevel(profile_req.mobility_level)
 
-    if request.pain_level is not None:
-        user.pain_level = request.pain_level
+    if profile_req.pain_level is not None:
+        user.pain_level = profile_req.pain_level
 
     db.commit()
 
@@ -78,7 +81,8 @@ async def update_profile(
     }
 
 @router.get("/me")
-async def get_my_profile(credentials = Depends(verify_token), db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+async def get_my_profile(request: Request, credentials = Depends(verify_token), db: Session = Depends(get_db)):
     """Get current user's profile"""
     user_id = credentials['user_id']
 
@@ -106,8 +110,10 @@ async def get_my_profile(credentials = Depends(verify_token), db: Session = Depe
     }
 
 @router.post("/personalized-params")
+@limiter.limit("20/minute")
 async def get_personalized_params(
-    request: PersonalizedParamsRequest,
+    request: Request,
+    params_req: PersonalizedParamsRequest,
     credentials = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
@@ -139,13 +145,13 @@ async def get_personalized_params(
     # Calculate personalized parameters using AI engine
     params = personalization_engine.calculate_personalized_params(
         user_data,
-        request.exercise_type
+        params_req.exercise_type
     )
 
     # Save to database
     existing_limit = db.query(UserExerciseLimits).filter(
         UserExerciseLimits.user_id == user_id,
-        UserExerciseLimits.exercise_type == request.exercise_type
+        UserExerciseLimits.exercise_type == params_req.exercise_type
     ).first()
 
     if existing_limit:
@@ -159,7 +165,7 @@ async def get_personalized_params(
     else:
         new_limit = UserExerciseLimits(
             user_id=user_id,
-            exercise_type=request.exercise_type,
+            exercise_type=params_req.exercise_type,
             max_depth_angle=params.get('down_angle'),
             min_raise_angle=params.get('up_angle'),
             max_reps_per_set=params.get('max_reps'),

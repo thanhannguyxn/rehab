@@ -1,5 +1,5 @@
 # General/public router for endpoints that don't need authentication or specific prefixes
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -7,6 +7,7 @@ from datetime import datetime
 from models import User, Gender, MobilityLevel, UserExerciseLimits, get_db
 from routers.auth import verify_token
 from ai_models import PersonalizationEngine
+from limiter import limiter
 
 router = APIRouter()
 
@@ -17,8 +18,10 @@ class PersonalizedParamsRequest(BaseModel):
     exercise_type: str
 
 @router.post("/personalized-params")
+@limiter.limit("20/minute")
 async def get_personalized_params(
-    request: PersonalizedParamsRequest,
+    request: Request,
+    req_data: PersonalizedParamsRequest,
     credentials = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
@@ -50,13 +53,13 @@ async def get_personalized_params(
     # Calculate personalized parameters using AI engine
     params = personalization_engine.calculate_personalized_params(
         user_data,
-        request.exercise_type
+        req_data.exercise_type
     )
 
     # Save to database
     existing_limit = db.query(UserExerciseLimits).filter(
         UserExerciseLimits.user_id == user_id,
-        UserExerciseLimits.exercise_type == request.exercise_type
+        UserExerciseLimits.exercise_type == req_data.exercise_type
     ).first()
 
     if existing_limit:
@@ -70,7 +73,7 @@ async def get_personalized_params(
     else:
         new_limit = UserExerciseLimits(
             user_id=user_id,
-            exercise_type=request.exercise_type,
+            exercise_type=req_data.exercise_type,
             max_depth_angle=params.get('down_angle'),
             min_raise_angle=params.get('up_angle'),
             max_reps_per_set=params.get('max_reps'),
@@ -95,7 +98,8 @@ EXERCISE_NAMES = {
 }
 
 @router.get("/exercises")
-async def get_exercises():
+@limiter.limit("30/minute")
+async def get_exercises(request: Request):
     """Get available exercises - public endpoint"""
     return {
         "exercises": [

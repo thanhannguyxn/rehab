@@ -2,8 +2,8 @@ import axios from 'axios';
 import type { LoginResponse, Exercise, Session, Patient, ErrorAnalyticsResponse } from './types';
 import { API_URL } from './config';
 
-// Get token from localStorage
-const getToken = () => localStorage.getItem('token');
+// Get token from sessionStorage
+const getToken = () => sessionStorage.getItem('token');
 
 // Create axios instance with auth
 const api = axios.create({

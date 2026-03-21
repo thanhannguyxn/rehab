@@ -16,6 +16,8 @@ services:
   backend:
     build: ./backend
     container_name: rehab-backend
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:123456@mysql:3306/rehab_v3
     ports:
       - "8000:8000"
     volumes:

@@ -7,11 +7,18 @@ interface SessionCardProps {
 }
 
 export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const localeMap: Record<string, string> = {
+    en: 'en-US',
+    vi: 'vi-VN',
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('vi-VN', {
+    const locale = localeMap[i18n.language] || i18n.language;
+
+    return date.toLocaleString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',

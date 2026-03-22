@@ -163,6 +163,13 @@ const resources = {
       },
 
       patientHistory: {
+        exercises: {
+          squat: "Bài Tập Squat",
+          arm_raise: "Bài Tập Giơ Tay",
+          calf_raise: "Bài Tập Nâng Bắp Chân",
+          single_leg_stand: "Bài Tập Đứng Một Chân"
+        },
+
         title: "Lịch Sử Luyện Tập",
         subtitle: "Xem lại các buổi tập và theo dõi tiến trình của bạn",
 
@@ -884,6 +891,13 @@ const resources = {
       },
 
       patientHistory: {
+        exercises: {
+          squat: "Squat Exercise",
+          arm_raise: "Arm Raise Exercise",
+          calf_raise: "Calf Raise Exercise",
+          single_leg_stand: "Single Leg Stand Exercise"
+        },
+
         title: "Exercise History",
         subtitle: "Review your exercise sessions and track your progress",
 

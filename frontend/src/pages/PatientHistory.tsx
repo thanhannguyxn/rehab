@@ -80,7 +80,7 @@ export const PatientHistory = () => {
   const currentStreak = calculateStreak();
 
   // Get unique exercise types
-  const exerciseTypes = Array.from(new Set(sessions.map(s => s.exercise_name)));
+  const exerciseTypes = Array.from(new Set(sessions.map(s => s.exercise_id)));
 
   // Filter and sort sessions
   const getFilteredAndSortedSessions = () => {
@@ -88,7 +88,7 @@ export const PatientHistory = () => {
     
     // Apply filter
     if (filterExercise !== 'all') {
-      filtered = filtered.filter(s => s.exercise_name === filterExercise);
+      filtered = filtered.filter(s => s.exercise_id === filterExercise);
     }
     
     // Apply sort
@@ -259,7 +259,7 @@ export const PatientHistory = () => {
                   >
                     <option value="all">{t("patientHistory.filterAllExercises")}</option>
                     {exerciseTypes.map(exercise => (
-                      <option key={exercise} value={exercise}>{exercise}</option>
+                      <option key={exercise} value={exercise}>{t(`sessionCard.exercises.${exercise}`, exercise)}</option>
                     ))}
                   </select>
 
@@ -279,7 +279,7 @@ export const PatientHistory = () => {
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition"
                   >
-                    {sortOrder === 'asc' ? '↑' + t("patientHistory.sortAsc") : '↓' + t("patientHistory.sortDesc")}
+                    {sortOrder === 'asc' ? '↑ ' + t("patientHistory.sortAsc") : '↓ ' + t("patientHistory.sortDesc")}
                   </button>
                 </div>
               </div>

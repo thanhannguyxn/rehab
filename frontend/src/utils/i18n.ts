@@ -583,6 +583,36 @@ const resources = {
       },
 
       sessionCard: {
+        exercises: {
+          squat: "Bài Tập Squat",
+          arm_raise: "Bài Tập Giơ Tay",
+          calf_raise: "Bài Tập Nâng Bắp Chân",
+          single_leg_stand: "Bài Tập Đứng Một Chân"
+        },
+
+        errors: {
+          title: "Lỗi phổ biến nhất:",
+
+          // Arm raise errors
+          not_high: "Góc vai chưa đủ",
+          arms_bent: "Tay không thẳng",
+          not_low: "Chưa hạ hết",
+
+          // Squat errors
+          not_deep: "Gập gối chưa đủ",
+          knees_forward: "Gối đẩy ra trước",
+          not_straight: "Chưa đứng thẳng",
+
+          // Calf raise errors
+          not_raised: "Chưa nâng đủ cao",
+          knees_bent: "Gập gối",
+          not_lowered: "Chưa hạ hết",
+
+          // Single leg stand errors
+          knee_not_bent: "Gối chưa gập đủ sâu",
+          leg_not_behind: "Chân không ra sau"
+        },
+
         stats: {
           totalReps: "Tổng số lần",
           correctReps: "Đúng kỹ thuật",
@@ -595,10 +625,6 @@ const resources = {
           good: "Tốt",
           average: "Trung bình",
           needImprovement: "Cần cải thiện"
-        },
-
-        errors: {
-          title: "Lỗi phổ biến nhất:"
         },
 
         comparison: {
@@ -1282,6 +1308,36 @@ const resources = {
       },
 
       sessionCard: {
+        exercises: {
+          squat: "Squat Exercise",
+          arm_raise: "Arm Raise Exercise",
+          calf_raise: "Calf Raise Exercise",
+          single_leg_stand: "Single Leg Stand Exercise"
+        },
+
+        errors: {
+          title: "Most common errors:",
+
+          // Arm raise errors
+          not_high: "Shoulder angle not high enough",
+          arms_bent: "Arms are not straight",
+          not_low: "Not lowered completely",
+
+          // Squat errors
+          not_deep: "Knees not bent deeply enough",
+          knees_forward: "Knees moving too far forward",
+          not_straight: "Not standing fully upright",
+
+          // Calf raise errors
+          not_raised: "Not raised high enough",
+          knees_bent: "Knees are bent",
+          not_lowered: "Not lowered completely",
+
+          // Single leg stand errors
+          knee_not_bent: "Knee not bent deeply enough",
+          leg_not_behind: "Leg not positioned behind"
+        },
+
         stats: {
           totalReps: "Total reps",
           correctReps: "Correct reps",
@@ -1296,14 +1352,10 @@ const resources = {
           needImprovement: "Needs improvement"
         },
 
-        errors: {
-          title: "Most common errors:"
-        },
-
         comparison: {
           title: "Compared to previous session:",
-          accuracyIncrease: "Accuracy +{{value}}%",
-          accuracyDecrease: "Accuracy {{value}}%",
+          accuracyIncrease: "Accuracy",
+          accuracyDecrease: "Accuracy",
           accuracySame: "Accuracy unchanged",
 
           error: "errors",

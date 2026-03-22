@@ -5,6 +5,7 @@ import { doctorAPI } from '../utils/api';
 import { PatientCard } from '../components/PatientCard';
 import type { Patient } from '../types';
 import { useTranslation } from 'react-i18next';
+import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton';
 
 export const DoctorDashboard = () => {
   const { user, logout } = useAuth();
@@ -90,9 +91,10 @@ export const DoctorDashboard = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-6">{t("doctorDashboard.patientList")}</h2>
 
           {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-xl text-gray-600">{t("doctorDashboard.loading")}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <PatientCardSkeleton key={index} />
+              ))}
             </div>
           ) : patients.length === 0 ? (
             <p className="text-center text-gray-600 py-8 text-lg">{t("doctorDashboard.empty")}</p>

@@ -6,6 +6,7 @@ import { SmartRecommendations } from '../components/SmartRecommendations';
 import { HeatmapCalendar } from '../components/HeatmapCalendar';
 import type { Session } from '../types';
 import { useTranslation } from 'react-i18next';
+import { PatientHistorySkeleton } from '../components/skeletons/PatientHistorySkeleton';
 
 export const PatientHistory = () => {
   const navigate = useNavigate();
@@ -151,10 +152,7 @@ export const PatientHistory = () => {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-teal-600 mx-auto"></div>
-            <p className="mt-4 text-xl text-gray-600">{t("patientHistory.loading")}</p>
-          </div>
+          <PatientHistorySkeleton />
         ) : sessions.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <p className="text-2xl text-gray-600 mb-6">{t("patientHistory.noSessions")}</p>

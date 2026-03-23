@@ -50,13 +50,21 @@ export const Navbar = () => {
                 <Link to="/history" className={getLinkClasses('/history')}>
                   {t("navbar.history")}
                 </Link>
+                <Link to="/schedule-sessions" className={getLinkClasses('/schedule-sessions')}>
+                  Schedule Session
+                </Link>
               </>
             )}
             
             {user && user.role === 'doctor' && (
-              <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
-                Dashboard
-              </Link>
+              <>
+                <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
+                  Dashboard
+                </Link>
+                <Link to="/doctor/assistant" className={getLinkClasses('/doctor/assistant')}>
+                  Assistant
+                </Link>
+              </>
             )}
           </div>
 

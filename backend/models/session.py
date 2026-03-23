@@ -68,3 +68,16 @@ class UserExerciseLimits(Base):
 
     # Relationships
     user = relationship("User", back_populates="exercise_limits")
+
+
+class PatientSchedule(Base):
+    __tablename__ = "patient_schedules"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    doctor_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    patient_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    exercise_name = Column(String(255), nullable=False)
+    scheduled_for = Column(DateTime, nullable=False, index=True)
+    note = Column(Text)
+    is_read = Column(Integer, default=0, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

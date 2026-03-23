@@ -2,15 +2,17 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PatientCoachChat } from './components/PatientCoachChat';
 import Layout from './components/Layout';
 import { Landing } from './pages/Landing';
 import { LoginChoice } from './pages/LoginChoice';
 import { Login } from './pages/Login';
-import { PatientDashboard } from './pages/PatientDashboard';
 import { ExercisePage } from './pages/ExercisePage';
 import { PatientHistory } from './pages/PatientHistory';
 import { DoctorDashboard } from './pages/DoctorDashboard';
+import { DoctorAssistantPage } from './pages/DoctorAssistantPage';
 import { PatientDetail } from './pages/PatientDetail';
+import { ScheduleSessionsPage } from './pages/ScheduleSessionsPage';
 import { UserProfile } from './pages/UserProfile';
 import { AppErrorBoundary } from './components/ErrorFallback';
 
@@ -33,6 +35,7 @@ function AppRoutes() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={user?.role === 'doctor' ? <Navigate to="/dashboard" replace /> : <Landing />} />
+        <Route path="/login" element={<Navigate to="/login-choice" replace />} />
         <Route path="/login-choice" element={user ? <Navigate to="/" replace /> : <LoginChoice />} />
         <Route path="/login/:role" element={user ? <Navigate to="/" replace /> : <Login />} />
         
@@ -41,7 +44,7 @@ function AppRoutes() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              {user?.role === 'patient' ? <PatientDashboard /> : <DoctorDashboard />}
+              {user?.role === 'patient' ? <Navigate to="/schedule-sessions" replace /> : <DoctorDashboard />}
             </ProtectedRoute>
           }
         />
@@ -64,6 +67,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="/schedule-sessions"
+          element={
+            <ProtectedRoute requiredRole="patient">
+              <ScheduleSessionsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profile"
           element={
             <ProtectedRoute requiredRole="patient">
@@ -81,10 +92,20 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/doctor/assistant"
+          element={
+            <ProtectedRoute requiredRole="doctor">
+              <DoctorAssistantPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {user?.role === 'patient' && <PatientCoachChat />}
     </Layout>
   );
 }

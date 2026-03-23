@@ -29,12 +29,19 @@ from db.connection import init_db
 # Initialize database
 init_db()
 
+# Seed default exercises (ensures they exist)
+from seed_exercises import seed_exercises
+seed_exercises()
+
 app = FastAPI(title="Rehab System V3")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Mount static files directory for music and assets
 app.mount("/static", StaticFiles(directory="."), name="static")
+
+# Mount uploads directory for exercise videos and thumbnails
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,

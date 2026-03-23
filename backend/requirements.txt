@@ -2,7 +2,7 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 websockets==12.0
 opencv-python==4.8.1.78
-mediapipe==0.10.21
+mediapipe==0.10.5
 numpy==1.26.2
 pyjwt==2.8.0
 sqlalchemy==2.0.23
@@ -12,3 +12,4 @@ passlib==1.7.4
 python-dotenv==1.0.1
 cryptography>=42.0.0
 slowapi==0.1.9
+openai>=1.0.0

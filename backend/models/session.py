@@ -21,6 +21,13 @@ class Session(Base):
     avg_heart_rate = Column(Integer)
     notes = Column(Text)
 
+    # Emotion tracking summary fields
+    avg_pain_level = Column(Float)
+    avg_fatigue_level = Column(Float)
+    predominant_emotion = Column(String(50))
+    pain_incidents = Column(Integer, default=0)
+    fatigue_incidents = Column(Integer, default=0)
+
     # Relationships
     patient = relationship("User", back_populates="sessions")
     frames = relationship("SessionFrame", back_populates="session")
@@ -35,6 +42,13 @@ class SessionFrame(Base):
     rep_count = Column(Integer)
     angles = Column(Text)  # JSON string
     errors = Column(Text)  # JSON string
+
+    # Emotion tracking fields
+    emotion_state = Column(String(50))  # neutral, happy, struggling, pain, tired, focused
+    emotion_confidence = Column(Float)  # 0.0-1.0
+    pain_level = Column(Float)  # 0.0-1.0
+    fatigue_level = Column(Float)  # 0.0-1.0
+    emotion_metrics = Column(Text)  # JSON string with detailed metrics
 
     # Relationships
     session = relationship("Session", back_populates="frames")

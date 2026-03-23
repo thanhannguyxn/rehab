@@ -98,6 +98,30 @@ export const useWebSocket = (
     }
   }, []);
 
+  const toggleEmotionTracking = useCallback((enabled: boolean) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'toggle_emotion_tracking',
+          enabled: enabled,
+        })
+      );
+      console.log('Toggled emotion tracking:', enabled);
+    }
+  }, []);
+
+  const setPerformanceMode = useCallback((mode: 'high_accuracy' | 'balanced' | 'high_speed') => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'set_performance_mode',
+          mode: mode,
+        })
+      );
+      console.log('Set performance mode:', mode);
+    }
+  }, []);
+
   useEffect(() => {
     if (isActive) {
       connect();
@@ -115,5 +139,7 @@ export const useWebSocket = (
     analysisData,
     sendFrame,
     resetCounter,
+    toggleEmotionTracking,
+    setPerformanceMode,
   };
 };

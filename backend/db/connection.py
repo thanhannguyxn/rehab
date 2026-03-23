@@ -16,6 +16,62 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
+DEFAULT_EXERCISES = [
+    {
+        "id": "squat",
+        "name": "Squat (Gập gối)",
+        "description": "Bài tập tăng cường cơ chân và khớp gối",
+        "target_reps": 16,
+        "duration_seconds": 600,
+        "down_threshold": 160.0,
+        "up_threshold": 90.0,
+        "hysteresis": 5.0,
+        "difficulty_level": "medium",
+        "primary_muscle_group": "legs",
+        "video_path": "/squat.mp4",
+    },
+    {
+        "id": "arm_raise",
+        "name": "Nâng Tay",
+        "description": "Bài tập tăng cường cơ vai và tay",
+        "target_reps": 12,
+        "duration_seconds": 300,
+        "down_threshold": 90.0,
+        "up_threshold": 160.0,
+        "hysteresis": 5.0,
+        "difficulty_level": "easy",
+        "primary_muscle_group": "shoulders",
+        "video_path": "/arm_raise.mp4",
+    },
+    {
+        "id": "calf_raise",
+        "name": "Nâng Gót Chân",
+        "description": "Bài tập tăng cường cơ bắp chân",
+        "target_reps": 12,
+        "duration_seconds": 300,
+        "down_threshold": 120.0,
+        "up_threshold": 140.0,
+        "hysteresis": 5.0,
+        "difficulty_level": "easy",
+        "primary_muscle_group": "calves",
+        "video_path": "/calf_raise.mp4",
+    },
+    {
+        "id": "single_leg_stand",
+        "name": "Đứng 1 Chân",
+        "description": "Bài tập cân bằng và tăng cường cơ chân",
+        "target_reps": 10,
+        "duration_seconds": 300,
+        "down_threshold": None,
+        "up_threshold": None,
+        "hysteresis": 5.0,
+        "difficulty_level": "medium",
+        "primary_muscle_group": "legs",
+        "video_path": "/single_leg_stand.mp4",
+    },
+]
+
 def get_db():
     db = SessionLocal()
     try:
@@ -27,6 +83,41 @@ def create_tables():
     """Create all tables"""
     from models.base import Base
     Base.metadata.create_all(bind=engine)
+
+
+def ensure_default_exercises(db):
+    """Ensure built-in exercises exist without removing custom exercises."""
+    from datetime import datetime
+    from models import Exercise
+
+    now = datetime.utcnow()
+
+    for payload in DEFAULT_EXERCISES:
+        exercise = db.query(Exercise).filter(Exercise.id == payload["id"]).first()
+
+        if exercise is None:
+            db.add(
+                Exercise(
+                    **payload,
+                    is_default=True,
+                    is_active=True,
+                    created_at=now,
+                    updated_at=now,
+                )
+            )
+            continue
+
+        # Keep existing customizations but make sure built-in exercises remain visible.
+        exercise.is_default = True
+        exercise.is_active = True
+        exercise.updated_at = now
+
+        if not exercise.name:
+            exercise.name = payload["name"]
+        if not exercise.description:
+            exercise.description = payload["description"]
+        if not exercise.video_path:
+            exercise.video_path = payload["video_path"]
 
 def init_db():
     """Initialize database with default data"""
@@ -68,6 +159,8 @@ def init_db():
                     doctor_id=doctor.id
                 )
                 db.add(patient)
+
+        ensure_default_exercises(db)
 
         db.commit()
     except Exception as e:

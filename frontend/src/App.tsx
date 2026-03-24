@@ -12,6 +12,8 @@ import { PatientHistory } from './pages/PatientHistory';
 import { DoctorDashboard } from './pages/DoctorDashboard';
 import { PatientDetail } from './pages/PatientDetail';
 import { UserProfile } from './pages/UserProfile';
+import { ExerciseManagement } from './pages/ExerciseManagement';
+import { PendingExerciseDetail } from './pages/PendingExerciseDetail';
 import { AppErrorBoundary } from './components/ErrorFallback';
 
 function AppRoutes() {
@@ -78,6 +80,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute requiredRole="doctor">
               <PatientDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercise-management"
+          element={
+            <ProtectedRoute requiredRole="doctor">
+              <ExerciseManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pending-exercises/:id"
+          element={
+            <ProtectedRoute requiredRole="doctor">
+              <PendingExerciseDetail />
             </ProtectedRoute>
           }
         />

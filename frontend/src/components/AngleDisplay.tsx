@@ -10,6 +10,15 @@ interface AngleDisplayProps {
 export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayProps) => {
   const { t } = useTranslation();
 
+  const labelByKey: Record<string, string> = {
+    left_knee: t("angleDisplay.labels.leftKnee"),
+    right_knee: t("angleDisplay.labels.rightKnee"),
+    left_shoulder: t("angleDisplay.labels.leftShoulder"),
+    right_shoulder: t("angleDisplay.labels.rightShoulder"),
+    left_ankle: t("angleDisplay.labels.leftAnkle"),
+    right_ankle: t("angleDisplay.labels.rightAnkle"),
+  };
+
   const getAngleColor = (angle: number, target: number, direction: 'up' | 'down') => {
     if (direction === 'up') {
       if (angle >= target) return 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30';
@@ -53,6 +62,23 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
         { key: 'left_ankle', label: t("angleDisplay.labels.leftAnkle"), target: 140, direction: 'up' },
         { key: 'right_ankle', label: t("angleDisplay.labels.rightAnkle"), target: 140, direction: 'up' }
     );
+  }
+
+  // Fallback for new/custom exercises that do not have a predefined display mapping.
+  if (angleConfigs.length === 0 && angles) {
+    const fallbackOrder = ['left_knee', 'right_knee', 'left_shoulder', 'right_shoulder', 'left_ankle', 'right_ankle'];
+    const usableKeys = fallbackOrder.filter((key) => typeof angles[key] === 'number');
+
+    for (const key of usableKeys.slice(0, 4)) {
+      const target = key.includes('shoulder') ? 160 : key.includes('ankle') ? 140 : 90;
+      const direction: 'up' | 'down' = key.includes('shoulder') || key.includes('ankle') ? 'up' : 'down';
+      angleConfigs.push({
+        key,
+        label: labelByKey[key] || key,
+        target,
+        direction,
+      });
+    }
   }
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">

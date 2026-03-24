@@ -7,7 +7,7 @@ from typing import Optional
 
 from models import DBSession, SessionFrame, SessionError, get_db
 from routers.auth import get_current_user
-from services.session_runtime import start_live_session, get_live_session, pop_live_session
+from services.session_runtime import start_live_session, get_live_session, pop_live_session, get_emotion_summary
 from limiter import limiter
 
 router = APIRouter()
@@ -121,6 +121,17 @@ async def end_session(request: Request, session_id: int, current_user = Depends(
     session.duration_seconds = int(duration)
     session.accuracy = round(accuracy, 2)
     session.correct_reps = correct_reps
+
+    # Update emotion summary if available
+    if live_stats:
+        emotion_summary = get_emotion_summary(session_id)
+        if emotion_summary:
+            session.avg_pain_level = emotion_summary.get('avg_pain_level')
+            session.avg_fatigue_level = emotion_summary.get('avg_fatigue_level')
+            session.predominant_emotion = emotion_summary.get('predominant_emotion')
+            session.pain_incidents = emotion_summary.get('pain_incidents', 0)
+            session.fatigue_incidents = emotion_summary.get('fatigue_incidents', 0)
+            print(f"Session {session_id} emotion summary: {emotion_summary}")
 
     # Rebuild error summary from live stats if available.
     if live_stats:

@@ -1,29 +1,32 @@
-"""Doctor assistant agent with doctor-scoped patient analytics context."""
+"""Doctor assistant agent with conversation memory, tool-calling, and LLM completion."""
 
 import json
 import re
 import unicodedata
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from models import User, DBSession, SessionError, UserRole, PatientSchedule
-from services.patient_coach_agent import _call_chat_completion
+from models import User, DBSession, SessionError, UserRole, PatientSchedule, ChatMessage, ConversationRole
+from settings import LLM_API_BASE_URL, LLM_API_KEY, LLM_MODEL
+from services.tools import TOOL_DEFINITIONS, TOOL_NAMES, execute_tool, build_tool_result_message
 
+_AGENT_TYPE = "doctor_assistant"
+_MAX_HISTORY_MESSAGES = 20
+
+# ---------------------------------------------------------------------------
+# Scheduling helpers (retained as fallback / lightweight path)
+# ---------------------------------------------------------------------------
 
 _EXERCISE_ALIASES = {
     "arm_raise": ["arm_raise", "arm raise", "arm-raise", "giơ tay", "gio tay"],
     "squat": ["squat"],
     "calf_raise": ["calf_raise", "calf raise", "calf-raise", "nâng bắp chân", "nang bap chan"],
     "single_leg_stand": [
-        "single_leg_stand",
-        "single leg stand",
-        "single-leg-stand",
-        "đứng một chân",
-        "dung mot chan",
+        "single_leg_stand", "single leg stand", "single-leg-stand",
+        "đứng một chân", "dung mot chan",
     ],
 }
 
@@ -46,7 +49,6 @@ def _resolve_exercise_name(message: str) -> Optional[str]:
 
 def _resolve_scheduled_for(message: str) -> datetime:
     normalized = _normalize_text(message)
-
     date_match = re.search(r"\b(\d{4}-\d{2}-\d{2})\b", normalized)
     if date_match:
         try:
@@ -54,7 +56,6 @@ def _resolve_scheduled_for(message: str) -> datetime:
         except ValueError:
             pass
 
-    # Support dd/mm/yyyy and dd-mm-yyyy which are common in VN usage.
     date_match_dmy = re.search(r"\b(\d{1,2})[/-](\d{1,2})[/-](\d{4})\b", normalized)
     if date_match_dmy:
         day = int(date_match_dmy.group(1))
@@ -266,24 +267,22 @@ def _build_doctor_context(db: Session, doctor_id: int, patient_id: Optional[int]
     patient_summary_list: List[Dict[str, Any]] = []
     for p in patients:
         last = last_session_per_patient.get(p.id)
-        patient_summary_list.append(
-            {
-                "patient_id": p.id,
-                "full_name": p.full_name,
-                "age": p.age,
-                "mobility_level": p.mobility_level.value if p.mobility_level else None,
-                "pain_level": p.pain_level,
-                "session_count": int(sessions_per_patient.get(p.id, 0) or 0),
-                "avg_accuracy": round(float(avg_accuracy_per_patient.get(p.id, 0.0) or 0.0), 2),
-                "last_session": {
-                    "exercise_name": last.exercise_name,
-                    "start_time": last.start_time.isoformat() if last and last.start_time else None,
-                    "accuracy": round(float(last.accuracy or 0.0), 2) if last else None,
-                }
-                if last
-                else None,
+        patient_summary_list.append({
+            "patient_id": p.id,
+            "full_name": p.full_name,
+            "age": p.age,
+            "mobility_level": p.mobility_level.value if p.mobility_level else None,
+            "pain_level": p.pain_level,
+            "session_count": int(sessions_per_patient.get(p.id, 0) or 0),
+            "avg_accuracy": round(float(avg_accuracy_per_patient.get(p.id, 0.0) or 0.0), 2),
+            "last_session": {
+                "exercise_name": last.exercise_name,
+                "start_time": last.start_time.isoformat() if last and last.start_time else None,
+                "accuracy": round(float(last.accuracy or 0.0), 2) if last else None,
             }
-        )
+            if last
+            else None,
+        })
 
     context["patient_summary_list"] = patient_summary_list[:20]
 
@@ -324,17 +323,156 @@ def _build_doctor_context(db: Session, doctor_id: int, patient_id: Optional[int]
     return context
 
 
+# ---------------------------------------------------------------------------
+# Conversation memory helpers
+# ---------------------------------------------------------------------------
+
+def _load_conversation_history(db: Session, user_id: int) -> List[Dict[str, str]]:
+    """Load the most recent conversation messages from DB for context."""
+    rows = (
+        db.query(ChatMessage)
+        .filter(
+            ChatMessage.user_id == user_id,
+            ChatMessage.agent_type == _AGENT_TYPE,
+        )
+        .order_by(ChatMessage.created_at.desc())
+        .limit(_MAX_HISTORY_MESSAGES)
+        .all()
+    )
+    return [
+        {"role": row.role.value, "content": row.content}
+        for row in reversed(rows)
+    ]
+
+
+def _save_message(
+    db: Session,
+    user_id: int,
+    role: ConversationRole,
+    content: str,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> None:
+    """Persist a chat message to the database."""
+    msg = ChatMessage(
+        user_id=user_id,
+        agent_type=_AGENT_TYPE,
+        role=role,
+        content=content,
+        metadata_=json.dumps(metadata) if metadata else None,
+    )
+    db.add(msg)
+    db.commit()
+
+
+# ---------------------------------------------------------------------------
+# LLM call helper (supports tool-calling)
+# ---------------------------------------------------------------------------
+
+def _call_llm_with_tools(messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Call LLM with optional tool-calling.
+    Returns the full response dict (includes tool_call if present).
+    Falls back gracefully when LLM_API_KEY is missing.
+    """
+    if not LLM_API_KEY:
+        return {
+            "content": (
+                "Doctor Assistant is configured but LLM_API_KEY is missing. "
+                "Please set it in backend/.env."
+            ),
+            "tool_call": None,
+        }
+
+    endpoint = LLM_API_BASE_URL.rstrip("/") + "/chat/completions"
+    payload: Dict[str, Any] = {
+        "model": LLM_MODEL,
+        "temperature": 0.3,
+        "max_tokens": 1000,
+        "messages": messages,
+        "tools": TOOL_DEFINITIONS,
+        "tool_choice": "auto",
+    }
+
+    req = __import__("urllib.request", fromlist=["Request"]).Request(
+        endpoint,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {LLM_API_KEY}",
+        },
+        method="POST",
+    )
+
+    try:
+        import urllib.error as _ue
+        with __import__("urllib.request", fromlist=["urlopen"]).urlopen(req, timeout=30) as resp:
+            raw = resp.read().decode("utf-8")
+            data = json.loads(raw)
+            choice = data["choices"][0]
+            msg = choice["message"]
+            return {
+                "content": msg.get("content") or "",
+                "tool_call": msg.get("tool_call"),
+                "finish_reason": choice.get("finish_reason"),
+            }
+    except Exception as exc:
+        return {
+            "content": f"I could not reach the LLM service ({type(exc).__name__}). Please try again.",
+            "tool_call": None,
+            "finish_reason": "error",
+        }
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
+
 def generate_doctor_assistant_reply(
     db: Session,
     doctor_id: int,
     user_message: str,
     patient_id: Optional[int] = None,
 ) -> Dict[str, Any]:
+    """
+    Generate doctor assistant reply with:
+    - Conversation memory (loaded from / saved to DB)
+    - Tool-calling (create_patient_schedule, list_doctor_patients, get_patient_details)
+    - Regex-based scheduling fallback for simple commands
+    """
+    # Try lightweight regex scheduling first (no LLM needed)
     command_result = _try_create_schedule_from_message(db, doctor_id, user_message)
     if command_result is not None:
+        # Still save the exchange for history
+        _save_message(db, doctor_id, ConversationRole.user, user_message, {"used_llm": False})
+        _save_message(db, doctor_id, ConversationRole.assistant, command_result["reply"], {"used_llm": False})
         return command_result
 
+    # Load history before saving the new user message
+    conversation_history = _load_conversation_history(db, doctor_id)
+
+    # Persist user message immediately
+    _save_message(
+        db,
+        user_id=doctor_id,
+        role=ConversationRole.user,
+        content=user_message,
+        metadata={"patient_id": patient_id},
+    )
+
     context = _build_doctor_context(db, doctor_id, patient_id)
+
+    # Build conversation history block
+    history_block = ""
+    if conversation_history:
+        history_lines = []
+        for msg in conversation_history:
+            role_label = "Doctor" if msg["role"] == "user" else "Assistant"
+            history_lines.append(f"{role_label}: {msg['content']}")
+        history_block = (
+            "\n[Conversation History - refer to this for context]\n"
+            + "\n".join(history_lines)
+            + "\n[End of history]\n"
+        )
 
     system_prompt = (
         "You are a Doctor Assistant for rehabilitation clinicians. "
@@ -342,7 +480,14 @@ def generate_doctor_assistant_reply(
         "When discussing patient data, use only provided context. "
         "Prefer concise bullets for plans and concise paragraph for direct explanations. "
         "Never provide medication prescriptions or definitive diagnosis. "
-        "If severe symptom patterns are discussed, recommend urgent clinical evaluation."
+        "If severe symptom patterns are discussed, recommend urgent clinical evaluation.\n"
+        "You have access to tools: create_patient_schedule, list_doctor_patients, get_patient_details.\n"
+        "Use create_patient_schedule when a doctor explicitly asks to schedule or assign an exercise to a patient "
+        "(provide patient_id as integer, exercise_name, scheduled_for in ISO 8601 format, and optional note).\n"
+        "Use list_doctor_patients to get a list of all patients under this doctor.\n"
+        "Use get_patient_details to look up a specific patient's full record by ID.\n"
+        "Call tools proactively when needed rather than guessing. "
+        "After a tool executes, incorporate its result into your response naturally."
     )
 
     user_payload = {
@@ -358,14 +503,76 @@ def generate_doctor_assistant_reply(
         },
     }
 
-    reply = _call_chat_completion(
-        [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)},
-        ]
+    # Build messages for the LLM
+    llm_messages: List[Dict[str, Any]] = [
+        {"role": "system", "content": system_prompt},
+    ]
+    if history_block:
+        llm_messages.append({"role": "system", "content": history_block})
+    llm_messages.append({"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)})
+
+    # First LLM call
+    response = _call_llm_with_tools(llm_messages)
+
+    # Handle tool calls: execute up to 5 rounds to allow chained calls
+    max_rounds = 5
+    current_content = response.get("content") or ""
+    tool_call = response.get("tool_call")
+
+    for _round in range(max_rounds):
+        if tool_call is None:
+            break
+
+        tool_name = tool_call.get("function", {}).get("name", "")
+        if tool_name not in TOOL_NAMES:
+            current_content += f"\n[Unknown tool '{tool_name}' ignored]"
+            break
+
+        raw_args = tool_call["function"].get("arguments", "{}")
+        try:
+            arguments = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
+        except json.JSONDecodeError:
+            current_content += "\n[Invalid tool arguments]"
+            break
+
+        tool_result = execute_tool(db, doctor_id, tool_name, arguments)
+        tool_result_str = build_tool_result_message(tool_result)
+
+        # Add tool result as a special assistant message with a tool call role
+        llm_messages.append({
+            "role": "assistant",
+            "content": current_content,
+            "tool_call": tool_call,
+        })
+        llm_messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call.get("id", ""),
+            "content": tool_result_str,
+        })
+
+        # Make next LLM call with tool result
+        response = _call_llm_with_tools(llm_messages)
+        current_content = response.get("content") or ""
+        tool_call = response.get("tool_call")
+
+    # If no content was generated, use a fallback
+    final_reply = current_content.strip()
+    if not final_reply:
+        final_reply = (
+            "I processed your request but did not generate a response. "
+            "Please try rephrasing your question."
+        )
+
+    # Persist assistant reply
+    _save_message(
+        db,
+        user_id=doctor_id,
+        role=ConversationRole.assistant,
+        content=final_reply,
+        metadata={"used_llm": True},
     )
 
     return {
-        "reply": reply,
+        "reply": final_reply,
         "used_llm": True,
     }

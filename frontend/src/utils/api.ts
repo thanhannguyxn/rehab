@@ -21,6 +21,14 @@ interface PatientScheduleNotification {
   message: string;
 }
 
+export interface ChatHistoryEntry {
+  id: number;
+  role: 'user' | 'assistant';
+  content: string;
+  created_at: string;
+  metadata?: Record<string, unknown>;
+}
+
 // Get token from sessionStorage
 const getToken = () => sessionStorage.getItem('token');
 
@@ -127,6 +135,7 @@ export const doctorAPI = {
 // ============= AGENT APIs =============
 
 export const agentAPI = {
+  // --- Patient chat ---
   async patientChat(message: string, exerciseType?: string): Promise<PatientChatResponse> {
     const response = await api.post('/agent/patient/chat', {
       message,
@@ -135,6 +144,19 @@ export const agentAPI = {
     return response.data;
   },
 
+  async getPatientChatHistory(limit = 40): Promise<ChatHistoryEntry[]> {
+    const response = await api.get('/agent/patient/history', {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  async clearPatientChatHistory(): Promise<{ ok: boolean; deleted: number }> {
+    const response = await api.delete('/agent/patient/history');
+    return response.data;
+  },
+
+  // --- Doctor chat ---
   async doctorChat(message: string, patientId?: number): Promise<DoctorChatResponse> {
     const response = await api.post('/agent/doctor/chat', {
       message,
@@ -143,6 +165,19 @@ export const agentAPI = {
     return response.data;
   },
 
+  async getDoctorChatHistory(limit = 40): Promise<ChatHistoryEntry[]> {
+    const response = await api.get('/agent/doctor/history', {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  async clearDoctorChatHistory(): Promise<{ ok: boolean; deleted: number }> {
+    const response = await api.delete('/agent/doctor/history');
+    return response.data;
+  },
+
+  // --- Notifications / Schedules ---
   async getPatientNotifications(): Promise<{ notifications: PatientScheduleNotification[] }> {
     const response = await api.get('/agent/patient/notifications');
     return response.data;

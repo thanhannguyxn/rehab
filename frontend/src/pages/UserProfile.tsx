@@ -56,7 +56,7 @@ export const UserProfile = () => {
 
   const loadProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const response = await fetch('http://localhost:8000/api/profile/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -113,7 +113,7 @@ export const UserProfile = () => {
     setMessage(null);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const response = await fetch('http://localhost:8000/api/profile/update', {
         method: 'POST',
         headers: {

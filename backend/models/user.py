@@ -54,9 +54,9 @@ class User(Base):
     pain_level = Column(Integer)
     doctor_notes = Column(Text)
     contraindicated_exercises = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    doctor_id = Column(Integer, ForeignKey('users.id'), index=True)
-
+    created_at = Column(DateTime, default=datetime.utcnow, index=True) # Add index for faster queries by created_at
+    doctor_id = Column(Integer, ForeignKey('users.id'), index=True) # Add index for faster queries by doctor_id
+    new_column = Column(String(100), nullable=True) #test for alembic migration
 
     # Relationships
     doctor = relationship("User", remote_side=[id])

@@ -8,7 +8,7 @@ Dưới đây là **quy trình hoàn chỉnh** để thay đổi database schema
 
 ### **Bước 1: Thay đổi Model SQLAlchemy**
 ```python
-# Trong backend/models.py
+# Trong backend/session.py hoặc backend/user.py
 class User(Base):
     # Thêm cột mới
     new_column = Column(String(100), nullable=True)
@@ -247,7 +247,3 @@ backend/
 5. **Có rollback plan** sẵn
 6. **Version control** migration files
 7. **Document** schema changes
-
-Với quy trình này, bạn có thể thay đổi database một cách an toàn và có thể quản lý được! 🚀
-
-Bạn có câu hỏi cụ thể về tình huống nào không?

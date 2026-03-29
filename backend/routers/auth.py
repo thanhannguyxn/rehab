@@ -1,5 +1,5 @@
 # Authentication router
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -9,6 +9,7 @@ from typing import Optional
 
 from models import User, UserRole, Gender, MobilityLevel, get_db, hash_password, verify_password
 from settings import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS
+from limiter import limiter
 
 router = APIRouter()
 security = HTTPBearer()
@@ -55,16 +56,17 @@ def get_current_user(token_data = Depends(verify_token)):
     return token_data
 
 @router.post("/login")
-async def login(request: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def login(request: Request, login_req: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(
-        User.username == request.username
+        User.username == login_req.username
     ).first()
 
-    if not user or not verify_password(request.password, user.password_hash):
+    if not user or not verify_password(login_req.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     # Validate role matches the expected role
-    if user.role.value != request.role:
+    if user.role.value != login_req.role:
         raise HTTPException(
             status_code=403,
             detail=f"Tài khoản này là tài khoản {'bác sĩ' if user.role.value == 'doctor' else 'bệnh nhân'}. Vui lòng chọn đúng loại tài khoản."
@@ -86,27 +88,28 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
     }
 
 @router.post("/register")
-async def register(request: RegisterRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def register(request: Request, reg_req: RegisterRequest, db: Session = Depends(get_db)):
     try:
         # Check if username already exists
-        existing_user = db.query(User).filter(User.username == request.username).first()
+        existing_user = db.query(User).filter(User.username == reg_req.username).first()
         if existing_user:
             raise HTTPException(status_code=400, detail="Username already exists")
 
         # Create new user
         new_user = User(
-            username=request.username,
-            password_hash=hash_password(request.password),
-            role=UserRole.patient if request.role == 'patient' else UserRole.doctor,
-            full_name=request.full_name,
-            age=request.age,
-            gender=Gender(request.gender) if request.gender else None,
-            height_cm=request.height_cm,
-            weight_kg=request.weight_kg,
-            medical_conditions=request.medical_conditions,
-            mobility_level=MobilityLevel(request.mobility_level) if request.mobility_level else None,
-            pain_level=request.pain_level,
-            doctor_id=request.doctor_id,
+            username=reg_req.username,
+            password_hash=hash_password(reg_req.password),
+            role=UserRole.patient if reg_req.role == 'patient' else UserRole.doctor,
+            full_name=reg_req.full_name,
+            age=reg_req.age,
+            gender=Gender(reg_req.gender) if reg_req.gender else None,
+            height_cm=reg_req.height_cm,
+            weight_kg=reg_req.weight_kg,
+            medical_conditions=reg_req.medical_conditions,
+            mobility_level=MobilityLevel(reg_req.mobility_level) if reg_req.mobility_level else None,
+            pain_level=reg_req.pain_level,
+            doctor_id=reg_req.doctor_id,
             created_at=datetime.utcnow()
         )
 

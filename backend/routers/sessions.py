@@ -1,5 +1,5 @@
 # Sessions router
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import datetime
@@ -8,6 +8,7 @@ from typing import Optional
 from models import DBSession, SessionFrame, SessionError, get_db
 from routers.auth import get_current_user
 from services.session_runtime import start_live_session, get_live_session, pop_live_session
+from limiter import limiter
 
 router = APIRouter()
 
@@ -50,7 +51,8 @@ def get_vietnamese_error_name(error_name: str) -> str:
     return ERROR_NAMES.get(error_name, error_name)
 
 @router.post("/start")
-async def start_session(exercise_name: str, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("20/minute")
+async def start_session(request: Request, exercise_name: str, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     # Create new session
     new_session = DBSession(
         patient_id=current_user['user_id'],
@@ -67,7 +69,8 @@ async def start_session(exercise_name: str, current_user = Depends(get_current_u
     return {'session_id': new_session.id}
 
 @router.post("/{session_id}/end")
-async def end_session(session_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("20/minute")
+async def end_session(request: Request, session_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     session = db.query(DBSession).filter(
         DBSession.id == session_id,
         DBSession.patient_id == current_user['user_id']
@@ -79,14 +82,24 @@ async def end_session(session_id: int, current_user = Depends(get_current_user),
     # Calculate session stats
     frames = db.query(SessionFrame).filter(SessionFrame.session_id == session_id).all()
 
-    duration = (datetime.utcnow() - session.start_time).total_seconds() if session.start_time else 0
+    start_time_dt = session.start_time
+    if isinstance(start_time_dt, str):
+        # Handle string parsing correctly
+        start_time_dt = datetime.fromisoformat(start_time_dt.replace('Z', '+00:00')).replace(tzinfo=None)
+
+    duration = (datetime.utcnow() - start_time_dt).total_seconds() if start_time_dt else 0
     total_reps = 0
     correct_reps = 0
     accuracy = 0.0
 
     if frames:
         total_reps = max((frame.rep_count for frame in frames), default=0)
-        duration = (frames[-1].timestamp - session.start_time).total_seconds()
+        
+        last_frame_dt = frames[-1].timestamp
+        if isinstance(last_frame_dt, str):
+            last_frame_dt = datetime.fromisoformat(last_frame_dt.replace('Z', '+00:00')).replace(tzinfo=None)
+            
+        duration = (last_frame_dt - start_time_dt).total_seconds()
 
         # Calculate accuracy based on error frames
         error_frames = [f for f in frames if f.errors and f.errors != '[]']
@@ -119,6 +132,7 @@ async def end_session(session_id: int, current_user = Depends(get_current_user),
                 count=count,
                 severity='medium'
             ))
+        db.flush()
 
     errors = db.query(SessionError).filter(SessionError.session_id == session_id).all()
 
@@ -143,7 +157,8 @@ async def end_session(session_id: int, current_user = Depends(get_current_user),
     }
 
 @router.get("/my-history")
-async def get_my_history(limit: int = 20, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+async def get_my_history(request: Request, limit: int = 50, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     sessions_query = db.query(DBSession).filter(
         DBSession.patient_id == current_user['user_id']
     ).order_by(DBSession.start_time.desc()).limit(limit).all()
@@ -152,10 +167,11 @@ async def get_my_history(limit: int = 20, current_user = Depends(get_current_use
     for session in sessions_query:
         # Get errors for this session
         errors = db.query(SessionError).filter(SessionError.session_id == session.id).all()
-        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'count': e.count, 'severity': e.severity} for e in errors]
+        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'displayname': e.error_name, 'count': e.count, 'severity': e.severity} for e in errors]
 
         sessions.append({
             'id': session.id,
+            'exercise_id': session.exercise_name,
             'exercise_name': get_vietnamese_exercise_name(session.exercise_name),
             'start_time': (session.start_time.isoformat() if isinstance(session.start_time, datetime) else datetime.fromisoformat(session.start_time.replace('Z', '+00:00')).isoformat()) if session.start_time else None,
             'total_reps': session.total_reps,
@@ -168,7 +184,8 @@ async def get_my_history(limit: int = 20, current_user = Depends(get_current_use
     return {'sessions': sessions}
 
 @router.get("/error-analytics")
-async def get_error_analytics(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+async def get_error_analytics(request: Request, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get error analytics grouped by exercise type"""
     from sqlalchemy import func
 

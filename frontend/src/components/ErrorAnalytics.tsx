@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { sessionAPI, doctorAPI } from '../utils/api';
 import type { ExerciseErrorAnalytics } from '../utils/types';
+import { useTranslation } from 'react-i18next';
 
 interface ErrorAnalyticsProps {
   patientId?: number; // Optional: for doctor view
@@ -11,6 +12,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   const [analytics, setAnalytics] = useState<ExerciseErrorAnalytics[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadAnalytics();
@@ -36,7 +38,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   if (isLoading) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Phân Tích Lỗi Theo Bài Tập</h3>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("errorAnalytics.title")}</h3>
         <div className="flex justify-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
         </div>
@@ -47,8 +49,8 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   if (analytics.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Phân Tích Lỗi Theo Bài Tập</h3>
-        <p className="text-lg text-gray-600">Chưa có dữ liệu lỗi</p>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("errorAnalytics.title")}</h3>
+        <p className="text-lg text-gray-600">{t("errorAnalytics.noData")}</p>
       </div>
     );
   }
@@ -70,9 +72,9 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
       return (
         <div className="bg-white p-4 rounded-lg shadow-lg border-2 border-teal-500">
           <p className="font-bold text-gray-800 mb-2">{data.name}</p>
-          <p className="text-orange-600 font-semibold">Tổng: {data.value} lần</p>
-          <p className="text-amber-600 font-semibold">TB: {data.avgValue} lần/buổi</p>
-          <p className="text-teal-600 font-semibold">Xuất hiện: {data.sessions} buổi</p>
+          <p className="text-orange-600 font-semibold">{t("errorAnalytics.tooltip.total")}: {data.value} {t("errorAnalytics.data.reps")}</p>
+          <p className="text-amber-600 font-semibold">{t("errorAnalytics.tooltip.average")}: {data.avgValue} {t("errorAnalytics.data.rps")}</p>
+          <p className="text-teal-600 font-semibold">{t("errorAnalytics.labels.sessionCount")}: {data.sessions} {t("errorAnalytics.data.sessions")}</p>
         </div>
       );
     }
@@ -85,7 +87,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   return (
     <div className="bg-gradient-to-br from-white to-teal-50 p-6 rounded-xl shadow-lg">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        Lỗi Thường Gặp Theo Bài Tập
+        {t("errorAnalytics.commonErrors")}
       </h3>
       
       {/* Exercise Tabs */}
@@ -110,7 +112,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
         <div className="bg-white rounded-xl p-6 mb-6 shadow-md">
           <h4 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
             <span className="text-2xl">📈</span>
-            Biểu đồ thống kê lỗi
+            {t("errorAnalytics.chartTitle")}
           </h4>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart 
@@ -199,14 +201,14 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
           </div>
         </div>
       ) : (
-        <p className="text-gray-600 text-center py-8">Chưa có lỗi cho bài tập này</p>
+        <p className="text-gray-600 text-center py-8">{t("errorAnalytics.noErrors")}</p>
       )}
 
       {/* Error Details Cards */}
       {currentExercise && currentExercise.errors.length > 0 && (
         <div>
           <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-            Chi tiết lỗi
+            {t("errorAnalytics.errorDetails")}
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {currentExercise.errors.map((error, index) => (
@@ -218,16 +220,16 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
                 <h5 className="font-bold text-gray-800 mb-3 text-lg">{error.error_name}</h5>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Tổng số lần:</span>
+                    <span className="text-gray-600">{t("errorAnalytics.totalCount")}:</span>
                     <span className="font-bold text-xl text-orange-600">{error.total_count}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Trung bình/buổi:</span>
+                    <span className="text-gray-600">{t("errorAnalytics.avgPerSessions")}:</span>
                     <span className="font-bold text-xl text-amber-600">{error.avg_per_session}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Xuất hiện:</span>
-                    <span className="font-bold text-xl text-teal-600">{error.session_count} buổi</span>
+                    <span className="text-gray-600">{t("errorAnalytics.sessions")}:</span>
+                    <span className="font-bold text-xl text-teal-600">{error.session_count} {t("errorAnalytics.data.sessions")}</span>
                   </div>
                 </div>
               </div>

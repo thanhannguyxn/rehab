@@ -4,12 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { doctorAPI } from '../utils/api';
 import { PatientCard } from '../components/PatientCard';
 import type { Patient } from '../types';
+import { useTranslation } from 'react-i18next';
+import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton';
 
 export const DoctorDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadPatients();
@@ -37,14 +40,14 @@ export const DoctorDashboard = () => {
       <div className="bg-blue-600 text-white p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Dashboard Bác Sĩ</h1>
-            <p className="text-xl mt-1">Xin chào, {user?.full_name}</p>
+            <h1 className="text-3xl font-bold">{t("doctorDashboard.title")}</h1>
+            <p className="text-xl mt-1">{t("doctorDashboard.greeting")}, {user?.full_name}</p>
           </div>
           <button
             onClick={handleLogout}
             className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
           >
-            Đăng Xuất
+            {t("doctorDashboard.logout")}
           </button>
         </div>
       </div>
@@ -53,11 +56,11 @@ export const DoctorDashboard = () => {
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Tổng bệnh nhân</p>
+            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.totalPatients")}</p>
             <p className="text-5xl font-bold text-blue-600">{patients.length}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Tập hôm nay</p>
+            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.todaySessions")}</p>
             <p className="text-5xl font-bold text-green-600">
               {patients.filter((p) => {
                 if (!p.last_session) return false;
@@ -68,7 +71,7 @@ export const DoctorDashboard = () => {
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Độ chính xác TB</p>
+            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.avgAccuracy")}</p>
             <p className="text-5xl font-bold text-purple-600">
               {patients.filter((p) => p.last_session).length > 0
                 ? (
@@ -85,15 +88,16 @@ export const DoctorDashboard = () => {
 
         {/* Patients List */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Danh Sách Bệnh Nhân</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">{t("doctorDashboard.patientList")}</h2>
 
           {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-xl text-gray-600">Đang tải...</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <PatientCardSkeleton key={index} />
+              ))}
             </div>
           ) : patients.length === 0 ? (
-            <p className="text-center text-gray-600 py-8 text-lg">Chưa có bệnh nhân nào</p>
+            <p className="text-center text-gray-600 py-8 text-lg">{t("doctorDashboard.empty")}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {patients.map((patient) => (

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
 import { STATIC_BASE_URL } from '../utils/config';
+import { useTranslation } from 'react-i18next';
 
 interface RelaxationPopupProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
   const [timeRemaining, setTimeRemaining] = useState(duration);
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen) {
@@ -97,10 +99,10 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Nghỉ Thư Giãn
+            {t("relaxation.title")}
           </h2>
           <p className="text-base text-gray-600 dark:text-gray-400">
-            Hãy thả lỏng cơ thể và hít thở sâu
+            {t("relaxation.subtitle")}
           </p>
         </div>
 
@@ -139,7 +141,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
                 <div className="text-5xl font-bold text-gray-900 dark:text-white">
                   {formatTime(timeRemaining)}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">còn lại</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">{t("relaxation.timer.remaining")}</div>
               </div>
             </div>
           </div>
@@ -161,16 +163,16 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
                   <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
-                    Hít vào
+                    {t("relaxation.breathing.inhale")}
                   </span>
                   <span className="text-gray-400">•</span>
                   <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
-                    Thở ra
+                    {t("relaxation.breathing.exhale")}
                   </span>
                   <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 text-xs font-light tracking-widest uppercase">
-                  Đều đặn và chậm rãi
+                  {t("relaxation.breathing.rhythm")}
                 </div>
               </div>
             </div>
@@ -178,24 +180,24 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
             {/* Relaxation Tips */}
             <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
               <h3 className="text-gray-900 dark:text-white font-semibold text-base mb-2">
-                Hướng dẫn thư giãn:
+                {t("relaxation.tips.title")}
               </h3>
               <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
                 <li className="flex items-start gap-2">
                   <span className="text-teal-500 dark:text-cyan-500">•</span>
-                  <span>Ngồi hoặc nằm ở tư thế thoải mái</span>
+                  <span>{t("relaxation.tips.tip1")}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-500 dark:text-cyan-500">•</span>
-                  <span>Hít thở sâu và đều đặn</span>
+                  <span>{t("relaxation.tips.tip2")}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-500 dark:text-cyan-500">•</span>
-                  <span>Thả lỏng tất cả các cơ trong cơ thể</span>
+                  <span>{t("relaxation.tips.tip3")}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-500 dark:text-cyan-500">•</span>
-                  <span>Đóng mắt và tập trung vào hơi thở</span>
+                  <span>{t("relaxation.tips.tip4")}</span>
                 </li>
               </ul>
             </div>
@@ -208,14 +210,14 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
             onClick={toggleMusic}
             className="flex-1 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2"
           >
-            {isPlaying ? 'Tắt Nhạc' : 'Bật Nhạc'}
+            {isPlaying ? t("relaxation.controls.musicOff") : t("relaxation.controls.musicOn")}
           </button>
           
           <button
             onClick={skipRelaxation}
             className="flex-1 bg-teal-500 dark:bg-cyan-500 hover:bg-teal-600 dark:hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2"
           >
-            Bỏ Qua
+            {t("relaxation.controls.skip")}
           </button>
         </div>
 

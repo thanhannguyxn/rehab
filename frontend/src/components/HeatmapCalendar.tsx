@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { Session } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface HeatmapCalendarProps {
   sessions: Session[];
@@ -9,6 +10,7 @@ type TimeFilter = '7days' | '1month' | '3months' | 'all';
 
 export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('7days');
+  const { t } = useTranslation();
 
   // Daily data for 7-day view
   const dailyData = useMemo(() => {
@@ -249,10 +251,10 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
         <div className="text-center py-12">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Chưa có dữ liệu tập luyện
+            {t("heatmap.empty.noData")}
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Hãy bắt đầu buổi tập đầu tiên của bạn!
+            {t("heatmap.empty.startNow")}
           </p>
         </div>
       </div>
@@ -265,7 +267,7 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
       <div className="mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <span>Tiến độ tập luyện</span>
+            <span>{t("heatmap.title")}</span>
           </h3>
           
           {/* Time Filter Dropdown */}
@@ -275,10 +277,10 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
               onChange={(e) => setTimeFilter(e.target.value as TimeFilter)}
               className="appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base font-medium rounded-lg px-4 py-2.5 pr-10 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-colors"
             >
-              <option value="7days">7 ngày qua</option>
-              <option value="1month">1 tháng qua</option>
-              <option value="3months">3 tháng qua</option>
-              <option value="all">Tất cả</option>
+              <option value="7days">{t("heatmap.filters.last7Days")}</option>
+              <option value="1month">{t("heatmap.filters.last1Month")}</option>
+              <option value="3months">{t("heatmap.filters.last3Months")}</option>
+              <option value="all">{t("heatmap.filters.all")}</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 dark:text-gray-300">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -291,22 +293,22 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-4 rounded-lg border border-teal-200 dark:border-teal-800">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              Tổng số buổi tập {timeFilter !== 'all' && `(${getFilterLabel()})`}
+              {t("heatmap.stats.totalSessions")} {timeFilter !== 'all' && `(${getFilterLabel()})`}
             </div>
             <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">{totalSessions}</div>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              Trung bình mỗi {showDailyView ? 'ngày' : 'tuần'}
+              {showDailyView ? t("heatmap.stats.averagePerDay") : t("heatmap.stats.averagePerWeek")}
             </div>
             <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{averagePerPeriod}</div>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              {showDailyView ? 'Ngày' : 'Tuần'} tốt nhất
+              {showDailyView ? t("heatmap.stats.bestDay") : t("heatmap.stats.bestWeek")}
             </div>
             <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-              {bestPeriod ? `${bestPeriod.sessions} buổi` : '0 buổi'}
+              {bestPeriod ? `${bestPeriod.sessions} ` + t("heatmap.stats.sessions") : '0 ' + t("heatmap.stats.sessions")}
             </div>
           </div>
         </div>
@@ -317,10 +319,10 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
         <div className="text-center py-12">
           <span className="text-6xl mb-4 block">📭</span>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            Không có dữ liệu trong khoảng thời gian này
+            {t("heatmap.empty.noDataInRange")}
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Thử chọn khoảng thời gian khác
+            {t("heatmap.empty.tryAnotherRange")}
           </p>
         </div>
       ) : (
@@ -361,7 +363,7 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
                   <div className="flex flex-col items-center justify-center w-[120px] h-[120px]">
                     <div className="text-5xl mb-2">😴</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                      Chưa tập
+                      {t("heatmap.empty.noExercise")}
                     </div>
                   </div>
                 ) : (
@@ -416,19 +418,19 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
       <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
         <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 p-2 rounded-lg border border-green-200 dark:border-green-800">
           <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-          <span className="text-gray-800 dark:text-gray-200 font-medium">≥80%: Xuất sắc</span>
+          <span className="text-gray-800 dark:text-gray-200 font-medium">≥{t("heatmap.legend.excellent")}</span>
         </div>
         <div className="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 p-2 rounded-lg border border-teal-200 dark:border-teal-800">
           <div className="w-4 h-4 bg-teal-500 rounded-full"></div>
-          <span className="text-gray-800 dark:text-gray-200 font-medium">≥60%: Tốt</span>
+          <span className="text-gray-800 dark:text-gray-200 font-medium">≥{t("heatmap.legend.good")}</span>
         </div>
         <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded-lg border border-yellow-200 dark:border-yellow-800">
           <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-          <span className="text-gray-800 dark:text-gray-200 font-medium">≥40%: Khá</span>
+          <span className="text-gray-800 dark:text-gray-200 font-medium">≥{t("heatmap.legend.average")}</span>
         </div>
         <div className="flex items-center gap-2 bg-orange-50 dark:bg-orange-900/20 p-2 rounded-lg border border-orange-200 dark:border-orange-800">
           <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
-          <span className="text-gray-800 dark:text-gray-200 font-medium">&lt;40%: Cần cố gắng</span>
+          <span className="text-gray-800 dark:text-gray-200 font-medium">&lt;{t("heatmap.legend.poor")}</span>
         </div>
       </div>
     </div>

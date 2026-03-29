@@ -1,5 +1,5 @@
 # Doctor router
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import datetime
@@ -7,6 +7,7 @@ from typing import Optional
 
 from models import User, UserRole, DBSession, SessionError, get_db
 from routers.auth import get_current_user
+from limiter import limiter
 
 router = APIRouter()
 
@@ -49,7 +50,8 @@ def get_vietnamese_error_name(error_name: str) -> str:
     return ERROR_NAMES.get(error_name, error_name)
 
 @router.get("/patients")
-async def get_my_patients(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+async def get_my_patients(request: Request, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
@@ -82,7 +84,8 @@ async def get_my_patients(current_user = Depends(get_current_user), db: Session 
     return {'patients': patients}
 
 @router.get("/patient/{patient_id}/history")
-async def get_patient_history(patient_id: int, limit: int = 20, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+async def get_patient_history(request: Request, patient_id: int, limit: int = 20, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
@@ -110,7 +113,8 @@ async def get_patient_history(patient_id: int, limit: int = 20, current_user = D
     return {'sessions': sessions}
 
 @router.get("/patient/{patient_id}/error-analytics")
-async def get_patient_error_analytics(patient_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+async def get_patient_error_analytics(request: Request, patient_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get error analytics for a specific patient grouped by exercise type"""
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")

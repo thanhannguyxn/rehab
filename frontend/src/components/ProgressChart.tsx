@@ -1,5 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import type { Session } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface ProgressChartProps {
   sessions: Session[];
@@ -18,10 +19,12 @@ export const ProgressChart = ({ sessions }: ProgressChartProps) => {
         day: 'numeric',
       }),
     }));
+  
+  const { t } = useTranslation();
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-2xl font-bold text-gray-800 mb-4">Tiến Độ Tập Luyện</h3>
+      <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("progressChart.title")}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -36,7 +39,7 @@ export const ProgressChart = ({ sessions }: ProgressChartProps) => {
             dataKey="accuracy"
             stroke="#2563eb"
             strokeWidth={3}
-            name="Độ chính xác (%)"
+            name={t("progressChart.legend.accuracy")}
             activeDot={{ r: 8 }}
           />
           <Line
@@ -45,7 +48,7 @@ export const ProgressChart = ({ sessions }: ProgressChartProps) => {
             dataKey="reps"
             stroke="#16a34a"
             strokeWidth={3}
-            name="Số lần tập"
+            name={t("progressChart.legend.reps")}
             activeDot={{ r: 8 }}
           />
         </LineChart>

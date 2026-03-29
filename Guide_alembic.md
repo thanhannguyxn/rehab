@@ -235,15 +235,3 @@ backend/
 ├── alembic.ini         # Config chính
 └── models.py           # SQLAlchemy models
 ```
-
----
-
-## 🎯 **Best Practices**
-
-1. **Luôn backup** trước khi migrate
-2. **Test trên dev/staging** trước production  
-3. **Viết migration message rõ ràng**
-4. **Review migration code** trước khi chạy
-5. **Có rollback plan** sẵn
-6. **Version control** migration files
-7. **Document** schema changes

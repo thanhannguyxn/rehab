@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../utils/config';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileData {
   age: number | '';
@@ -18,6 +18,7 @@ export const UserProfile = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'basic' | 'medical' | 'mobility'>('basic');
+  const { t } = useTranslation();
   
   const [profile, setProfile] = useState<ProfileData>({
     age: '',
@@ -30,14 +31,14 @@ export const UserProfile = () => {
   });
 
   const medicalOptions = [
-    { value: 'knee_arthritis', label: 'Viêm khớp gối' },
-    { value: 'shoulder_pain', label: 'Đau vai' },
-    { value: 'back_pain', label: 'Đau lưng' },
-    { value: 'osteoporosis', label: 'Loãng xương' },
-    { value: 'diabetes', label: 'Tiểu đường' },
-    { value: 'heart_disease', label: 'Bệnh tim' },
-    { value: 'hypertension', label: 'Cao huyết áp' },
-    { value: 'stroke_recovery', label: 'Phục hồi sau đột quỵ' },
+    { value: 'knee_arthritis', label: t("userProfile.medicalConditions.arthritis") },
+    { value: 'shoulder_pain', label: t("userProfile.medicalConditions.shoulderPain") },
+    { value: 'back_pain', label: t("userProfile.medicalConditions.backPain") },
+    { value: 'osteoporosis', label: t("userProfile.medicalConditions.osteoporosis") },
+    { value: 'diabetes', label: t("userProfile.medicalConditions.diabetes") },
+    { value: 'heart_disease', label: t("userProfile.medicalConditions.heartDisease") },
+    { value: 'hypertension', label: t("userProfile.medicalConditions.hypertension") },
+    { value: 'stroke_recovery', label: t("userProfile.medicalConditions.strokeRecovery") },
   ];
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export const UserProfile = () => {
   const loadProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/profile/me`, {
+      const response = await fetch('http://localhost:8000/api/profile/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -91,10 +92,10 @@ export const UserProfile = () => {
   };
 
   const getBMICategory = (bmi: number) => {
-    if (bmi < 18.5) return { text: 'Thiếu cân', color: 'text-yellow-600 dark:text-yellow-400' };
-    if (bmi < 25) return { text: 'Bình thường', color: 'text-green-600 dark:text-green-400' };
-    if (bmi < 30) return { text: 'Thừa cân', color: 'text-orange-600 dark:text-orange-400' };
-    return { text: 'Béo phì', color: 'text-red-600 dark:text-red-400' };
+    if (bmi < 18.5) return { text: t("userProfile.bmi.underweight"), color: 'text-yellow-600 dark:text-yellow-400' };
+    if (bmi < 25) return { text: t("userProfile.bmi.normal"), color: 'text-green-600 dark:text-green-400' };
+    if (bmi < 30) return { text: t("userProfile.bmi.overweight"), color: 'text-orange-600 dark:text-orange-400' };
+    return { text: t("userProfile.bmi.obese"), color: 'text-red-600 dark:text-red-400' };
   };
 
   const handleMedicalConditionToggle = (condition: string) => {
@@ -113,7 +114,7 @@ export const UserProfile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/profile/update`, {
+      const response = await fetch('http://localhost:8000/api/profile/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,16 +133,16 @@ export const UserProfile = () => {
 
       if (response.ok) {
         await response.json();
-        setMessage({ type: 'success', text: 'Cập nhật thông tin thành công!' });
+        setMessage({ type: 'success', text: t("userProfile.success") });
         
         // Reload profile to get BMI
         await loadProfile();
       } else {
-        setMessage({ type: 'error', text: 'Có lỗi xảy ra, vui lòng thử lại' });
+        setMessage({ type: 'error', text: t("userProfile.error") });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      setMessage({ type: 'error', text: 'Không thể kết nối đến server' });
+      setMessage({ type: 'error', text: t("userProfile.serverError") });
     } finally {
       setSaving(false);
     }
@@ -151,7 +152,7 @@ export const UserProfile = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="flex items-center justify-center h-screen">
-          <div className="text-xl text-gray-600 dark:text-gray-400">Đang tải...</div>
+          <div className="text-xl text-gray-600 dark:text-gray-400">{t("userProfile.loading")}</div>
         </div>
       </div>
     );
@@ -166,10 +167,10 @@ export const UserProfile = () => {
         {/* Header */}
         <div className="mb-8 max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Thông Tin Cá Nhân
+            {t("userProfile.title")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Cập nhật thông tin để nhận được bài tập phù hợp với bạn
+            {t("userProfile.subtitle")}
           </p>
         </div>
 
@@ -186,7 +187,7 @@ export const UserProfile = () => {
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                Thông Tin Cơ Bản
+                {t("userProfile.tabs.basic")}
               </button>
               <button
                 type="button"
@@ -197,7 +198,7 @@ export const UserProfile = () => {
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                Tình Trạng Sức Khỏe
+                {t("userProfile.tabs.medical")}
               </button>
               <button
                 type="button"
@@ -208,7 +209,7 @@ export const UserProfile = () => {
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                Vận Động & Đau Đớn
+                {t("userProfile.tabs.mobility")}
               </button>
             </div>
           </div>
@@ -219,21 +220,21 @@ export const UserProfile = () => {
             {activeTab === 'basic' && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Thông Tin Cơ Bản
+                  {t("userProfile.tabs.basic")}
                 </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Age */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Tuổi <span className="text-red-500">*</span>
+                  {t("userProfile.fields.age")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
                   value={profile.age}
                   onChange={(e) => setProfile({ ...profile, age: e.target.value ? Number(e.target.value) : '' })}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Nhập tuổi của bạn"
+                  placeholder={t("userProfile.placeholders.age")}
                   required
                   min="1"
                   max="120"
@@ -243,7 +244,7 @@ export const UserProfile = () => {
               {/* Gender */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Giới tính <span className="text-red-500">*</span>
+                  {t("userProfile.fields.gender")} <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={profile.gender}
@@ -251,23 +252,23 @@ export const UserProfile = () => {
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   required
                 >
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
+                  <option value="male">{t("userProfile.genderOptions.male")}</option>
+                  <option value="female">{t("userProfile.genderOptions.female")}</option>
+                  <option value="other">{t("userProfile.genderOptions.other")}</option>
                 </select>
               </div>
 
               {/* Height */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Chiều cao (cm) <span className="text-red-500">*</span>
+                  {t("userProfile.fields.height")} (cm) <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
                   value={profile.height_cm}
                   onChange={(e) => setProfile({ ...profile, height_cm: e.target.value ? Number(e.target.value) : '' })}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Ví dụ: 170"
+                  placeholder={t("userProfile.placeholders.height")}
                   required
                   min="100"
                   max="250"
@@ -277,14 +278,14 @@ export const UserProfile = () => {
               {/* Weight */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Cân nặng (kg) <span className="text-red-500">*</span>
+                  {t("userProfile.fields.weight")} (kg) <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
                   value={profile.weight_kg}
                   onChange={(e) => setProfile({ ...profile, weight_kg: e.target.value ? Number(e.target.value) : '' })}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Ví dụ: 65"
+                  placeholder={t("userProfile.placeholders.weight")}
                   required
                   min="20"
                   max="300"
@@ -297,12 +298,12 @@ export const UserProfile = () => {
               <div className="mt-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Chỉ số BMI của bạn:</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t("userProfile.bmi.label")}:</p>
                     <p className="text-3xl font-bold text-teal-600 dark:text-teal-400">{bmi}</p>
                   </div>
                   {bmiCategory && (
                     <div className="text-right">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Phân loại:</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t("userProfile.bmi.category")}:</p>
                       <p className={`text-xl font-bold ${bmiCategory.color}`}>{bmiCategory.text}</p>
                     </div>
                   )}
@@ -316,10 +317,10 @@ export const UserProfile = () => {
             {activeTab === 'medical' && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  Tình Trạng Sức Khỏe
+                  {t("userProfile.medicalTitle")}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Chọn các vấn đề sức khỏe hiện tại (nếu có)
+                  {t("userProfile.medicalSubtitle")}
                 </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -349,20 +350,20 @@ export const UserProfile = () => {
             {activeTab === 'mobility' && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Mức Độ Vận Động & Đau Đớn
+                  {t("userProfile.tabs.mobility")}
                 </h2>
 
             <div className="space-y-6">
               {/* Mobility Level */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                  Khả năng di chuyển hiện tại
+                  {t("userProfile.fields.mobilityLevel")}
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {[
-                    { value: 'beginner', label: 'Mới bắt đầu', desc: 'Ít vận động' },
-                    { value: 'intermediate', label: 'Trung bình', desc: 'Vận động vừa phải' },
-                    { value: 'advanced', label: 'Nâng cao', desc: 'Vận động tốt' },
+                    { value: 'beginner', label: t("userProfile.mobilityLevels.beginner"), desc: t("userProfile.mobilityLevels.beginnerDesc") },
+                    { value: 'intermediate', label: t("userProfile.mobilityLevels.intermediate"), desc: t("userProfile.mobilityLevels.intermediateDesc") },
+                    { value: 'advanced', label: t("userProfile.mobilityLevels.advanced"), desc: t("userProfile.mobilityLevels.advancedDesc") },
                   ].map((level) => (
                     <label
                       key={level.value}
@@ -392,7 +393,7 @@ export const UserProfile = () => {
               {/* Pain Level */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                  Mức độ đau hiện tại: <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.pain_level}/10</span>
+                  {t("userProfile.fields.painLevel")}: <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.pain_level}/10</span>
                 </label>
                 <input
                   type="range"
@@ -403,9 +404,9 @@ export const UserProfile = () => {
                   className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
                 />
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  <span>0 - Không đau</span>
-                  <span>5 - Đau vừa</span>
-                  <span>10 - Rất đau</span>
+                  <span>0 - {t("userProfile.painScale.none")}</span>
+                  <span>5 - {t("userProfile.painScale.medium")}</span>
+                  <span>10 - {t("userProfile.painScale.severe")}</span>
                 </div>
               </div>
                 </div>
@@ -419,14 +420,14 @@ export const UserProfile = () => {
                 disabled={saving}
                 className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition shadow-lg disabled:cursor-not-allowed"
               >
-                {saving ? 'Đang lưu...' : 'Lưu Thông Tin'}
+                {saving ? t("userProfile.loading") : t("userProfile.save")}
               </button>
               <button
                 type="button"
                 onClick={() => navigate(-1)}
                 className="px-8 py-4 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold rounded-xl transition"
               >
-                Hủy
+                {t("userProfile.cancel")}
               </button>
             </div>
 

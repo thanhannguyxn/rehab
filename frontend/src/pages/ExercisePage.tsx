@@ -9,6 +9,7 @@ import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
 import { API_URL } from '../utils/config';
+import { useTranslation } from 'react-i18next';
 
 interface PersonalizedParams {
   down_angle?: number;
@@ -34,6 +35,7 @@ export const ExercisePage = () => {
   const [loadingParams, setLoadingParams] = useState(false);
   const [showRelaxation, setShowRelaxation] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const { t } = useTranslation();
 
   // Track last announced rep and error to avoid repetition
   const lastAnnouncedRep = useRef<number>(0);
@@ -153,38 +155,31 @@ export const ExercisePage = () => {
           setCompletionStatus('completed');
           // Voice: Completed
           voiceService.speak(VoiceMessages.complete, true);
-          // Voice: Transition to relaxation
-          setTimeout(() => {
-            voiceService.speak('Bây giờ chúng ta sẽ nghỉ thư giãn ba phút.', true);
-          }, 3000);
-          // Show relaxation popup after completing exercise
+          // Show relaxation popup after completing exercise (allow initial voice to finish)
           setTimeout(() => {
             setShowRelaxation(true);
-          }, 5000);
+          }, 2000);
         } else if (status === 'timeout') {
           setCompletionStatus('timeout');
           // Voice: Timeout
           voiceService.speak(VoiceMessages.timeout, true);
+          setShowSummary(true);
         } else {
           // Manual stop - check if target was reached
-          const targetReached = currentExercise && analysisData?.rep_count &&
-                                analysisData.rep_count >= currentExercise.target_reps;
+          const targetReached = targetReps && analysisData?.rep_count &&
+                                analysisData.rep_count >= targetReps;
           setCompletionStatus(targetReached ? 'completed' : 'timeout');
 
           // Show relaxation if target reached
           if (targetReached) {
             voiceService.speak(VoiceMessages.complete, true);
-            // Voice: Transition to relaxation
-            setTimeout(() => {
-              voiceService.speak('Bây giờ chúng ta sẽ nghỉ thư giãn ba phút.', true);
-            }, 3000);
             setTimeout(() => {
               setShowRelaxation(true);
-            }, 5000);
+            }, 2000);
+          } else {
+            setShowSummary(true);
           }
         }
-
-        setShowSummary(true);
       } catch (error) {
         console.error('Failed to end session:', error);
       }
@@ -319,51 +314,27 @@ export const ExercisePage = () => {
   // Exercise details and instructions
   const exerciseDetails: Record<string, { difficulty: string; description: string; instructions: string[] }> = {
     squat: {
-      difficulty: 'Trung bình',
-      description: 'Bài tập tăng cường cơ chân và và hông',
-      instructions: [
-        'Đứng thẳng, hai tay duỗi thẳng hai bên',
-        'Từ từ hạ thấp cơ thể xuống như ngồi ghế',
-        'Giữ lưng thẳng trong suốt động tác',
-        'Hạ tay từ từ về tư thế ban đầu',
-      ],
+      difficulty: t("exercisePage.exercises.difficulty.medium"),
+      description: t("exercisePage.exercises.description.squat"),
+      instructions: t("exercisePage.exercises.instructions.squat", {returnObjects: true}) as string[],
     },
     arm_raise: {
-      difficulty: 'Dễ',
-      description: 'Bài tập vai và tay',
-      instructions: [
-        'Đứng thẳng, hai tay duỗi thẳng hai bên',
-        'Từ từ nâng tay lên cao qua đầu',
-        'Giữ tay thẳng trong suốt động tác',
-        'Hạ tay từ từ về tư thế ban đầu',
-      ],
+      difficulty: t("exercisePage.exercises.difficulty.easy"),
+      description: t("exercisePage.exercises.description.armRaise"),
+      instructions: t("exercisePage.exercises.instructions.armRaise", {returnObjects: true}) as string[],
     },
 
     // THÊM MỚI
     single_leg_stand: {
-      difficulty: 'Trung bình',
-      description: 'Bài tập cân bằng và cơ chân',
-      instructions: [
-        'Đứng cạnh ghế, tay phải nắm thành ghế',
-        'Co chân trái lên cao, đầu gối nâng cao',
-        'Tay trái giữ chân trái ở vị trí đó',
-        'Giữ 10 giây, sau đó hạ chân xuống',
-        'Đổi bên: tay trái nắm ghế, co chân phải',
-        'Tay phải giữ chân phải, giữ 10 giây',
-      ],
+      difficulty: t("exercisePage.exercises.difficulty.medium"),
+      description: t("exercisePage.exercises.description.singleLegStand"),
+      instructions: t("exercisePage.exercises.instructions.singleLegStand", {returnObjects: true}) as string[],
     },
     // THÊM MỚI
     calf_raise: {
-        difficulty: 'Dễ',
-        description: 'Bài tập tăng cường cơ bắp chân',
-        instructions: [
-            'Đứng thẳng, hai chân rộng bằng vai',
-            'Tay có thể đỡ vào tường để giữ thăng bằng',
-            'Từ từ nâng gót lên cao (đứng bằng mũi chân)',
-            'Giữ 1-2 giây ở trên',
-            'Từ từ hạ gót xuống về tư thế ban đầu',
-            'Lặp lại động tác',
-        ],
+      difficulty: t("exercisePage.exercises.difficulty.easy"),
+      description: t("exercisePage.exercises.description.calfRaise"),
+      instructions: t("exercisePage.exercises.instructions.calfRaise", {returnObjects: true}) as string[],
     },
   };
 
@@ -371,11 +342,11 @@ export const ExercisePage = () => {
     <>
       <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300">
         <div className="max-w-7xl mx-auto p-6">
-          <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-8 bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">Bài Tập Phục Hồi</h1>
+          <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-8 bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">{t("exercisePage.title")}</h1>
 
           {/* Exercise Selection at Top */}
           <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-6 transition-colors duration-300">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Chọn Bài Tập</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t("exercisePage.selectExercise")}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {exercises.map((exercise) => {
@@ -407,13 +378,13 @@ export const ExercisePage = () => {
                           )}
                         </div>
                         <div>
-                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{exercise.name}</h3>
+                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{t(`exercisePage.exercises.names.${exercise.id}`)}</h3>
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            details?.difficulty === 'Dễ' ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
-                            details?.difficulty === 'Trung bình' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400' :
+                            details?.difficulty === t("exercisePage.exercises.difficulty.easy") ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
+                            details?.difficulty === t("exercisePage.exercises.difficulty.medium") ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400' :
                             'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
                           }`}>
-                            {details?.difficulty || 'Dễ'}
+                            {details?.difficulty || t("exercisePage.exercises.difficulty.easy")}
                           </span>
                         </div>
                       </div>
@@ -428,10 +399,10 @@ export const ExercisePage = () => {
                     <p className="text-gray-700 dark:text-gray-400 text-sm mb-2">{details?.description}</p>
                     <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-500">
                       <span className="flex items-center gap-1">
-                       {exercise.id === 'squat' ? '5-10 phút' : '5 phút'}
+                       {exercise.id === 'squat' ? '5-10 ' + t("exercisePage.minute") : '5 ' + t("exercisePage.minute")}
                       </span>
                       <span className="flex items-center gap-1">
-                       {exercise.target_reps} lần
+                       {exercise.target_reps} reps
                       </span>
                     </div>
                   </button>
@@ -467,8 +438,8 @@ export const ExercisePage = () => {
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-center">
                       <div className="text-6xl mb-4">📹</div>
-                      <p className="text-2xl text-gray-700 dark:text-gray-400 mb-2">Camera sẽ bật khi bạn bắt đầu</p>
-                      <p className="text-lg text-gray-600 dark:text-gray-500">Đảm bảo có đủ ánh sáng và không gian</p>
+                      <p className="text-2xl text-gray-700 dark:text-gray-400 mb-2">{t("exercisePage.cameraPlaceholder")}</p>
+                      <p className="text-lg text-gray-600 dark:text-gray-500">{t("exercisePage.cameraNote")}</p>
                     </div>
                   </div>
                 )}
@@ -485,7 +456,7 @@ export const ExercisePage = () => {
                     : 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-teal-500/50'
                 } disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105`}
               >
-                {isExercising ? '⏸ Tạm Dừng' : '▶ Bắt Đầu'}
+                {isExercising ? '⏸ ' + t("exercisePage.pause") : '▶ ' + t("exercisePage.start")}
               </button>
 
               {/* Voice Settings Button */}
@@ -493,7 +464,7 @@ export const ExercisePage = () => {
                 onClick={() => setShowVoiceSettings(true)}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl text-xl transition shadow-lg transform hover:scale-105"
               >
-                Cài Đặt Giọng Nói
+                {t("exercisePage.voiceSettings")}
               </button>
 
               {isExercising && (
@@ -501,7 +472,7 @@ export const ExercisePage = () => {
                   onClick={handleReset}
                   className="w-full bg-gray-200 dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 hover:bg-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold py-4 rounded-xl text-xl transition shadow-lg"
                 >
-                  Đặt Lại Bộ Đếm
+                  {t("exercisePage.reset")}
                 </button>
               )}
 
@@ -509,13 +480,13 @@ export const ExercisePage = () => {
               {currentExercise && (
                 <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Hướng Dẫn: {currentExercise.name}
+                    {t("exercisePage.instructions")}: {currentExercise.name}
                   </h2>
                   <p className="text-lg text-gray-800 dark:text-gray-400 mb-4">
                     {exerciseDetails[currentExercise.id]?.description}
                   </p>
                   <div className="space-y-2">
-                    <p className="font-semibold text-gray-900 dark:text-white text-lg">Các bước thực hiện:</p>
+                    <p className="font-semibold text-gray-900 dark:text-white text-lg">{t("exercisePage.steps")}</p>
                     {exerciseDetails[currentExercise.id]?.instructions.map((step, index) => (
                       <p key={index} className="text-gray-800 dark:text-gray-300 text-base">
                         {index + 1}. {step}
@@ -527,7 +498,7 @@ export const ExercisePage = () => {
 
               {/* Exercise instruction video */}
               <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Video Hướng Dẫn</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t("exercisePage.videoGuide")}</h3>
                 <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300 overflow-hidden">
                   {selectedExercise ? (
                     <>
@@ -576,7 +547,7 @@ export const ExercisePage = () => {
                           }
                         }}
                       >
-                        Trình duyệt của bạn không hỗ trợ video.
+                        {t("exercisePage.noVideoSupport")}
                       </video>
                       <div className="video-placeholder text-center" style={{ display: 'none', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', position: 'absolute' }}>
                         <svg className="w-20 h-20 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -584,7 +555,7 @@ export const ExercisePage = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-gray-600 dark:text-gray-500 text-lg">
-                          Chưa có video hướng dẫn cho bài tập này
+                          {t("exercisePage.noVideo")}
                         </p>
                       </div>
                     </>
@@ -595,7 +566,7 @@ export const ExercisePage = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <p className="text-gray-600 dark:text-gray-500 text-lg">
-                        Chọn bài tập để xem video hướng dẫn
+                        {t("exercisePage.selectToWatch")}
                       </p>
                     </div>
                   )}
@@ -608,8 +579,8 @@ export const ExercisePage = () => {
               <div className="sticky top-6 space-y-3">
                 {/* Exercise Progress Section */}
                 <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-xl transition-colors duration-300 z-10">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Tiến độ Bài Tập</h2>
-                  <p className="text-xs text-gray-700 dark:text-gray-400 mb-3">Mục tiêu: {targetReps} lần trong {currentExercise?.duration_seconds ? Math.floor(currentExercise.duration_seconds / 60) : 3} phút</p>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t("exercisePage.progress")}</h2>
+                  <p className="text-xs text-gray-700 dark:text-gray-400 mb-3">{t("exercisePage.target")}: {targetReps} {t("exercisePage.targetReps")} {currentExercise?.duration_seconds ? Math.floor(currentExercise.duration_seconds / 60) : 3} {t("exercisePage.minute")}</p>
                   
                   <div className="space-y-2">
                     {/* Timer display */}
@@ -624,7 +595,7 @@ export const ExercisePage = () => {
                         <div className="text-2xl font-bold mb-0.5 text-center">
                           {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
                         </div>
-                        <div className="text-center text-xs opacity-90">Thời gian</div>
+                        <div className="text-center text-xs opacity-90">{t("exercisePage.time")}</div>
                       </div>
                     )}
                     
@@ -637,7 +608,7 @@ export const ExercisePage = () => {
                       <div className="text-3xl font-bold mb-0.5 text-center">
                         {isExercising ? analysisData?.rep_count || 0 : 0} / {targetReps}
                       </div>
-                      <div className="text-center text-xs opacity-90">Lần lặp</div>
+                      <div className="text-center text-xs opacity-90">{t("exercisePage.reps")}</div>
                     </div>
                   </div>
 
@@ -645,7 +616,7 @@ export const ExercisePage = () => {
                     <div className="mt-3 flex items-center justify-center">
                       <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse mr-2`}></div>
                       <span className="text-xs text-gray-700 dark:text-gray-400">
-                        {isConnected ? 'Đang kết nối' : 'Mất kết nối'}
+                        {isConnected ? t("exercisePage.connected") : t("exercisePage.disconnected")}
                       </span>
                     </div>
                   )}
@@ -660,12 +631,12 @@ export const ExercisePage = () => {
               {/* Personalized Parameters Card */}
               {personalizedParams && (
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border border-blue-300 dark:border-blue-500/30 rounded-xl p-5 shadow-lg">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Tùy Chỉnh Cá Nhân</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t("exercisePage.personalized")}</h3>
 
                   {/* Difficulty Score */}
                   <div className="mb-4 p-3 bg-blue-100 dark:bg-black/30 rounded-lg border border-blue-200 dark:border-transparent">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-base text-gray-700 dark:text-gray-300">Độ khó:</span>
+                      <span className="text-base text-gray-700 dark:text-gray-300">{t("exercisePage.difficulty")}:</span>
                       <span className="text-lg font-bold text-teal-600 dark:text-teal-400">
                         {Math.round(personalizedParams.difficulty_score * 100)}%
                       </span>
@@ -682,7 +653,7 @@ export const ExercisePage = () => {
                   <div className="space-y-2 mb-4">
                     {personalizedParams.down_angle && (
                       <div className="flex items-center justify-between text-base">
-                        <span className="text-gray-700 dark:text-gray-300">Góc:</span>
+                        <span className="text-gray-700 dark:text-gray-300">{t("exercisePage.angle")}:</span>
                         <span className="font-semibold text-gray-900 dark:text-white">
                           {Math.round(personalizedParams.down_angle)}° - {Math.round(personalizedParams.up_angle || 180)}°
                         </span>
@@ -695,7 +666,7 @@ export const ExercisePage = () => {
                       </div>
                     )}
                     <div className="flex items-center justify-between text-base">
-                      <span className="text-gray-700 dark:text-gray-300">Nghỉ:</span>
+                      <span className="text-gray-700 dark:text-gray-300">{t("exercisePage.rest")}:</span>
                       <span className="font-semibold text-gray-900 dark:text-white">{personalizedParams.rest_seconds}s</span>
                     </div>
                   </div>
@@ -703,7 +674,7 @@ export const ExercisePage = () => {
                   {/* Warnings */}
                   {personalizedParams.warnings.length > 0 && (
                     <div className="mb-3 p-3 bg-orange-50 dark:bg-orange-900/30 border border-orange-300 dark:border-orange-500/30 rounded-lg">
-                      <span className="font-semibold text-orange-700 dark:text-orange-300 text-base block mb-2">Lưu ý:</span>
+                      <span className="font-semibold text-orange-700 dark:text-orange-300 text-base block mb-2">{t("exercisePage.warnings")}:</span>
                       <ul className="space-y-1.5 text-sm text-orange-800 dark:text-orange-200">
                         {personalizedParams.warnings.map((warning, idx) => (
                           <li key={idx}>{warning}</li>
@@ -715,7 +686,7 @@ export const ExercisePage = () => {
                   {/* Recommendations */}
                   {personalizedParams.recommendations.length > 0 && (
                     <div className="p-3 bg-green-50 dark:bg-green-900/30 border border-green-300 dark:border-green-500/30 rounded-lg">
-                      <span className="font-semibold text-green-700 dark:text-green-300 text-base block mb-2">Gợi ý:</span>
+                      <span className="font-semibold text-green-700 dark:text-green-300 text-base block mb-2">{t("exercisePage.recommendations")}:</span>
                       <ul className="space-y-1.5 text-sm text-green-800 dark:text-green-200">
                         {personalizedParams.recommendations.map((rec, idx) => (
                           <li key={idx}>{rec}</li>
@@ -730,16 +701,16 @@ export const ExercisePage = () => {
               {!loadingParams && !personalizedParams && (
                 <div className="p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-xl">
                   <p className="text-xs text-yellow-200 font-semibold mb-1">
-                    Chưa có thông tin
+                    {t("exercisePage.noProfile")}
                   </p>
                   <p className="text-[10px] text-yellow-300/80 mb-2">
-                    Điền thông tin để nhận bài tập phù hợp
+                    {t("exercisePage.fillProfile")}
                   </p>
                   <button
                     onClick={() => navigate('/profile')}
                     className="text-[10px] bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded-lg transition"
                   >
-                    Điền thông tin →
+                    {t("exercisePage.fillNow")} →
                   </button>
                 </div>
               )}
@@ -757,13 +728,13 @@ export const ExercisePage = () => {
                 <div className="text-center mb-8">
                   {completionStatus === 'completed' ? (
                     <>
-                      <h2 className="text-4xl font-bold text-green-500 dark:text-green-400 mb-2">Hoàn Thành!</h2>
-                      <p className="text-xl text-gray-600 dark:text-gray-400">Bạn đã hoàn thành bài tập trong thời gian quy định</p>
+                      <h2 className="text-4xl font-bold text-green-500 dark:text-green-400 mb-2">{t("exercisePage.completed")}</h2>
+                      <p className="text-xl text-gray-600 dark:text-gray-400">{t("exercisePage.completedDesc")}</p>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-4xl font-bold text-orange-500 dark:text-orange-400 mb-2">Hết Giờ!</h2>
-                      <p className="text-xl text-gray-600 dark:text-gray-400">Bạn chưa hoàn thành bài tập trong thời gian quy định</p>
+                      <h2 className="text-4xl font-bold text-orange-500 dark:text-orange-400 mb-2">{t("exercisePage.timeout")}</h2>
+                      <p className="text-xl text-gray-600 dark:text-gray-400">{t("exercisePage.timeoutDesc")}</p>
                     </>
                   )}
                 </div>
@@ -775,21 +746,21 @@ export const ExercisePage = () => {
                   }`}>
                     {sessionSummary?.accuracy?.toFixed(1)}%
                   </div>
-                  <p className="text-xl text-gray-600 dark:text-gray-400">Độ chính xác</p>
+                  <p className="text-xl text-gray-600 dark:text-gray-400">{t("exercisePage.accuracy")}</p>
                 </div>
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="bg-blue-50 dark:bg-gradient-to-br dark:from-blue-500/20 dark:to-blue-600/20 border border-blue-200 dark:border-blue-500/30 p-4 rounded-xl text-center">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Tổng số lần</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.totalReps")}</p>
                     <p className="text-3xl font-bold text-blue-500 dark:text-blue-400">{sessionSummary?.total_reps}</p>
                   </div>
                   <div className="bg-green-50 dark:bg-gradient-to-br dark:from-green-500/20 dark:to-green-600/20 border border-green-200 dark:border-green-500/30 p-4 rounded-xl text-center">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Đúng kỹ thuật</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.correctReps")}</p>
                     <p className="text-3xl font-bold text-green-500 dark:text-green-400">{sessionSummary?.correct_reps}</p>
                   </div>
                   <div className="bg-purple-50 dark:bg-gradient-to-br dark:from-purple-500/20 dark:to-purple-600/20 border border-purple-200 dark:border-purple-500/30 p-4 rounded-xl text-center">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Thời gian</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.duration")}</p>
                     <p className="text-3xl font-bold text-purple-500 dark:text-purple-400">
                       {Math.floor(sessionSummary?.duration_seconds / 60)}:{(sessionSummary?.duration_seconds % 60).toString().padStart(2, '0')}
                     </p>
@@ -799,12 +770,12 @@ export const ExercisePage = () => {
                 {/* Common Errors */}
                 {sessionSummary?.common_errors && Object.keys(sessionSummary.common_errors).length > 0 && (
                   <div className="bg-orange-50 dark:bg-gradient-to-br dark:from-orange-500/20 dark:to-red-500/20 border border-orange-200 dark:border-orange-500/30 rounded-xl p-4 mb-6">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Lỗi cần cải thiện:</h3>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t("exercisePage.commonErrors")}</h3>
                     <div className="space-y-2">
                       {Object.entries(sessionSummary.common_errors).map(([error, data]: [string, any]) => (
                         <div key={error} className="flex justify-between text-base">
                           <span className="text-gray-700 dark:text-gray-300">{error}</span>
-                          <span className="font-semibold text-orange-600 dark:text-orange-400">{data.count} lần</span>
+                          <span className="font-semibold text-orange-600 dark:text-orange-400">{data.count} rep</span>
                         </div>
                       ))}
                     </div>
@@ -821,13 +792,13 @@ export const ExercisePage = () => {
                     }}
                     className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl text-xl transition shadow-2xl shadow-teal-500/30"
                   >
-                    Tập Tiếp
+                    {t("exercisePage.continue")}
                   </button>
                   <button
                     onClick={() => navigate('/')}
                     className="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold py-4 px-6 rounded-lg text-xl transition shadow-lg"
                   >
-                    Về Trang Chủ
+                    {t("exercisePage.backHome")}
                   </button>
                 </div>
               </div>

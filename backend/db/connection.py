@@ -1,7 +1,6 @@
 # Database connection and configuration
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base
 
 from settings import DATABASE_URL
 
@@ -26,6 +25,7 @@ def get_db():
 
 def create_tables():
     """Create all tables"""
+    from models.base import Base
     Base.metadata.create_all(bind=engine)
 
 def init_db():

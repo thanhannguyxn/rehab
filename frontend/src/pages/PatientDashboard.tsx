@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { sessionAPI } from '../utils/api';
 import type { Session } from '../types';
+import { useTranslation } from 'react-i18next';
 
 export const PatientDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [recentSessions, setRecentSessions] = useState<Session[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadRecentSessions();
@@ -35,11 +37,11 @@ export const PatientDashboard = () => {
     const now = new Date();
     const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffHours < 1) return 'Vừa xong';
-    if (diffHours < 24) return `${diffHours} giờ trước`;
+    if (diffHours < 1) return t("patientDashboard.justNow");
+    if (diffHours < 24) return `${diffHours}` + t("patientDashboard.hoursAgo");
     const diffDays = Math.floor(diffHours / 24);
-    if (diffDays === 1) return 'Hôm qua';
-    return `${diffDays} ngày trước`;
+    if (diffDays === 1) return t("patientDashboard.yesterday");
+    return `${diffDays}` + t("patientDashboard.daysAgo");
   };
 
   return (
@@ -48,14 +50,14 @@ export const PatientDashboard = () => {
       <div className="bg-blue-600 text-white p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Xin chào, {user?.full_name}!</h1>
-            <p className="text-xl mt-1">Sẵn sàng tập luyện hôm nay</p>
+            <h1 className="text-3xl font-bold">{t("patientDashboard.greeting")}, {user?.full_name}!</h1>
+            <p className="text-xl mt-1">{t("patientDashboard.subtitle")}</p>
           </div>
           <button
             onClick={handleLogout}
             className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
           >
-            Đăng Xuất
+            {t("patientDashboard.logout")}
           </button>
         </div>
       </div>
@@ -73,7 +75,7 @@ export const PatientDashboard = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-4xl font-bold">Bắt Đầu Tập Luyện</span>
+              <span className="text-4xl font-bold">{t("patientDashboard.startExercise")}</span>
             </div>
           </Link>
         </div>
@@ -81,11 +83,11 @@ export const PatientDashboard = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Tổng buổi tập</p>
+            <p className="text-gray-600 text-lg mb-2">{t("patientDashboard.totalSessions")}</p>
             <p className="text-5xl font-bold text-blue-600">{recentSessions.length}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Độ chính xác TB</p>
+            <p className="text-gray-600 text-lg mb-2">{t("patientDashboard.avgAccuracy")}</p>
             <p className="text-5xl font-bold text-green-600">
               {recentSessions.length > 0
                 ? (recentSessions.reduce((sum, s) => sum + s.accuracy, 0) / recentSessions.length).toFixed(1)
@@ -93,7 +95,7 @@ export const PatientDashboard = () => {
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">Tổng số lần</p>
+            <p className="text-gray-600 text-lg mb-2">{t("patientDashboard.totalReps")}</p>
             <p className="text-5xl font-bold text-purple-600">
               {recentSessions.reduce((sum, s) => sum + s.total_reps, 0)}
             </p>
@@ -103,20 +105,20 @@ export const PatientDashboard = () => {
         {/* Recent Sessions */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Buổi Tập Gần Đây</h2>
+            <h2 className="text-2xl font-bold text-gray-800">{t("patientDashboard.recentSessions")}</h2>
             <Link
               to="/history"
               className="text-blue-600 hover:text-blue-700 font-semibold text-lg"
             >
-              Xem tất cả →
+              {t("patientDashboard.viewAll")} →
             </Link>
           </div>
 
           {isLoading ? (
-            <p className="text-center text-gray-600 py-8 text-lg">Đang tải...</p>
+            <p className="text-center text-gray-600 py-8 text-lg">{t("patientDashboard.loading")}</p>
           ) : recentSessions.length === 0 ? (
             <p className="text-center text-gray-600 py-8 text-lg">
-              Chưa có buổi tập nào. Hãy bắt đầu ngay!
+              {t("patientDashboard.noSessions")}
             </p>
           ) : (
             <div className="space-y-4">
@@ -129,7 +131,7 @@ export const PatientDashboard = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-bold text-green-600">{session.accuracy.toFixed(1)}%</p>
-                      <p className="text-gray-600">{session.total_reps} lần</p>
+                      <p className="text-gray-600">{session.total_reps} {t("patientDashboard.reps")}</p>
                     </div>
                   </div>
                 </div>

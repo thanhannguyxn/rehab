@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Patient } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface PatientCardProps {
   patient: Patient;
@@ -11,13 +12,15 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
     const now = new Date();
     const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffHours < 1) return 'Vừa xong';
-    if (diffHours < 24) return `${diffHours} giờ trước`;
+    if (diffHours < 1) return t("patientCard.time.justNow");
+    if (diffHours < 24) return `${diffHours} ` + t("patientCard.time.hoursAgo");
     const diffDays = Math.floor(diffHours / 24);
-    if (diffDays === 1) return 'Hôm qua';
-    if (diffDays < 7) return `${diffDays} ngày trước`;
+    if (diffDays === 1) return t("patientCard.time.yesterday");
+    if (diffDays < 7) return `${diffDays} ` + t("patientCard.time.daysAgo");
     return date.toLocaleDateString('vi-VN');
   };
+
+  const { t } = useTranslation();
 
   return (
     <Link
@@ -28,7 +31,7 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
         <div>
           <h3 className="text-2xl font-bold text-gray-800">{patient.full_name}</h3>
           <p className="text-gray-600">
-            {patient.age} tuổi • {patient.gender}
+            {patient.age} {t("patientCard.age")} • {patient.gender}
           </p>
         </div>
         <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
@@ -38,7 +41,7 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
 
       {patient.last_session ? (
         <div className="bg-gray-50 p-4 rounded-lg">
-          <p className="text-sm text-gray-600 mb-2">Buổi tập gần nhất:</p>
+          <p className="text-sm text-gray-600 mb-2">{t("patientCard.lastSession")}</p>
           <div className="flex justify-between items-center">
             <div>
               <p className="font-semibold text-gray-800">{patient.last_session.exercise}</p>
@@ -59,7 +62,7 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
         </div>
       ) : (
         <div className="bg-gray-50 p-4 rounded-lg text-center">
-          <p className="text-gray-600">Chưa có buổi tập nào</p>
+          <p className="text-gray-600">{t("patientCard.noSession")}</p>
         </div>
       )}
     </Link>

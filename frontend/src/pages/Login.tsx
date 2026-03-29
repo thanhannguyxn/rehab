@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export const Login = () => {
   const { role } = useParams<{ role: 'patient' | 'doctor' }>();
@@ -8,12 +9,13 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const  { t } = useTranslation();
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const isDoctor = role === 'doctor';
-  const roleText = isDoctor ? 'Bác Sĩ' : 'Bệnh Nhân';
+  const roleText = isDoctor ? t("login.doctorAccount") : t("login.patientAccount");
   const roleColor = isDoctor ? 'green' : 'teal';
 
   const handleSubmit = async (e: FormEvent) => {
@@ -26,7 +28,7 @@ export const Login = () => {
       await login(username, password, role || 'patient');
       navigate(isDoctor ? '/dashboard' : '/');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Đăng nhập thất bại. Vui lòng thử lại.');
+      setError(err.response?.data?.detail || t("login.loginFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -51,19 +53,19 @@ export const Login = () => {
                 )}
               </div>
               <h1 className={`text-4xl font-bold text-${roleColor}-600 dark:text-${roleColor}-400 mb-2`}>
-                Đăng Nhập {roleText}
+                {t("login.loginButton")} {roleText}
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-400">Hệ Thống Phục Hồi Chức Năng</p>
+              <p className="text-xl text-gray-600 dark:text-gray-400">{t("login.systemName")}</p>
             </div>
 
             <div className="space-y-4">
-              <p className="text-lg text-gray-600 dark:text-gray-400 font-semibold">Tài khoản mẫu:</p>
+              <p className="text-lg text-gray-600 dark:text-gray-400 font-semibold">{t("login.sampleAccounts")}</p>
               <div className="space-y-2 text-base text-gray-700 dark:text-gray-300">
                 <p className={`${isDoctor ? 'font-bold' : ''}`}>
-                  Bác sĩ: <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">doctor1 / doctor123</span>
+                  {t("login.doctorAccount")} <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">doctor1 / doctor123</span>
                 </p>
                 <p className={`${!isDoctor ? 'font-bold' : ''}`}>
-                  Bệnh nhân: <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">patient1 / patient123</span>
+                  {t("login.patientAccount")} <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">patient1 / patient123</span>
                 </p>
               </div>
             </div>
@@ -73,7 +75,7 @@ export const Login = () => {
                 to="/login-choice"
                 className="text-lg text-gray-600 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition inline-block"
               >
-                ← Đăng nhập loại tài khoản khác
+                ← {t("login.switchAccount")}
               </Link>
             </div>
           </div>
@@ -89,7 +91,7 @@ export const Login = () => {
 
           <div>
             <label htmlFor="username" className="block text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Tên đăng nhập
+              {t("login.usernameLabel")}
             </label>
             <input
               id="username"
@@ -97,7 +99,7 @@ export const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className={`w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-${roleColor}-500 focus:ring-2 focus:ring-${roleColor}-200 dark:focus:ring-${roleColor}-800 transition`}
-              placeholder="Nhập tên đăng nhập"
+              placeholder={t("login.usernamePlaceholder")}
               required
               autoFocus
             />
@@ -105,7 +107,7 @@ export const Login = () => {
 
           <div>
             <label htmlFor="password" className="block text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Mật khẩu
+              {t("login.passwordLabel")}
             </label>
             <input
               id="password"
@@ -113,7 +115,7 @@ export const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={`w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-${roleColor}-500 focus:ring-2 focus:ring-${roleColor}-200 dark:focus:ring-${roleColor}-800 transition`}
-              placeholder="Nhập mật khẩu"
+              placeholder={t("login.passwordPlaceholder")}
               required
             />
           </div>
@@ -123,7 +125,7 @@ export const Login = () => {
             disabled={isLoading}
             className={`w-full bg-${roleColor}-600 hover:bg-${roleColor}-700 dark:bg-${roleColor}-500 dark:hover:bg-${roleColor}-600 text-white font-bold py-5 px-6 rounded-lg text-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg`}
           >
-            {isLoading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
+            {isLoading ? t("login.loggingIn") : t("login.loginButton")}
           </button>
         </form>
           </div>

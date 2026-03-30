@@ -58,18 +58,6 @@ export const Login = () => {
               <p className="text-xl text-gray-600 dark:text-gray-400">{t("login.systemName")}</p>
             </div>
 
-            <div className="space-y-4">
-              <p className="text-lg text-gray-600 dark:text-gray-400 font-semibold">{t("login.sampleAccounts")}</p>
-              <div className="space-y-2 text-base text-gray-700 dark:text-gray-300">
-                <p className={`${isDoctor ? 'font-bold' : ''}`}>
-                  {t("login.doctorAccount")} <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">doctor1 / doctor123</span>
-                </p>
-                <p className={`${!isDoctor ? 'font-bold' : ''}`}>
-                  {t("login.patientAccount")} <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">patient1 / patient123</span>
-                </p>
-              </div>
-            </div>
-
             <div className="text-center md:text-left">
               <Link
                 to="/login-choice"

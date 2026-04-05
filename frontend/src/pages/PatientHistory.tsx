@@ -244,6 +244,41 @@ export const PatientHistory = () => {
               </div>
             </div>
 
+            {/* Pain Analysis Summary */}
+            {(() => {
+              const analyzedSessions = sessions.filter(s => s.avg_pain_level !== null && s.avg_pain_level !== undefined);
+              if (analyzedSessions.length === 0) return null;
+              const painSessions = analyzedSessions.filter(s => (s.avg_pain_level ?? 0) > 0.35);
+              const avgPain = analyzedSessions.reduce((sum, s) => sum + (s.avg_pain_level ?? 0), 0) / analyzedSessions.length;
+              const worstSession = [...analyzedSessions].sort((a, b) => (b.avg_pain_level ?? 0) - (a.avg_pain_level ?? 0))[0];
+              return (
+                <div className={`rounded-xl p-5 mb-6 border flex flex-col md:flex-row gap-4 items-start md:items-center ${
+                  avgPain > 0.55 ? 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700'
+                  : avgPain > 0.35 ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700'
+                  : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                }`}>
+                  <div className="text-4xl">{avgPain > 0.55 ? '😣' : avgPain > 0.35 ? '😟' : '😊'}</div>
+                  <div className="flex-1">
+                    <p className={`font-bold text-lg ${avgPain > 0.55 ? 'text-red-700 dark:text-red-400' : avgPain > 0.35 ? 'text-orange-700 dark:text-orange-400' : 'text-green-700 dark:text-green-400'}`}>
+                      Phân tích đau — {analyzedSessions.length} buổi tập được ghi nhận
+                    </p>
+                    <div className="flex flex-wrap gap-x-6 gap-y-1 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      <span>Mức đau trung bình: <strong>{Math.round(avgPain * 100)}%</strong></span>
+                      <span>Buổi có dấu hiệu đau: <strong>{painSessions.length}</strong></span>
+                      {worstSession && (
+                        <span>Buổi đau nhất: <strong>{worstSession.exercise_name}</strong> ({Math.round((worstSession.avg_pain_level ?? 0) * 100)}%)</span>
+                      )}
+                    </div>
+                  </div>
+                  {avgPain > 0.35 && (
+                    <div className={`text-sm font-medium px-3 py-2 rounded-lg ${avgPain > 0.55 ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300'}`}>
+                      Nên tham khảo bác sĩ
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {/* Session List with Filters */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

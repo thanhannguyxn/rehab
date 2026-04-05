@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import type { Landmark } from '../types';
 
 interface VideoCaptureProps {
@@ -34,23 +34,51 @@ export const VideoCapture = ({
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null); // ← Canvas riêng cho skeleton
   const streamRef = useRef<MediaStream | null>(null);
   const frameIdRef = useRef<number>();
-  
+  const [cameraError, setCameraError] = useState<string | null>(null);
 
   // Start camera
   useEffect(() => {
     const startCamera = async () => {
+      // Check if getUserMedia is available (requires HTTPS or localhost)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setCameraError(
+          'Trình duyệt không hỗ trợ truy cập camera.\n' +
+          'Hãy đảm bảo bạn đang dùng localhost hoặc kết nối HTTPS.'
+        );
+        return;
+      }
+
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 1280, height: 720 },
-        });
-        
+        let stream: MediaStream;
+        try {
+          // Try HD first
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 1280, height: 720 },
+          });
+        } catch {
+          // Fallback to any available camera
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        }
+
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           streamRef.current = stream;
+          setCameraError(null);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error accessing camera:', err);
-        alert('Không thể truy cập camera. Vui lòng cho phép quyền truy cập camera.');
+        const name = err?.name || '';
+        let msg = 'Không thể truy cập camera.';
+        if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+          msg = 'Camera bị chặn quyền truy cập.\nHãy nhấp vào biểu tượng camera trên thanh địa chỉ trình duyệt → chọn "Cho phép" rồi tải lại trang.';
+        } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+          msg = 'Không tìm thấy camera. Hãy kiểm tra webcam đã được kết nối chưa.';
+        } else if (name === 'NotReadableError' || name === 'TrackStartError') {
+          msg = 'Camera đang được dùng bởi ứng dụng khác. Hãy đóng các ứng dụng khác đang dùng camera rồi tải lại trang.';
+        } else if (name === 'OverconstrainedError') {
+          msg = 'Camera không hỗ trợ độ phân giải yêu cầu.';
+        }
+        setCameraError(msg);
       }
     };
 
@@ -177,6 +205,23 @@ useEffect(() => {
 
   return (
     <div className="relative w-full max-w-4xl mx-auto">
+      {/* Camera error overlay */}
+      {cameraError && (
+        <div className="w-full aspect-video bg-gray-900 rounded-lg border-4 border-red-500 flex flex-col items-center justify-center gap-4 p-6 text-center">
+          <span className="text-5xl">📷</span>
+          <p className="text-red-400 font-bold text-xl">Lỗi camera</p>
+          {cameraError.split('\n').map((line, i) => (
+            <p key={i} className="text-gray-300 text-base">{line}</p>
+          ))}
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition"
+          >
+            Tải lại trang
+          </button>
+        </div>
+      )}
+
       {/* Video element - rendered but invisible */}
       <video
         ref={videoRef}

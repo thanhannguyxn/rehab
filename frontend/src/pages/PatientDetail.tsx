@@ -6,41 +6,6 @@ import { ProgressChart } from '../components/ProgressChart';
 import { ErrorAnalytics } from '../components/ErrorAnalytics';
 import type { Session } from '../types';
 
-// Add emotion types
-interface EmotionSummary {
-  avg_pain_level?: number;
-  avg_fatigue_level?: number;
-  predominant_emotion?: string;
-  pain_incidents?: number;
-  fatigue_incidents?: number;
-}
-
-interface SessionWithEmotion extends Session {
-  emotion_summary?: EmotionSummary;
-}
-
-interface EmotionTrends {
-  patient_id: number;
-  trends: Array<{
-    session_id: number;
-    date: string;
-    exercise_name: string;
-    duration_minutes: number;
-    predominant_emotion: string;
-    avg_pain_level: number;
-    avg_fatigue_level: number;
-    pain_incidents: number;
-    fatigue_incidents: number;
-    accuracy: number;
-  }>;
-  summary: {
-    total_sessions: number;
-    avg_pain_level: number;
-    avg_fatigue_level: number;
-    most_common_emotion: string;
-    emotion_distribution: Record<string, number>;
-  };
-}
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
@@ -55,9 +20,7 @@ declare module 'jspdf' {
 export const PatientDetail = () => {
   const { patientId } = useParams<{ patientId: string }>();
   const navigate = useNavigate();
-  const [sessions, setSessions] = useState<SessionWithEmotion[]>([]);
-  const [emotionTrends, setEmotionTrends] = useState<EmotionTrends | null>(null);
-  const [showEmotionChart, setShowEmotionChart] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
@@ -69,25 +32,9 @@ export const PatientDetail = () => {
 
   const loadPatientHistory = async () => {
     try {
-      // Load sessions with emotion data
+      // Load sessions
       const sessionData = await doctorAPI.getPatientHistory(Number(patientId), 50);
       setSessions(sessionData.sessions);
-
-      // Load emotion trends
-      try {
-        const emotionData = await fetch(`/api/doctor/patients/${patientId}/emotion-trends`, {
-          headers: {
-            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-          }
-        });
-        if (emotionData.ok) {
-          const trends = await emotionData.json();
-          setEmotionTrends(trends);
-        }
-      } catch (emotionError) {
-        console.log('No emotion data available:', emotionError);
-        // Continue without emotion data
-      }
     } catch (error) {
       console.error('Failed to load patient history:', error);
     } finally {
@@ -156,42 +103,6 @@ export const PatientDetail = () => {
     doc.save(`bao-cao-benh-nhan-${patientId}.pdf`);
   };
 
-  // Helper functions for emotion display
-  const getEmotionIcon = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return '😊';
-      case 'pain': return '😣';
-      case 'tired': return '😴';
-      case 'struggling': return '😰';
-      case 'focused': return '🧘';
-      case 'neutral': return '😐';
-      default: return '😐';
-    }
-  };
-
-  const getEmotionLabel = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return 'Vui vẻ';
-      case 'pain': return 'Đau đớn';
-      case 'tired': return 'Mệt mỏi';
-      case 'struggling': return 'Gắng sức';
-      case 'focused': return 'Tập trung';
-      case 'neutral': return 'Bình thường';
-      default: return 'Không xác định';
-    }
-  };
-
-  const getEmotionBadgeColor = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return 'bg-green-100 text-green-800';
-      case 'pain': return 'bg-red-100 text-red-800';
-      case 'tired': return 'bg-yellow-100 text-yellow-800';
-      case 'struggling': return 'bg-orange-100 text-orange-800';
-      case 'focused': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -235,93 +146,6 @@ export const PatientDetail = () => {
             <div className="grid grid-cols-1 gap-6 mb-6">
               <ProgressChart sessions={sessions} />
               <ErrorAnalytics patientId={Number(patientId)} />
-
-              {/* Emotion Analysis Chart */}
-              {emotionTrends && emotionTrends.summary.total_sessions > 0 && (
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-800">Phân tích cảm xúc</h3>
-                    <button
-                      onClick={() => setShowEmotionChart(!showEmotionChart)}
-                      className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
-                    >
-                      {showEmotionChart ? 'Ẩn chi tiết' : 'Xem chi tiết'}
-                    </button>
-                  </div>
-
-                  {/* Emotion Summary Stats */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="text-lg font-semibold text-blue-600">Cảm xúc chủ đạo</h4>
-                      <p className="text-2xl font-bold text-blue-800">
-                        {getEmotionLabel(emotionTrends.summary.most_common_emotion)}
-                      </p>
-                    </div>
-                    <div className="bg-orange-50 p-4 rounded-lg">
-                      <h4 className="text-lg font-semibold text-orange-600">Mức đau TB</h4>
-                      <p className="text-2xl font-bold text-orange-800">
-                        {Math.round(emotionTrends.summary.avg_pain_level * 100)}%
-                      </p>
-                    </div>
-                    <div className="bg-yellow-50 p-4 rounded-lg">
-                      <h4 className="text-lg font-semibold text-yellow-600">Mức mệt TB</h4>
-                      <p className="text-2xl font-bold text-yellow-800">
-                        {Math.round(emotionTrends.summary.avg_fatigue_level * 100)}%
-                      </p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="text-lg font-semibold text-green-600">Tổng phiên</h4>
-                      <p className="text-2xl font-bold text-green-800">
-                        {emotionTrends.summary.total_sessions}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Emotion Distribution */}
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold mb-3">Phân bố cảm xúc</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(emotionTrends.summary.emotion_distribution).map(([emotion, count]) => (
-                        <div
-                          key={emotion}
-                          className={`px-3 py-2 rounded-full text-sm font-medium ${getEmotionBadgeColor(emotion)}`}
-                        >
-                          {getEmotionLabel(emotion)}: {count}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Detailed Timeline */}
-                  {showEmotionChart && (
-                    <div>
-                      <h4 className="text-lg font-semibold mb-4">Timeline cảm xúc</h4>
-                      <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {emotionTrends.trends.map((trend, index) => (
-                          <div key={trend.session_id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center gap-4">
-                              <div className="text-2xl">{getEmotionIcon(trend.predominant_emotion)}</div>
-                              <div>
-                                <p className="font-medium">{trend.exercise_name}</p>
-                                <p className="text-sm text-gray-600">{trend.date}</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-sm font-medium">
-                                Đau: {Math.round(trend.avg_pain_level * 100)}% |
-                                Mệt: {Math.round(trend.avg_fatigue_level * 100)}%
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                Độ chính xác: {trend.accuracy}%
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             {/* Summary Stats */}

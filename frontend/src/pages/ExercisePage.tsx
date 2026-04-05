@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { VideoCapture } from '../components/VideoCapture';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { exerciseAPI, sessionAPI } from '../utils/api';
-import type { Exercise, EmotionData, EmotionWarning } from '../utils/types';
+import type { Exercise } from '../utils/types';
 import { AngleDisplay } from '../components/AngleDisplay';
 import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
@@ -36,22 +36,6 @@ export const ExercisePage = () => {
   const [showRelaxation, setShowRelaxation] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
 
-  // Emotion tracking states
-  const [currentEmotion, setCurrentEmotion] = useState<EmotionData | null>(null);
-  const [emotionWarnings, setEmotionWarnings] = useState<EmotionWarning[]>([]);
-  const [showEmotionWarning, setShowEmotionWarning] = useState(false);
-  const [lastEmotionWarning, setLastEmotionWarning] = useState<EmotionWarning | null>(null);
-  const [emotionTrackingEnabled, setEmotionTrackingEnabled] = useState<boolean>(() => {
-    // Load from localStorage, default to true
-    const saved = localStorage.getItem('emotionTrackingEnabled');
-    return saved === null ? true : saved === 'true';
-  });
-  const [performanceMode, setPerformanceModeState] = useState<string>(() => {
-    // Load performance mode from localStorage, default to balanced
-    const saved = localStorage.getItem('facePerformanceMode');
-    return saved || 'balanced';
-  });
-
   const { t } = useTranslation();
 
   const selectedExerciseObj = exercises.find((ex) => ex.id === selectedExercise);
@@ -69,7 +53,7 @@ export const ExercisePage = () => {
     max_reps: personalizedParams.max_reps
   } : undefined;
 
-  const { isConnected, analysisData, sendFrame, resetCounter, toggleEmotionTracking, setPerformanceMode } = useWebSocket(
+  const { isConnected, analysisData, sendFrame, resetCounter } = useWebSocket(
     selectedExercise || 'squat',
     isExercising,
     customThresholds,
@@ -85,22 +69,6 @@ export const ExercisePage = () => {
       loadPersonalizedParams();
     }
   }, [selectedExercise]);
-
-  // Toggle emotion tracking when state changes
-  useEffect(() => {
-    if (isConnected && toggleEmotionTracking) {
-      toggleEmotionTracking(emotionTrackingEnabled);
-      localStorage.setItem('emotionTrackingEnabled', String(emotionTrackingEnabled));
-    }
-  }, [emotionTrackingEnabled, isConnected, toggleEmotionTracking]);
-
-  // Update performance mode when state changes
-  useEffect(() => {
-    if (isConnected && setPerformanceMode) {
-      setPerformanceMode(performanceMode as 'high_accuracy' | 'balanced' | 'high_speed');
-      localStorage.setItem('facePerformanceMode', performanceMode);
-    }
-  }, [performanceMode, isConnected, setPerformanceMode]);
 
   const loadExercises = async () => {
     try {
@@ -347,36 +315,6 @@ export const ExercisePage = () => {
     }
   }, [analysisData?.feedback, isExercising]);
 
-  // Handle emotion data and warnings
-  useEffect(() => {
-    if (!analysisData) return;
-
-    // Update current emotion data
-    if (analysisData.emotion) {
-      setCurrentEmotion(analysisData.emotion);
-    }
-
-    // Handle emotion warnings
-    if (analysisData.emotion_warnings && analysisData.emotion_warnings.length > 0) {
-      const newWarning = analysisData.emotion_warnings[0];
-      setLastEmotionWarning(newWarning);
-      setEmotionWarnings(prev => [...prev, newWarning]);
-      setShowEmotionWarning(true);
-
-      // Auto-hide warning after 5 seconds
-      setTimeout(() => {
-        setShowEmotionWarning(false);
-      }, 5000);
-
-      // Voice announcement for warnings
-      if (newWarning.type === 'pain') {
-        voiceService.speak('Phát hiện biểu hiện đau đớn. Hãy nghỉ ngơi nếu cần.');
-      } else if (newWarning.type === 'fatigue') {
-        voiceService.speak('Bạn có vẻ mệt mỏi. Hãy nghỉ ngơi.');
-      }
-    }
-  }, [analysisData?.emotion, analysisData?.emotion_warnings]);
-
   // Exercise details and instructions
   const exerciseDetails: Record<string, { difficulty: string; description: string; instructions: string[] }> = {
     squat: {
@@ -402,41 +340,6 @@ export const ExercisePage = () => {
       description: t("exercisePage.exercises.description.calfRaise"),
       instructions: t("exercisePage.exercises.instructions.calfRaise", {returnObjects: true}) as string[],
     },
-  };
-
-  // Helper functions for emotion display
-  const getEmotionIcon = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return '😊';
-      case 'pain': return '😣';
-      case 'tired': return '😴';
-      case 'struggling': return '😰';
-      case 'focused': return '🧘';
-      default: return '😐';
-    }
-  };
-
-  const getEmotionLabel = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return 'Vui vẻ';
-      case 'pain': return 'Đau đớn';
-      case 'tired': return 'Mệt mỏi';
-      case 'struggling': return 'Gắng sức';
-      case 'focused': return 'Tập trung';
-      case 'neutral': return 'Bình thường';
-      default: return 'Không xác định';
-    }
-  };
-
-  const getEmotionColor = (emotion: string) => {
-    switch (emotion) {
-      case 'happy': return 'bg-green-100 dark:bg-green-900/30';
-      case 'pain': return 'bg-red-100 dark:bg-red-900/30';
-      case 'tired': return 'bg-yellow-100 dark:bg-yellow-900/30';
-      case 'struggling': return 'bg-orange-100 dark:bg-orange-900/30';
-      case 'focused': return 'bg-blue-100 dark:bg-blue-900/30';
-      default: return 'bg-gray-100 dark:bg-gray-800';
-    }
   };
 
   return (
@@ -556,103 +459,6 @@ export const ExercisePage = () => {
                 )}
               </div>
 
-              {/* Emotion Status Display */}
-              {isExercising && emotionTrackingEnabled && currentEmotion && (
-                <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-full ${getEmotionColor(currentEmotion.emotion)}`}>
-                        <span className="text-lg">{getEmotionIcon(currentEmotion.emotion)}</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Trạng thái: {getEmotionLabel(currentEmotion.emotion)}
-                        </p>
-                        {currentEmotion.calibrating ? (
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                            Đang hiệu chuẩn... {Math.round((currentEmotion.calibration_progress || 0) * 100)}%
-                          </p>
-                        ) : (
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                            Độ tin cậy: {Math.round(currentEmotion.confidence * 100)}%
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-right text-xs text-gray-600 dark:text-gray-400">
-                      {currentEmotion.pain_level > 0.3 && (
-                        <div className="text-orange-600 dark:text-orange-400">
-                          Đau: {Math.round(currentEmotion.pain_level * 100)}%
-                        </div>
-                      )}
-                      {currentEmotion.fatigue_level > 0.3 && (
-                        <div className="text-yellow-600 dark:text-yellow-400">
-                          Mệt: {Math.round(currentEmotion.fatigue_level * 100)}%
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Emotion Warning Popup */}
-              {showEmotionWarning && lastEmotionWarning && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4 border-l-4 ${
-                    lastEmotionWarning.severity === 'high'
-                      ? 'border-red-500'
-                      : lastEmotionWarning.severity === 'medium'
-                      ? 'border-orange-500'
-                      : 'border-yellow-500'
-                  }`}>
-                    <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-full ${
-                        lastEmotionWarning.type === 'pain'
-                          ? 'bg-red-100 dark:bg-red-900/30'
-                          : 'bg-yellow-100 dark:bg-yellow-900/30'
-                      }`}>
-                        <span className="text-2xl">
-                          {lastEmotionWarning.type === 'pain' ? '😣' : '😴'}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className={`text-lg font-semibold mb-2 ${
-                          lastEmotionWarning.type === 'pain'
-                            ? 'text-red-600 dark:text-red-400'
-                            : 'text-yellow-600 dark:text-yellow-400'
-                        }`}>
-                          {lastEmotionWarning.type === 'pain' ? 'Cảnh báo đau đớn' : 'Cảnh báo mệt mỏi'}
-                        </h3>
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                          {lastEmotionWarning.message}
-                        </p>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => setShowEmotionWarning(false)}
-                            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                          >
-                            Tiếp tục
-                          </button>
-                          <button
-                            onClick={() => {
-                              setShowEmotionWarning(false);
-                              handleStopExercise();
-                            }}
-                            className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${
-                              lastEmotionWarning.type === 'pain'
-                                ? 'bg-red-500 hover:bg-red-600'
-                                : 'bg-yellow-500 hover:bg-yellow-600'
-                            }`}
-                          >
-                            Dừng lại nghỉ
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
 
               {/* Control Button */}
               <button
@@ -674,36 +480,6 @@ export const ExercisePage = () => {
               >
                 {t("exercisePage.voiceSettings")}
               </button>
-
-              {/* Emotion Tracking Toggle */}
-              <button
-                onClick={() => setEmotionTrackingEnabled(!emotionTrackingEnabled)}
-                className={`w-full font-bold py-4 rounded-xl text-xl transition shadow-lg transform hover:scale-105 ${
-                  emotionTrackingEnabled
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white'
-                    : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
-                }`}
-              >
-                {emotionTrackingEnabled ? '😊 Nhận diện cảm xúc: BẬT' : '😐 Nhận diện cảm xúc: TẮT'}
-              </button>
-
-              {/* Performance Mode Selector */}
-              {emotionTrackingEnabled && (
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Chế độ hiệu suất:
-                  </label>
-                  <select
-                    value={performanceMode}
-                    onChange={(e) => setPerformanceModeState(e.target.value)}
-                    className="w-full p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="high_speed">⚡ Tốc độ cao (ít chính xác)</option>
-                    <option value="balanced">⚖️ Cân bằng (khuyên dùng)</option>
-                    <option value="high_accuracy">🎯 Chính xác cao (chậm hơn)</option>
-                  </select>
-                </div>
-              )}
 
               {isExercising && (
                 <button

@@ -64,6 +64,11 @@ export interface Session {
   accuracy: number;
   duration_seconds: number;
   errors?: ErrorStat[];
+  avg_pain_level?: number | null;
+  avg_fatigue_level?: number | null;
+  predominant_emotion?: string | null;
+  pain_incidents?: number;
+  fatigue_incidents?: number;
 }
 
 export interface SessionSummary extends Session {

@@ -1,332 +1,219 @@
-# Face emotion detection service
+"""
+Post-session face-based pain/fatigue analyzer.
+
+Runs on still frames (static_image_mode=True) — NOT called during live
+skeleton tracking so it never competes with pose processing.
+
+Geometric pipeline (no ML model training required):
+  - Eye Aspect Ratio (EAR)  → squinting = pain signal
+  - Brow depression score   → furrowed brows = pain signal
+  - Lip compression ratio   → pressed lips = pain signal
+  - Jaw slack ratio         → slack jaw = fatigue signal
+  - Combined scoring into pain_score / fatigue_score ∈ [0, 1]
+"""
+
+import math
+from typing import Optional
+
 import cv2
 import mediapipe as mp
 import numpy as np
-from enum import Enum
-import time
-from typing import Optional, Dict, List, Tuple
 
-# MediaPipe Face Mesh with optimized settings for performance
-mp_face_mesh = mp.solutions.face_mesh
+# ---------------------------------------------------------------------------
+# FaceMesh landmark indices used for analysis
+# ---------------------------------------------------------------------------
+# Left eye
+_L_EYE_TOP     = 159
+_L_EYE_BOT     = 145
+_L_EYE_INNER   = 33
+_L_EYE_OUTER   = 133
 
-class PerformanceMode(Enum):
-    HIGH_ACCURACY = "high_accuracy"
-    BALANCED = "balanced"
-    HIGH_SPEED = "high_speed"
+# Right eye
+_R_EYE_TOP     = 386
+_R_EYE_BOT     = 374
+_R_EYE_INNER   = 263
+_R_EYE_OUTER   = 362
 
-class FaceMeshManager:
-    def __init__(self):
-        self.current_mode = PerformanceMode.BALANCED
-        self.face_mesh_instances = {}
-        self._create_instances()
+# Brow inner corners (closest to nose bridge)
+_L_INNER_BROW  = 55
+_R_INNER_BROW  = 285
 
-    def _create_instances(self):
-        """Create different FaceMesh instances for different performance modes"""
-        # High accuracy: more detailed but slower
-        self.face_mesh_instances[PerformanceMode.HIGH_ACCURACY] = mp_face_mesh.FaceMesh(
-            max_num_faces=1,
-            refine_landmarks=True,
-            min_detection_confidence=0.7,
-            min_tracking_confidence=0.7
+# Brow mid-points (used for depression measurement)
+_L_BROW_MID    = 105
+_R_BROW_MID    = 334
+
+# Face width reference points (left/right cheeks)
+_FACE_LEFT     = 234
+_FACE_RIGHT    = 454
+
+# Face height reference points
+_FACE_TOP      = 10
+_FACE_CHIN     = 152
+
+# Mouth corners and center lips
+_MOUTH_TOP     = 13
+_MOUTH_BOT     = 14
+_MOUTH_LEFT    = 78
+_MOUTH_RIGHT   = 308
+
+
+def _ear(lm, top: int, bot: int, inner: int, outer: int) -> float:
+    """Eye Aspect Ratio — lower = more closed/squinting."""
+    h = abs(lm[bot].y - lm[top].y)
+    w = abs(lm[outer].x - lm[inner].x)
+    return h / (w + 1e-6)
+
+
+def _brow_depression(lm, brow_mid: int, eye_top: int, face_h: float) -> float:
+    """
+    Normalised brow-to-eye gap (positive = brow above eye = healthy gap).
+    Value shrinks / goes near-zero when brows are heavily depressed.
+    Returned as a *score* where higher = more depressed.
+    """
+    gap = (lm[eye_top].y - lm[brow_mid].y)   # positive because y increases downward
+    normalised = gap / (face_h + 1e-6)
+    # Typical neutral gap ~0.05-0.09; clamped to [0, 0.12]
+    normalised = max(0.0, min(normalised, 0.12))
+    # Invert so that low gap → high depression score
+    return 1.0 - (normalised / 0.12)
+
+
+def _lip_compression(lm, top: int, bot: int, left: int, right: int) -> float:
+    """
+    Mouth Aspect Ratio for the vertical opening.
+    Low value = lips pressed together (pain signal).
+    Returns a *compression score* where 1 = very compressed.
+    """
+    v = abs(lm[bot].y - lm[top].y)
+    w = abs(lm[right].x - lm[left].x)
+    mar = v / (w + 1e-6)
+    # Neutral lip MAR ~ 0.04-0.10; compress is near 0, open is ~0.3+
+    threshold = 0.06
+    if mar >= threshold:
+        return 0.0
+    return (threshold - mar) / threshold
+
+
+def _jaw_slack(lm, top: int, bot: int, left: int, right: int) -> float:
+    """
+    Moderate mouth openness without pain markers.
+    Returns score 0-1; peaks around MAR=0.20 (slightly agape, not wide open).
+    """
+    v = abs(lm[bot].y - lm[top].y)
+    w = abs(lm[right].x - lm[left].x)
+    mar = v / (w + 1e-6)
+    # Bell-shaped peak around 0.15-0.25
+    peak = 0.20
+    spread = 0.12
+    score = math.exp(-((mar - peak) ** 2) / (2 * spread ** 2))
+    # Only meaningful when mouth is more open than neutral closed
+    if mar < 0.04:
+        return 0.0
+    return min(score, 1.0)
+
+
+class FacePainAnalyzer:
+    """
+    Lazy-initialised singleton wrapper around MediaPipe FaceMesh.
+
+    Usage::
+
+        analyzer = FacePainAnalyzer()
+        result = analyzer.analyze_frame(bgr_frame)
+        # result → {"pain_score": 0.0-1.0, "fatigue_score": 0.0-1.0,
+        #            "expression": "neutral"|"discomfort"|"pain"|"tired"}
+        # or None if no face detected
+    """
+
+    _face_mesh = None
+
+    @classmethod
+    def _get_mesh(cls):
+        if cls._face_mesh is None:
+            cls._face_mesh = mp.solutions.face_mesh.FaceMesh(
+                static_image_mode=True,
+                max_num_faces=1,
+                refine_landmarks=True,
+                min_detection_confidence=0.5,
+            )
+        return cls._face_mesh
+
+    def analyze_frame(self, bgr_frame: np.ndarray) -> Optional[dict]:
+        """
+        Analyse a single BGR frame.
+
+        Returns a dict with pain_score, fatigue_score, expression; or None if
+        no face is detected.
+        """
+        if bgr_frame is None:
+            return None
+
+        rgb = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2RGB)
+        results = self._get_mesh().process(rgb)
+
+        if not results.multi_face_landmarks:
+            return None
+
+        lm = results.multi_face_landmarks[0].landmark
+
+        # Reference dimensions
+        face_h = abs(lm[_FACE_CHIN].y - lm[_FACE_TOP].y)
+
+        # --- Feature extraction ---
+        left_ear  = _ear(lm, _L_EYE_TOP, _L_EYE_BOT, _L_EYE_INNER, _L_EYE_OUTER)
+        right_ear = _ear(lm, _R_EYE_TOP, _R_EYE_BOT, _R_EYE_INNER, _R_EYE_OUTER)
+        avg_ear   = (left_ear + right_ear) / 2.0
+
+        # Squint: EAR drops below ~0.25 in a normal open eye
+        # Threshold 0.22 chosen conservatively to avoid flagging natural small eyes
+        normal_ear = 0.25
+        squint_score = max(0.0, (normal_ear - avg_ear) / normal_ear)
+
+        # Brow depression (average both sides)
+        l_dep = _brow_depression(lm, _L_BROW_MID, _L_EYE_TOP, face_h)
+        r_dep = _brow_depression(lm, _R_BROW_MID, _R_EYE_TOP, face_h)
+        brow_score = (l_dep + r_dep) / 2.0
+
+        lip_score = _lip_compression(
+            lm, _MOUTH_TOP, _MOUTH_BOT, _MOUTH_LEFT, _MOUTH_RIGHT
         )
 
-        # Balanced: good balance between speed and accuracy
-        self.face_mesh_instances[PerformanceMode.BALANCED] = mp_face_mesh.FaceMesh(
-            max_num_faces=1,
-            refine_landmarks=False,  # Disable for speed
-            min_detection_confidence=0.6,
-            min_tracking_confidence=0.6
+        jaw_score = _jaw_slack(
+            lm, _MOUTH_TOP, _MOUTH_BOT, _MOUTH_LEFT, _MOUTH_RIGHT
         )
 
-        # High speed: fastest but less accurate
-        self.face_mesh_instances[PerformanceMode.HIGH_SPEED] = mp_face_mesh.FaceMesh(
-            max_num_faces=1,
-            refine_landmarks=False,
-            min_detection_confidence=0.4,
-            min_tracking_confidence=0.4
+        # --- Combined scores ---
+        # Pain: squinting + brow furrow + lip compression
+        pain_score = (
+            0.40 * squint_score
+            + 0.35 * brow_score
+            + 0.25 * lip_score
         )
 
-    def set_performance_mode(self, mode: PerformanceMode):
-        """Switch performance mode"""
-        self.current_mode = mode
-        print(f"Face tracking performance mode: {mode.value}")
+        # Fatigue: drooping eyes (low EAR without much brow furrow) + jaw slack
+        # Subtract brow_score because furrowed brows are a pain signal, not fatigue
+        droop = max(0.0, squint_score - brow_score * 0.5)
+        fatigue_score = (
+            0.55 * droop
+            + 0.30 * jaw_score
+            + 0.15 * max(0.0, squint_score - brow_score)
+        )
 
-    def get_current_instance(self):
-        """Get current FaceMesh instance based on performance mode"""
-        return self.face_mesh_instances[self.current_mode]
+        pain_score    = round(min(pain_score, 1.0), 4)
+        fatigue_score = round(min(fatigue_score, 1.0), 4)
 
-# Global face mesh manager
-face_mesh_manager = FaceMeshManager()
-# Default face mesh for backward compatibility
-face_mesh = face_mesh_manager.get_current_instance()
-
-class EmotionState(Enum):
-    NEUTRAL = "neutral"
-    HAPPY = "happy"
-    STRUGGLING = "struggling"
-    PAIN = "pain"
-    TIRED = "tired"
-    FOCUSED = "focused"
-
-class EmotionDetector:
-    def __init__(self):
-        # Key facial landmarks for emotion detection
-        self.EYEBROW_LEFT = [70, 63, 105, 66, 107, 55, 65, 52, 53, 46]
-        self.EYEBROW_RIGHT = [296, 334, 293, 300, 276, 283, 282, 295, 285, 336]
-        self.EYE_LEFT = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246]
-        self.EYE_RIGHT = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]
-        self.MOUTH_OUTER = [61, 84, 17, 314, 405, 320, 307, 375, 321, 308, 324, 318]
-        self.MOUTH_INNER = [78, 95, 88, 178, 87, 14, 317, 402, 318, 324, 308, 415]
-        self.JAW = [172, 136, 150, 149, 176, 148, 152, 377, 400, 378, 379, 365, 397, 288, 361, 323]
-
-        # Baseline measurements (will be calibrated during first few frames)
-        self.baseline_eye_ratio = None
-        self.baseline_mouth_ratio = None
-        self.baseline_eyebrow_height = None
-        self.calibration_frames = 0
-        self.calibration_target = 30  # 30 frames for calibration
-
-    def _get_landmark_coords(self, landmarks, indices: List[int], frame_width: int, frame_height: int) -> List[Tuple[float, float]]:
-        """Extract coordinates for specific landmark indices"""
-        coords = []
-        for idx in indices:
-            if idx < len(landmarks.landmark):
-                x = landmarks.landmark[idx].x * frame_width
-                y = landmarks.landmark[idx].y * frame_height
-                coords.append((x, y))
-        return coords
-
-    def _calculate_distance(self, p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
-        """Calculate Euclidean distance between two points"""
-        return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
-
-    def _calculate_eye_aspect_ratio(self, eye_coords: List[Tuple[float, float]]) -> float:
-        """Calculate Eye Aspect Ratio (EAR) to detect eye squinting/closing"""
-        if len(eye_coords) < 6:
-            return 1.0
-
-        # Vertical distances
-        v1 = self._calculate_distance(eye_coords[1], eye_coords[5])
-        v2 = self._calculate_distance(eye_coords[2], eye_coords[4])
-
-        # Horizontal distance
-        h1 = self._calculate_distance(eye_coords[0], eye_coords[3])
-
-        # EAR formula
-        ear = (v1 + v2) / (2.0 * h1)
-        return ear
-
-    def _calculate_mouth_aspect_ratio(self, mouth_coords: List[Tuple[float, float]]) -> float:
-        """Calculate Mouth Aspect Ratio to detect mouth expressions"""
-        if len(mouth_coords) < 4:
-            return 1.0
-
-        # Vertical distance (mouth opening)
-        v1 = self._calculate_distance(mouth_coords[1], mouth_coords[7])
-        v2 = self._calculate_distance(mouth_coords[2], mouth_coords[6])
-
-        # Horizontal distance (mouth width)
-        h1 = self._calculate_distance(mouth_coords[0], mouth_coords[4])
-
-        # MAR formula
-        mar = (v1 + v2) / (2.0 * h1)
-        return mar
-
-    def _calculate_eyebrow_height(self, eyebrow_coords: List[Tuple[float, float]], eye_coords: List[Tuple[float, float]]) -> float:
-        """Calculate average distance from eyebrow to eye (higher = raised eyebrows)"""
-        if len(eyebrow_coords) == 0 or len(eye_coords) == 0:
-            return 0.0
-
-        # Average Y position of eyebrow and eye
-        eyebrow_y = np.mean([coord[1] for coord in eyebrow_coords])
-        eye_y = np.mean([coord[1] for coord in eye_coords])
-
-        # Return distance (higher values = raised eyebrows)
-        return abs(eyebrow_y - eye_y)
-
-    def _detect_mouth_corners(self, face_landmarks, frame_width: int, frame_height: int) -> float:
-        """Detect if mouth corners are turned up (smile) or down (frown)"""
-        # Mouth corner landmarks
-        left_corner = (face_landmarks.landmark[61].x * frame_width, face_landmarks.landmark[61].y * frame_height)
-        right_corner = (face_landmarks.landmark[291].x * frame_width, face_landmarks.landmark[291].y * frame_height)
-
-        # Center of mouth
-        mouth_center = (face_landmarks.landmark[13].x * frame_width, face_landmarks.landmark[13].y * frame_height)
-
-        # Calculate if corners are above or below center line
-        left_relative = left_corner[1] - mouth_center[1]  # Negative = raised (smile)
-        right_relative = right_corner[1] - mouth_center[1]  # Negative = raised (smile)
-
-        # Average corner position (negative = smile, positive = frown)
-        corner_position = (left_relative + right_relative) / 2
-        return -corner_position  # Invert so positive = smile, negative = frown
-
-    def calibrate(self, face_landmarks, frame_width: int, frame_height: int):
-        """Calibrate baseline measurements from first few frames"""
-        if self.calibration_frames >= self.calibration_target:
-            return
-
-        # Get coordinates for analysis
-        left_eye_coords = self._get_landmark_coords(face_landmarks, self.EYE_LEFT[:6], frame_width, frame_height)
-        right_eye_coords = self._get_landmark_coords(face_landmarks, self.EYE_RIGHT[:6], frame_width, frame_height)
-        mouth_coords = self._get_landmark_coords(face_landmarks, self.MOUTH_OUTER[:8], frame_width, frame_height)
-        left_eyebrow_coords = self._get_landmark_coords(face_landmarks, self.EYEBROW_LEFT[:5], frame_width, frame_height)
-
-        # Calculate current measurements
-        left_ear = self._calculate_eye_aspect_ratio(left_eye_coords)
-        right_ear = self._calculate_eye_aspect_ratio(right_eye_coords)
-        current_eye_ratio = (left_ear + right_ear) / 2
-
-        current_mouth_ratio = self._calculate_mouth_aspect_ratio(mouth_coords)
-        current_eyebrow_height = self._calculate_eyebrow_height(left_eyebrow_coords, left_eye_coords)
-
-        # Update running averages
-        if self.baseline_eye_ratio is None:
-            self.baseline_eye_ratio = current_eye_ratio
-            self.baseline_mouth_ratio = current_mouth_ratio
-            self.baseline_eyebrow_height = current_eyebrow_height
+        # --- Expression classification ---
+        if pain_score > 0.55:
+            expression = "pain"
+        elif pain_score > 0.35:
+            expression = "discomfort"
+        elif fatigue_score > 0.50:
+            expression = "tired"
         else:
-            alpha = 0.1  # Smoothing factor
-            self.baseline_eye_ratio = (1-alpha) * self.baseline_eye_ratio + alpha * current_eye_ratio
-            self.baseline_mouth_ratio = (1-alpha) * self.baseline_mouth_ratio + alpha * current_mouth_ratio
-            self.baseline_eyebrow_height = (1-alpha) * self.baseline_eyebrow_height + alpha * current_eyebrow_height
-
-        self.calibration_frames += 1
-
-    def analyze_emotion(self, face_landmarks, frame_width: int, frame_height: int) -> Dict:
-        """Analyze facial expression and return emotion state"""
-        if self.calibration_frames < self.calibration_target:
-            self.calibrate(face_landmarks, frame_width, frame_height)
-            return {
-                'emotion': EmotionState.NEUTRAL.value,
-                'confidence': 0.0,
-                'pain_level': 0.0,
-                'fatigue_level': 0.0,
-                'calibrating': True,
-                'calibration_progress': self.calibration_frames / self.calibration_target
-            }
-
-        # Get landmark coordinates
-        left_eye_coords = self._get_landmark_coords(face_landmarks, self.EYE_LEFT[:6], frame_width, frame_height)
-        right_eye_coords = self._get_landmark_coords(face_landmarks, self.EYE_RIGHT[:6], frame_width, frame_height)
-        mouth_coords = self._get_landmark_coords(face_landmarks, self.MOUTH_OUTER[:8], frame_width, frame_height)
-        left_eyebrow_coords = self._get_landmark_coords(face_landmarks, self.EYEBROW_LEFT[:5], frame_width, frame_height)
-        right_eyebrow_coords = self._get_landmark_coords(face_landmarks, self.EYEBROW_RIGHT[:5], frame_width, frame_height)
-
-        # Calculate current measurements
-        left_ear = self._calculate_eye_aspect_ratio(left_eye_coords)
-        right_ear = self._calculate_eye_aspect_ratio(right_eye_coords)
-        current_eye_ratio = (left_ear + right_ear) / 2
-
-        current_mouth_ratio = self._calculate_mouth_aspect_ratio(mouth_coords)
-
-        left_eyebrow_height = self._calculate_eyebrow_height(left_eyebrow_coords, left_eye_coords)
-        right_eyebrow_height = self._calculate_eyebrow_height(right_eyebrow_coords, right_eye_coords)
-        current_eyebrow_height = (left_eyebrow_height + right_eyebrow_height) / 2
-
-        mouth_corner_position = self._detect_mouth_corners(face_landmarks, frame_width, frame_height)
-
-        # Calculate relative changes from baseline
-        eye_ratio_change = (current_eye_ratio - self.baseline_eye_ratio) / self.baseline_eye_ratio if self.baseline_eye_ratio > 0 else 0
-        mouth_ratio_change = (current_mouth_ratio - self.baseline_mouth_ratio) / self.baseline_mouth_ratio if self.baseline_mouth_ratio > 0 else 0
-        eyebrow_height_change = (current_eyebrow_height - self.baseline_eyebrow_height) / self.baseline_eyebrow_height if self.baseline_eyebrow_height > 0 else 0
-
-        # Emotion detection logic
-        emotion = EmotionState.NEUTRAL
-        confidence = 0.5
-        pain_level = 0.0
-        fatigue_level = 0.0
-
-        # Pain detection: squinted eyes + furrowed brows + downturned mouth
-        if eye_ratio_change < -0.15 and eyebrow_height_change < -0.1 and mouth_corner_position < -3:
-            emotion = EmotionState.PAIN
-            confidence = min(1.0, abs(eye_ratio_change) + abs(eyebrow_height_change) + abs(mouth_corner_position/10))
-            pain_level = min(1.0, (abs(eye_ratio_change) + abs(eyebrow_height_change)) * 2)
-
-        # Struggling: slightly squinted eyes + raised eyebrows + neutral/tense mouth
-        elif eye_ratio_change < -0.1 and eyebrow_height_change > 0.05 and abs(mouth_corner_position) < 2:
-            emotion = EmotionState.STRUGGLING
-            confidence = min(1.0, abs(eye_ratio_change) + eyebrow_height_change)
-            pain_level = min(0.7, abs(eye_ratio_change) * 2)
-
-        # Tired: droopy eyes + lowered eyebrows + neutral mouth
-        elif eye_ratio_change < -0.2 and eyebrow_height_change < -0.05 and abs(mouth_corner_position) < 2:
-            emotion = EmotionState.TIRED
-            confidence = min(1.0, abs(eye_ratio_change) + abs(eyebrow_height_change))
-            fatigue_level = min(1.0, abs(eye_ratio_change) * 2)
-
-        # Happy: wide eyes + raised mouth corners
-        elif eye_ratio_change > 0.05 and mouth_corner_position > 3:
-            emotion = EmotionState.HAPPY
-            confidence = min(1.0, eye_ratio_change + mouth_corner_position/10)
-
-        # Focused: slightly raised eyebrows + neutral eyes and mouth
-        elif eyebrow_height_change > 0.1 and abs(eye_ratio_change) < 0.05 and abs(mouth_corner_position) < 2:
-            emotion = EmotionState.FOCUSED
-            confidence = min(1.0, eyebrow_height_change)
+            expression = "neutral"
 
         return {
-            'emotion': emotion.value,
-            'confidence': round(confidence, 3),
-            'pain_level': round(pain_level, 3),
-            'fatigue_level': round(fatigue_level, 3),
-            'calibrating': False,
-            'metrics': {
-                'eye_ratio_change': round(eye_ratio_change, 3),
-                'mouth_ratio_change': round(mouth_ratio_change, 3),
-                'eyebrow_height_change': round(eyebrow_height_change, 3),
-                'mouth_corner_position': round(mouth_corner_position, 3)
-            }
+            "pain_score":    pain_score,
+            "fatigue_score": fatigue_score,
+            "expression":    expression,
         }
-
-class FaceService:
-    def __init__(self):
-        self.emotion_detector = EmotionDetector()
-        self.performance_mode = PerformanceMode.BALANCED
-
-    def set_performance_mode(self, mode: PerformanceMode):
-        """Set performance mode for face detection"""
-        self.performance_mode = mode
-        face_mesh_manager.set_performance_mode(mode)
-
-    def process_frame(self, frame) -> Optional[Dict]:
-        """Process a single frame and return face landmarks and emotion data"""
-        try:
-            # Convert BGR to RGB
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-            # Process frame with current performance mode
-            current_face_mesh = face_mesh_manager.get_current_instance()
-            results = current_face_mesh.process(rgb_frame)
-
-            if results.multi_face_landmarks:
-                face_landmarks = results.multi_face_landmarks[0]
-                frame_height, frame_width = frame.shape[:2]
-
-                # Analyze emotion
-                emotion_data = self.emotion_detector.analyze_emotion(face_landmarks, frame_width, frame_height)
-
-                # Convert landmarks to list format for JSON serialization
-                landmarks_list = []
-                for landmark in face_landmarks.landmark:
-                    landmarks_list.append({
-                        'x': landmark.x,
-                        'y': landmark.y,
-                        'z': landmark.z
-                    })
-
-                return {
-                    'face_landmarks': landmarks_list,
-                    'emotion_data': emotion_data,
-                    'timestamp': time.time(),
-                    'performance_mode': self.performance_mode.value
-                }
-
-            return None
-
-        except Exception as e:
-            print(f"Face processing error: {e}")
-            return None
-
-# Global face service instance
-face_service = FaceService()

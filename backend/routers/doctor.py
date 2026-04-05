@@ -229,7 +229,12 @@ async def get_patient_history(request: Request, patient_id: int, limit: int = 20
             'correct_reps': session.correct_reps,
             'accuracy': session.accuracy,
             'duration_seconds': session.duration_seconds,
-            'errors': error_list
+            'errors': error_list,
+            'avg_pain_level': session.avg_pain_level,
+            'avg_fatigue_level': session.avg_fatigue_level,
+            'predominant_emotion': session.predominant_emotion,
+            'pain_incidents': session.pain_incidents,
+            'fatigue_incidents': session.fatigue_incidents,
         })
 
     return {'sessions': sessions}

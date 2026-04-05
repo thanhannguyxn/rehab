@@ -48,28 +48,6 @@ export interface FormError {
   severity: 'low' | 'medium' | 'high';
 }
 
-// ============= Emotion Detection Types =============
-
-export interface EmotionData {
-  emotion: 'neutral' | 'happy' | 'struggling' | 'pain' | 'tired' | 'focused';
-  confidence: number;
-  pain_level: number;
-  fatigue_level: number;
-  calibrating: boolean;
-  metrics?: {
-    eye_ratio_change: number;
-    mouth_ratio_change: number;
-    eyebrow_height_change: number;
-    mouth_corner_position: number;
-  };
-}
-
-export interface EmotionWarning {
-  type: 'pain' | 'fatigue';
-  message: string;
-  severity: 'low' | 'medium' | 'high';
-}
-
 export interface AnalysisResult {
   type: 'analysis';
   pose_detected: boolean;
@@ -78,11 +56,6 @@ export interface AnalysisResult {
   rep_count?: number;
   errors?: FormError[];
   feedback?: string;
-  // Emotion detection fields
-  emotion?: EmotionData | null;
-  emotion_warnings?: EmotionWarning[];
-  pain_warning_count?: number;
-  fatigue_warning_count?: number;
 }
 
 // ============= Session Types =============

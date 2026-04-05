@@ -476,7 +476,7 @@ export const ExercisePage = () => {
               {/* Voice Settings Button */}
               <button
                 onClick={() => setShowVoiceSettings(true)}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl text-xl transition shadow-lg transform hover:scale-105"
+                className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl text-xl transition shadow-md"
               >
                 {t("exercisePage.voiceSettings")}
               </button>

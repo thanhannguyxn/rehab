@@ -26,7 +26,7 @@ export const Login = () => {
     try {
       // Pass the role from URL params to login function
       await login(username, password, role || 'patient');
-      navigate(isDoctor ? '/dashboard' : '/');
+      navigate(role === 'doctor' ? '/dashboard' : '/schedule-sessions');
     } catch (err: any) {
       setError(err.response?.data?.detail || t("login.loginFailed"));
     } finally {

@@ -112,6 +112,12 @@ export const PatientDetail = () => {
           </div>
           <div className="flex gap-4">
             <button
+              onClick={() => navigate(`/doctor/assistant?patientId=${patientId}`)}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition"
+            >
+              🤖 Trợ Lý AI
+            </button>
+            <button
               onClick={generatePDF}
               disabled={sessions.length === 0}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"

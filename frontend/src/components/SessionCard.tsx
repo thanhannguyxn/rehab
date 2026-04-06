@@ -95,7 +95,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
 
       <div className="flex justify-between items-start mb-4 pr-32">
         <div>
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white">{t(`sessionCard.exercises.${session.exercise_id}`)}</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white">{t(`sessionCard.exercises.${session.exercise_name}`, session.exercise_name)}</h3>
           <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(session.start_time)}</p>
         </div>
       </div>
@@ -133,7 +133,9 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
           <div className="space-y-2">
             {top3Errors.map((error, index) => (
               <div key={index} className="flex items-center gap-3 bg-white dark:bg-gray-800 p-2 rounded">
-                <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">{t(`sessionCard.errors.${error.display_name}`)}</span>
+                <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
+                  {t(`sessionCard.errors.${error.name}`, error.name)}
+                </span>
                 <span className="font-bold text-red-600 dark:text-red-400 text-sm">
                   {error.count}x
                 </span>
@@ -174,12 +176,9 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
             {/* Error comparison */}
             <div className="flex items-center gap-2">
               {comparison.errorDiff < 0 ? (
-                <>
-                  <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
-                  <span className="text-sm text-green-600 dark:text-green-400">
-                    {t("sessionCard.comparison.decrease")} {Math.abs(comparison.errorDiff)} {t("sessionCard.comparison.error")}
-                  </span>
-                </>
+                <span className="text-sm text-green-600 dark:text-green-400">
+                  {t("sessionCard.comparison.decrease")} {Math.abs(comparison.errorDiff)} {t("sessionCard.comparison.error")}
+                </span>
               ) : comparison.errorDiff > 0 ? (
                 <>
                   <span className="text-sm text-orange-600 dark:text-orange-400">

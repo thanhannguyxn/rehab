@@ -81,7 +81,7 @@ export const PatientHistory = () => {
   const currentStreak = calculateStreak();
 
   // Get unique exercise types
-  const exerciseTypes = Array.from(new Set(sessions.map(s => s.exercise_id)));
+  const exerciseTypes = Array.from(new Set(sessions.map(s => s.exercise_name)));
 
   // Filter and sort sessions
   const getFilteredAndSortedSessions = () => {
@@ -89,7 +89,7 @@ export const PatientHistory = () => {
     
     // Apply filter
     if (filterExercise !== 'all') {
-      filtered = filtered.filter(s => s.exercise_id === filterExercise);
+      filtered = filtered.filter(s => s.exercise_name === filterExercise);
     }
     
     // Apply sort

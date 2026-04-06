@@ -223,9 +223,6 @@ class RepetitionCounter:
         elif exercise_type == "single_leg_stand":
             self.knee_threshold = 90  # Góc gập gối
             self.knee_height_threshold = 0.1  # Chân phải nâng cao hơn 0.1 (tỉ lệ)
-            # Set default thresholds for compatibility
-            self.down_threshold = 90
-            self.up_threshold = 60
             self.hysteresis = 5
         elif exercise_type == "calf_raise":
             # Ngưỡng cho nâng gót chân - CHỈ CẦN NÂNG MỘT CHÚT

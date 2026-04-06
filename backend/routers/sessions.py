@@ -151,12 +151,15 @@ async def end_session(request: Request, session_id: int, background_tasks: Backg
 
     # Schedule post-session face pain analysis (runs after response is sent)
     face_frames = pop_frame_buffer(session_id)
+    print(f"[sessions] Frame buffer for session {session_id}: {len(face_frames)} frames")
     if face_frames:
         background_tasks.add_task(
             analyze_session_pain, session_id, face_frames, SessionLocal
         )
         print(f"[sessions] Scheduled pain analysis for session {session_id} "
               f"({len(face_frames)} frames)")
+    else:
+        print(f"[sessions] No frames buffered for session {session_id} — pain analysis skipped")
 
     return {
         'session_id': session.id,

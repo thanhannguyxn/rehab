@@ -77,6 +77,7 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str, db: Sessi
                     if session_id is not None and current_time - last_buffer_time >= 5.0:
                         buffer_frame(session_id, img_data)
                         last_buffer_time = current_time
+                        print(f"[websocket] Buffered frame for session {session_id}")
 
                     nparr = np.frombuffer(img_data, np.uint8)
                     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)

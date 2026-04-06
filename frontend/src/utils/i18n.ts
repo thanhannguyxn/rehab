@@ -411,6 +411,7 @@ const resources = {
         home: "Trang Chủ",
         exercise: "Bài Tập",
         history: "Lịch Sử",
+        scheduleSession: "Lịch Tập",
         dashboard: "Dashboard",
 
         greeting: "Xin chào",
@@ -418,6 +419,21 @@ const resources = {
         logout: "Đăng Xuất",
 
         login: "Đăng Nhập"
+      },
+
+      schedulePage: {
+        title: "Lịch tập được giao",
+        subtitle: "Danh sách các bài tập phục hồi chức năng do bác sĩ thiết lập",
+        loading: "Đang tải danh sách...",
+        emptyTitle: "Chưa có lịch tập nào",
+        emptySubtitle: "Khi bác sĩ tạo lịch tập cho bạn, nó sẽ xuất hiện ở đây.",
+        scheduledFor: "Thời gian:",
+        doctor: "Bác sĩ:",
+        note: "Ghi chú:",
+        statusNew: "Mới",
+        statusSeen: "Đã xem",
+        btnMarkSeen: "Đánh dấu đã xem",
+        btnOpen: "Mở bài tập"
       },
 
       angleDisplay: {
@@ -1138,6 +1154,7 @@ const resources = {
         home: "Home",
         exercise: "Exercises",
         history: "History",
+        scheduleSession: "Schedule Session",
         dashboard: "Dashboard",
 
         greeting: "Hello",
@@ -1145,6 +1162,21 @@ const resources = {
         logout: "Logout",
 
         login: "Login"
+      },
+
+      schedulePage: {
+        title: "Assigned Sessions",
+        subtitle: "Your doctor-created rehabilitation schedule list",
+        loading: "Loading schedules...",
+        emptyTitle: "No scheduled sessions yet",
+        emptySubtitle: "When your doctor creates one, it will appear here.",
+        scheduledFor: "Scheduled for:",
+        doctor: "Doctor:",
+        note: "Note:",
+        statusNew: "New",
+        statusSeen: "Seen",
+        btnMarkSeen: "Mark as seen",
+        btnOpen: "Open"
       },
 
       angleDisplay: {

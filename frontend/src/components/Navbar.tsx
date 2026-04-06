@@ -47,11 +47,11 @@ export const Navbar = () => {
                 <Link to="/exercise" className={getLinkClasses('/exercise')}>
                   {t("navbar.exercise")}
                 </Link>
+                <Link to="/schedule-sessions" className={getLinkClasses('/schedule-sessions')}>
+                  {t("navbar.scheduleSession")}
+                </Link>
                 <Link to="/history" className={getLinkClasses('/history')}>
                   {t("navbar.history")}
-                </Link>
-                <Link to="/schedule-sessions" className={getLinkClasses('/schedule-sessions')}>
-                  Schedule Session
                 </Link>
               </>
             )}

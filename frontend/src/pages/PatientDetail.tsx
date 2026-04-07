@@ -5,6 +5,7 @@ import { SessionCard } from '../components/SessionCard';
 import { ProgressChart } from '../components/ProgressChart';
 import { ErrorAnalytics } from '../components/ErrorAnalytics';
 import type { Session } from '../types';
+
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
@@ -31,8 +32,9 @@ export const PatientDetail = () => {
 
   const loadPatientHistory = async () => {
     try {
-      const data = await doctorAPI.getPatientHistory(Number(patientId), 50);
-      setSessions(data.sessions);
+      // Load sessions
+      const sessionData = await doctorAPI.getPatientHistory(Number(patientId), 50);
+      setSessions(sessionData.sessions);
     } catch (error) {
       console.error('Failed to load patient history:', error);
     } finally {

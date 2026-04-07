@@ -138,7 +138,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
         <button
           onClick={handleTest}
           disabled={!enabled}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition mb-4"
+          className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl text-xl transition shadow-md"
         >
           {t("voiceSettings.actions.test")}
         </button>

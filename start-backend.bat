@@ -35,6 +35,7 @@ if errorlevel 1 (
 
 echo [INFO] Running database migration...
 python migrate_db.py
+alembic upgrade head
 if errorlevel 1 (
 	echo [WARNING] Migration failed. Check MySQL service and backend/.env.
 )

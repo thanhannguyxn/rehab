@@ -22,6 +22,11 @@ export interface Exercise {
   description: string;
   target_reps: number;
   duration_seconds: number;
+  video_path?: string;           // Path to demonstration video
+  thumbnail_path?: string;       // Path to thumbnail image
+  base_exercise_type?: string;   // For tracking (squat, arm_raise, etc.)
+  is_default?: boolean;          // Built-in vs custom exercise
+  difficulty_level?: string;     // easy, medium, hard
 }
 
 // ============= Pose Detection Types =============

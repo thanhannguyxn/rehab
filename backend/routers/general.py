@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from models import User, Gender, MobilityLevel, UserExerciseLimits, get_db
+from models import User, Gender, MobilityLevel, UserExerciseLimits, Exercise, get_db
 from routers.auth import verify_token
 from ai_models import PersonalizationEngine
 from limiter import limiter
@@ -99,13 +99,27 @@ EXERCISE_NAMES = {
 
 @router.get("/exercises")
 @limiter.limit("30/minute")
-async def get_exercises(request: Request):
-    """Get available exercises - public endpoint"""
+async def get_exercises(request: Request, db: Session = Depends(get_db)):
+    """Get available exercises from database - public endpoint"""
+    # Query active exercises from database
+    exercises = db.query(Exercise).filter(
+        Exercise.is_active == True
+    ).order_by(Exercise.name).all()
+
     return {
         "exercises": [
-            {"id": "squat", "name": "Squat (Gập gối)", "description": "Bài tập tăng cường cơ chân", "target_reps": 16, "duration_seconds": 600},
-            {"id": "arm_raise", "name": "Nâng Tay", "description": "Bài tập vai và tay", "target_reps": 12, "duration_seconds": 300},
-            {"id": "single_leg_stand", "name": "Đứng 1 Chân", "description": "Bài tập cân bằng và cơ chân", "target_reps": 10, "duration_seconds": 300},
-            {"id": "calf_raise", "name": "Nâng Gót Chân", "description": "Bài tập tăng cường cơ bắp chân", "target_reps": 12, "duration_seconds": 300}
+            {
+                "id": ex.id,
+                "name": ex.name,
+                "description": ex.description,
+                "target_reps": ex.target_reps,
+                "duration_seconds": ex.duration_seconds,
+                "difficulty_level": ex.difficulty_level,
+                "video_path": ex.video_path,
+                "thumbnail_path": ex.thumbnail_path,
+                "base_exercise_type": ex.base_exercise_type,
+                "is_default": ex.is_default
+            }
+            for ex in exercises
         ]
     }

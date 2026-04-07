@@ -60,6 +60,22 @@ export const DoctorDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-200">
       <div className="max-w-6xl mx-auto p-6">
+        {/* Exercise Management Links */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <button
+            onClick={() => navigate('/exercise-management')}
+            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+          >
+            <span>Quản Lý Bài Tập</span>
+          </button>
+          <button
+            onClick={() => navigate('/exercise-management')}
+            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+          >
+            <span>Thêm Bài Tập Mới</span>
+          </button>
+        </div>
+
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">

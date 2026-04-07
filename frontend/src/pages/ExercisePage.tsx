@@ -8,7 +8,7 @@ import { AngleDisplay } from '../components/AngleDisplay';
 import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
-import { API_URL } from '../utils/config';
+import { API_URL, API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
 
 interface PersonalizedParams {
@@ -35,7 +35,11 @@ export const ExercisePage = () => {
   const [loadingParams, setLoadingParams] = useState(false);
   const [showRelaxation, setShowRelaxation] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+
   const { t } = useTranslation();
+
+  const selectedExerciseObj = exercises.find((ex) => ex.id === selectedExercise);
+  const selectedTrackingType = selectedExerciseObj?.base_exercise_type || selectedExercise || 'squat';
 
   // Track last announced rep and error to avoid repetition
   const lastAnnouncedRep = useRef<number>(0);
@@ -50,7 +54,7 @@ export const ExercisePage = () => {
   } : undefined;
 
   const { isConnected, analysisData, sendFrame, resetCounter } = useWebSocket(
-    selectedExercise || 'squat',
+    selectedTrackingType,
     isExercising,
     customThresholds,
     sessionId
@@ -90,7 +94,7 @@ export const ExercisePage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ exercise_type: selectedExercise })
+        body: JSON.stringify({ exercise_type: selectedTrackingType })
       });
 
       if (response.ok) {
@@ -352,6 +356,16 @@ export const ExercisePage = () => {
               {exercises.map((exercise) => {
                 const details = exerciseDetails[exercise.id];
                 const isSelected = selectedExercise === exercise.id;
+                // Use API data for custom exercises, fallback to hardcoded for defaults
+                const displayName = exercise.is_default !== false
+                  ? t(`exercisePage.exercises.names.${exercise.id}`, exercise.name)
+                  : exercise.name;
+                const displayDifficulty = details?.difficulty ||
+                  (exercise.difficulty_level === 'easy' ? t("exercisePage.exercises.difficulty.easy") :
+                   exercise.difficulty_level === 'medium' ? t("exercisePage.exercises.difficulty.medium") :
+                   exercise.difficulty_level === 'hard' ? t("exercisePage.exercises.difficulty.hard") :
+                   t("exercisePage.exercises.difficulty.easy"));
+                const displayDescription = details?.description || exercise.description || '';
 
                 return (
                   <button
@@ -367,7 +381,7 @@ export const ExercisePage = () => {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3">
                         <div className={`p-2 rounded-xl ${isSelected ? 'bg-gradient-to-br from-teal-500 to-cyan-500' : 'bg-gray-300 dark:bg-gray-700'}`}>
-                          {exercise.id === 'squat' ? (
+                          {exercise.id === 'squat' || exercise.base_exercise_type === 'squat' ? (
                             <svg className={`w-6 h-6 ${isSelected ? 'text-white' : 'text-gray-700 dark:text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg>
@@ -378,13 +392,13 @@ export const ExercisePage = () => {
                           )}
                         </div>
                         <div>
-                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{t(`exercisePage.exercises.names.${exercise.id}`)}</h3>
+                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{displayName}</h3>
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            details?.difficulty === t("exercisePage.exercises.difficulty.easy") ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
-                            details?.difficulty === t("exercisePage.exercises.difficulty.medium") ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400' :
+                            displayDifficulty === t("exercisePage.exercises.difficulty.easy") ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
+                            displayDifficulty === t("exercisePage.exercises.difficulty.medium") ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400' :
                             'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
                           }`}>
-                            {details?.difficulty || t("exercisePage.exercises.difficulty.easy")}
+                            {displayDifficulty}
                           </span>
                         </div>
                       </div>
@@ -396,10 +410,10 @@ export const ExercisePage = () => {
                         </div>
                       )}
                     </div>
-                    <p className="text-gray-700 dark:text-gray-400 text-sm mb-2">{details?.description}</p>
+                    <p className="text-gray-700 dark:text-gray-400 text-sm mb-2">{displayDescription}</p>
                     <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-500">
                       <span className="flex items-center gap-1">
-                       {exercise.id === 'squat' ? '5-10 ' + t("exercisePage.minute") : '5 ' + t("exercisePage.minute")}
+                       {Math.floor(exercise.duration_seconds / 60)} {t("exercisePage.minute")}
                       </span>
                       <span className="flex items-center gap-1">
                        {exercise.target_reps} reps
@@ -462,7 +476,7 @@ export const ExercisePage = () => {
               {/* Voice Settings Button */}
               <button
                 onClick={() => setShowVoiceSettings(true)}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl text-xl transition shadow-lg transform hover:scale-105"
+                className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl text-xl transition shadow-md"
               >
                 {t("exercisePage.voiceSettings")}
               </button>
@@ -483,15 +497,21 @@ export const ExercisePage = () => {
                     {t("exercisePage.instructions")}: {currentExercise.name}
                   </h2>
                   <p className="text-lg text-gray-800 dark:text-gray-400 mb-4">
-                    {exerciseDetails[currentExercise.id]?.description}
+                    {exerciseDetails[currentExercise.id]?.description || currentExercise.description}
                   </p>
                   <div className="space-y-2">
                     <p className="font-semibold text-gray-900 dark:text-white text-lg">{t("exercisePage.steps")}</p>
-                    {exerciseDetails[currentExercise.id]?.instructions.map((step, index) => (
-                      <p key={index} className="text-gray-800 dark:text-gray-300 text-base">
-                        {index + 1}. {step}
+                    {exerciseDetails[currentExercise.id]?.instructions ? (
+                      exerciseDetails[currentExercise.id].instructions.map((step, index) => (
+                        <p key={index} className="text-gray-800 dark:text-gray-300 text-base">
+                          {index + 1}. {step}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="text-gray-600 dark:text-gray-400 text-base italic">
+                        {t("exercisePage.followVideoGuide", "Hãy xem video hướng dẫn bên dưới để thực hiện bài tập.")}
                       </p>
-                    ))}
+                    )}
                   </div>
                 </div>
               )}
@@ -500,7 +520,7 @@ export const ExercisePage = () => {
               <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t("exercisePage.videoGuide")}</h3>
                 <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300 overflow-hidden">
-                  {selectedExercise ? (
+                  {selectedExercise && currentExercise ? (
                     <>
                       <video
                         key={selectedExercise}
@@ -518,11 +538,15 @@ export const ExercisePage = () => {
                           }
                         }}
                         src={
-                          selectedExercise === 'squat' ? '/squat.mp4' :
-                          selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :
-                          selectedExercise === 'calf_raise' ? '/calf_raise.mp4' :
-                          selectedExercise === 'single_leg_stand' ? '/single_leg_stand.mp4' :
-                          ''
+                          currentExercise.video_path?.startsWith('/uploads') 
+                            ? `${API_BASE_URL}${currentExercise.video_path}` 
+                            : currentExercise.video_path || (
+                            selectedExercise === 'squat' ? '/squat.mp4' :
+                            selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :
+                            selectedExercise === 'calf_raise' ? '/calf_raise.mp4' :
+                            selectedExercise === 'single_leg_stand' ? '/single_leg_stand.mp4' :
+                            ''
+                          )
                         }
                         onError={(e) => {
                           // Only show placeholder if video truly cannot be loaded
@@ -624,7 +648,7 @@ export const ExercisePage = () => {
                 
                 <AngleDisplay
                   angles={analysisData?.angles}
-                  exerciseType={selectedExercise || 'squat'}
+                  exerciseType={selectedTrackingType}
                   isDetected={analysisData?.pose_detected || false}
                 />
 

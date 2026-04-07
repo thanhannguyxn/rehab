@@ -179,7 +179,15 @@ class ExerciseState(Enum):
 
 
 class RepetitionCounter:
-    def __init__(self, exercise_type):
+    def __init__(self, exercise_type, custom_thresholds=None):
+        """
+        Initialize RepetitionCounter.
+
+        Args:
+            exercise_type: Type of exercise (squat, arm_raise, calf_raise, single_leg_stand)
+            custom_thresholds: Optional dict with custom thresholds from database
+                             {'down_threshold': float, 'up_threshold': float, 'hysteresis': float}
+        """
         self.exercise_type = exercise_type
         self.rep_count = 0
 
@@ -203,7 +211,7 @@ class RepetitionCounter:
         self.left_completed = False
         self.right_completed = False
 
-        # Thresholds
+        # Default Thresholds
         if exercise_type == "arm_raise":
             self.down_threshold = 90
             self.up_threshold = 160
@@ -221,6 +229,21 @@ class RepetitionCounter:
             self.down_threshold = 120  # Góc ankle khi gót chạm đất
             self.up_threshold = 140    # Góc ankle khi nâng gót lên cao
             self.hysteresis = 5
+        else:
+            # Unknown exercise - use generic thresholds
+            self.down_threshold = 160
+            self.up_threshold = 90
+            self.hysteresis = 5
+
+        # Apply custom thresholds from database (override defaults)
+        if custom_thresholds:
+            if 'down_threshold' in custom_thresholds and custom_thresholds['down_threshold'] is not None:
+                self.down_threshold = custom_thresholds['down_threshold']
+            if 'up_threshold' in custom_thresholds and custom_thresholds['up_threshold'] is not None:
+                self.up_threshold = custom_thresholds['up_threshold']
+            if 'hysteresis' in custom_thresholds and custom_thresholds['hysteresis'] is not None:
+                self.hysteresis = custom_thresholds['hysteresis']
+            print(f"Applied custom thresholds: down={self.down_threshold}, up={self.up_threshold}, hysteresis={self.hysteresis}")
 
     def add_error_to_current_rep(self, error_name: str):
         """Add error to current rep (will only count once per rep)"""

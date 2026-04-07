@@ -17,6 +17,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 // Load user from sessionStorage on mount
   useEffect(() => {
+    // Clear legacy auth keys from localStorage to avoid sending stale tokens.
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     const token = sessionStorage.getItem('token');
     const savedUser = sessionStorage.getItem('user');
 
@@ -28,6 +32,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
       }
+    } else {
+      // Keep token and user in sync: if one is missing, clear both.
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
     }
     
     setIsLoading(false);
@@ -44,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 

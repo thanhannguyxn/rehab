@@ -5,6 +5,100 @@ const resources = {
   vi: {
     translation: {
       /* Translations for pages */
+      exerciseManagement: {
+        title: "Quản Lý Bài Tập",
+        subtitle: "Upload video bài tập để hệ thống tự động nhận diện và thêm vào hệ thống",
+        back: "Quay lại",
+        
+        uploadCardTitle: "Upload Video Bài Tập Mới",
+        fileInputLabel: "Chọn file video",
+        fileSupportText: "Hỗ trợ: MP4, AVI, MOV, WebM (tối đa 100MB)",
+        uploading: "Đang Upload...",
+        uploadBtn: "Upload và Phân Tích",
+        previewLabel: "Xem trước",
+        noVideoPreview: "Chọn video để xem trước",
+        
+        tabApproved: "Bài Tập Đã Duyệt",
+        tabPending: "Chờ Duyệt",
+        
+        listTitle: "Danh Sách Bài Tập",
+        refresh: "Làm mới",
+        emptyApproved: "Chưa có bài tập nào",
+        defaultBadge: "Mặc định",
+        noDesc: "Không có mô tả",
+        
+        angleTrackingTitle: "Góc Khớp Theo Dõi",
+        angleInfoTitle: "Thông Tin Góc Khớp",
+        typeLabel: "Loại:",
+        baseTypeLabel: "Loại bài tập:",
+        primaryAngleLabel: "Góc chính:",
+        downLabel: "Down:",
+        upLabel: "Up:",
+        
+        repsLabel: "reps",
+        minutesLabel: "phút",
+        rulesLabel: "quy tắc góc",
+        rulesPreviewTitle: "Quy tắc phát hiện lỗi:",
+        moreRules: "thêm",
+        
+        editBtn: "Sửa",
+        deleteBtn: "Xóa",
+        deleteConfirm: "Bạn có chắc muốn xóa bài tập này?",
+        deleteSuccess: "Đã xóa bài tập",
+        deleteError: "Lỗi khi xóa",
+        
+        pendingTitle: "Bài Tập Chờ Duyệt",
+        loading: "Đang tải...",
+        emptyPending: "Chưa có bài tập nào được upload",
+        analyzing: "Đang phân tích...",
+        confidenceLabel: "Độ tin cậy:",
+        
+        modalTitle: "Chỉnh Sửa Bài Tập",
+        exerciseNameLabel: "Tên bài tập *",
+        exerciseDescLabel: "Mô tả",
+        baseTypeSelectLabel: "Loại bài tập (ảnh hưởng đến góc khớp theo dõi)",
+        targetRepsLabel: "Số rep mục tiêu",
+        durationLabel: "Thời gian (giây)",
+        difficultyLabel: "Độ khó",
+        existingRulesTitle: "Quy tắc phát hiện lỗi hiện tại",
+        saving: "Đang lưu...",
+        saveBtn: "Lưu thay đổi",
+        cancelBtn: "Hủy",
+        
+        alerts: {
+          onlyVideo: "Chỉ chấp nhận file video!",
+          fileTooLarge: "File quá lớn! Tối đa 100MB.",
+          uploadSuccess: "Upload thành công! Đang phân tích video...",
+          uploadFailed: "Upload thất bại!",
+          uploadError: "Lỗi khi upload!",
+          updateSuccess: "Đã cập nhật bài tập!",
+          updateError: "Lỗi khi cập nhật",
+          deleteErrorTitle: "Lỗi khi xóa"
+        },
+        
+        status: {
+          UPLOADING: "Đang tải",
+          PROCESSING: "Đang xử lý",
+          PENDING: "Chờ duyệt",
+          APPROVED: "Đã duyệt",
+          REJECTED: "Đã từ chối",
+          ERROR: "Lỗi"
+        },
+        
+        baseTypes: {
+          squat: "Squat (Gối)",
+          arm_raise: "Nâng Tay (Vai)",
+          calf_raise: "Nâng Gót (Cổ chân)",
+          single_leg_stand: "Đứng 1 Chân (Gối)"
+        },
+        
+        difficulty: {
+          easy: "Dễ",
+          medium: "Trung bình",
+          hard: "Khó"
+        }
+      },
+
       landing: {
           heroBadge: "Công nghệ AI Tiên tiến",
           heroTitle1: "Phục Hồi Chức Năng",
@@ -749,6 +843,100 @@ const resources = {
   en: {
     translation: {
       /* Translations for pages */
+      exerciseManagement: {
+        title: "Exercise Management",
+        subtitle: "Upload exercise videos for automatic recognition and addition to the system",
+        back: "Back",
+        
+        uploadCardTitle: "Upload New Exercise Video",
+        fileInputLabel: "Choose video file",
+        fileSupportText: "Supported: MP4, AVI, MOV, WebM (max 100MB)",
+        uploading: "Uploading...",
+        uploadBtn: "Upload & Analyze",
+        previewLabel: "Preview",
+        noVideoPreview: "Select video to preview",
+        
+        tabApproved: "Approved Exercises",
+        tabPending: "Pending",
+        
+        listTitle: "Exercise List",
+        refresh: "Refresh",
+        emptyApproved: "No exercises yet",
+        defaultBadge: "Default",
+        noDesc: "No description",
+        
+        angleTrackingTitle: "Traded Joint Angles",
+        angleInfoTitle: "Angle Information",
+        typeLabel: "Type:",
+        baseTypeLabel: "Exercise Type:",
+        primaryAngleLabel: "Primary Angle:",
+        downLabel: "Down:",
+        upLabel: "Up:",
+        
+        repsLabel: "reps",
+        minutesLabel: "mins",
+        rulesLabel: "rules",
+        rulesPreviewTitle: "Error Detection Rules:",
+        moreRules: "more",
+        
+        editBtn: "Edit",
+        deleteBtn: "Delete",
+        deleteConfirm: "Are you sure you want to delete this exercise?",
+        deleteSuccess: "Exercise deleted",
+        deleteError: "Error deleting",
+        
+        pendingTitle: "Pending Exercises",
+        loading: "Loading...",
+        emptyPending: "No pending exercises uploaded",
+        analyzing: "Analyzing...",
+        confidenceLabel: "Confidence:",
+        
+        modalTitle: "Edit Exercise",
+        exerciseNameLabel: "Exercise Name *",
+        exerciseDescLabel: "Description",
+        baseTypeSelectLabel: "Exercise Base Type (affects tracked angles)",
+        targetRepsLabel: "Target Reps",
+        durationLabel: "Duration (seconds)",
+        difficultyLabel: "Difficulty",
+        existingRulesTitle: "Current error detection rules",
+        saving: "Saving...",
+        saveBtn: "Save Changes",
+        cancelBtn: "Cancel",
+        
+        alerts: {
+          onlyVideo: "Only video files accepted!",
+          fileTooLarge: "File too large! Max 100MB.",
+          uploadSuccess: "Upload successful! Analyzing video...",
+          uploadFailed: "Upload failed!",
+          uploadError: "Error during upload!",
+          updateSuccess: "Exercise updated!",
+          updateError: "Error updating",
+          deleteErrorTitle: "Error deleting"
+        },
+        
+        status: {
+          UPLOADING: "Uploading",
+          PROCESSING: "Processing",
+          PENDING: "Pending",
+          APPROVED: "Approved",
+          REJECTED: "Rejected",
+          ERROR: "Error"
+        },
+        
+        baseTypes: {
+          squat: "Squat (Knee)",
+          arm_raise: "Arm Raise (Shoulder)",
+          calf_raise: "Calf Raise (Ankle)",
+          single_leg_stand: "Single Leg Stand (Knee)"
+        },
+        
+        difficulty: {
+          easy: "Easy",
+          medium: "Medium",
+          hard: "Hard"
+        }
+      },
+
       landing: {
           heroBadge: "Advanced AI Technology",
           heroTitle1: "Rehabilitation",

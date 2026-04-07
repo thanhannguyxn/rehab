@@ -176,13 +176,17 @@ class PersonalizationEngine:
     def _calculate_pain_factor(self, pain_level: int) -> float:
         """
         Calculate pain level adjustment factor
-        
+
         Higher pain = easier exercises
         - Pain 0-2: 1.0 (normal)
         - Pain 3-5: 0.85
         - Pain 6-8: 0.70
         - Pain 9-10: 0.50 (very easy or should not exercise)
         """
+        # Handle None or invalid pain_level
+        if pain_level is None:
+            return 1.0  # Default to normal if no pain data
+
         if pain_level <= 2:
             return 1.0
         elif pain_level <= 5:

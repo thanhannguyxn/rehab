@@ -10,7 +10,7 @@ import numpy as np
 from models import get_db
 from services.pose_service import AngleCalculator, RepetitionCounter, pose
 from services.pain_service import ErrorDetector
-from services.session_runtime import update_live_session
+from services.session_runtime import update_live_session, buffer_frame
 
 router = APIRouter()
 
@@ -31,7 +31,8 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str, db: Sessi
     error_detector = ErrorDetector(exercise_type)
 
     last_process_time = 0
-    prev_rep_count = 0  # Track previous rep count to detect new reps
+    prev_rep_count = 0
+    last_buffer_time = 0.0  # For post-session face pain sampling
 
     try:
         while True:
@@ -70,6 +71,14 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str, db: Sessi
 
                 try:
                     img_data = base64.b64decode(message['data'].split(',')[1])
+
+                    # Sample one frame every 5 s for post-session pain analysis
+                    # (before pose decode check — face analysis handles its own decoding)
+                    if session_id is not None and current_time - last_buffer_time >= 5.0:
+                        buffer_frame(session_id, img_data)
+                        last_buffer_time = current_time
+                        print(f"[websocket] Buffered frame for session {session_id}")
+
                     nparr = np.frombuffer(img_data, np.uint8)
                     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 

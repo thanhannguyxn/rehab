@@ -86,6 +86,18 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
   const top3Errors = getTop3Errors();
   const comparison = getComparison();
 
+  const getPainBadge = () => {
+    const pain = session.avg_pain_level;
+    const fatigue = session.avg_fatigue_level;
+    if (pain === undefined || pain === null) return null;
+    if (pain > 0.55) return { label: 'Phát hiện đau', className: 'bg-red-100 text-red-700 border-red-300' };
+    if (pain > 0.35) return { label: 'Khó chịu nhẹ', className: 'bg-orange-100 text-orange-700 border-orange-300' };
+    if (fatigue !== null && fatigue !== undefined && fatigue > 0.50) return { label: 'Có dấu hiệu mệt', className: 'bg-yellow-100 text-yellow-700 border-yellow-300' };
+    return { label: 'Trạng thái tốt', className: 'bg-green-100 text-green-700 border-green-300' };
+  };
+
+  const painBadge = getPainBadge();
+
   return (
     <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
       {/* Performance Badge */}
@@ -142,6 +154,36 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Pain / Fatigue Analysis (post-session) */}
+      {painBadge !== null ? (
+        <div className="mb-4 p-3 rounded-lg border bg-gray-50 dark:bg-gray-700/30 border-gray-200 dark:border-gray-600">
+          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">Phân tích đau khuôn mặt</p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border ${painBadge.className}`}>
+              {painBadge.label === 'Trạng thái tốt' ? '😊' : painBadge.label === 'Có dấu hiệu mệt' ? '😴' : painBadge.label === 'Khó chịu nhẹ' ? '😟' : '😣'} {painBadge.label}
+            </span>
+            {session.pain_incidents !== undefined && session.pain_incidents > 0 && (
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {session.pain_incidents} lần phát hiện đau
+              </span>
+            )}
+            {session.avg_pain_level !== null && session.avg_pain_level !== undefined && (
+              <span className="text-xs text-gray-400 dark:text-gray-500">
+                Đau {Math.round(session.avg_pain_level * 100)}%
+                {session.avg_fatigue_level !== null && session.avg_fatigue_level !== undefined
+                  ? ` · Mệt ${Math.round(session.avg_fatigue_level * 100)}%`
+                  : ''}
+              </span>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="mb-4 p-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 flex items-center gap-2">
+          <span className="text-gray-400 text-lg">😐</span>
+          <span className="text-xs text-gray-400 dark:text-gray-500 italic">Chưa có phân tích đau — sẽ xuất hiện sau buổi tập tiếp theo</span>
         </div>
       )}
 

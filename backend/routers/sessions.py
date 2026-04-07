@@ -1,5 +1,5 @@
 # Sessions router
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import datetime
@@ -7,7 +7,9 @@ from typing import Optional
 
 from models import DBSession, SessionFrame, SessionError, get_db
 from routers.auth import get_current_user
-from services.session_runtime import start_live_session, get_live_session, pop_live_session
+from services.session_runtime import start_live_session, get_live_session, pop_live_session, pop_frame_buffer
+from services.pain_analysis_task import analyze_session_pain
+from db.connection import SessionLocal
 from limiter import limiter
 
 router = APIRouter()
@@ -70,7 +72,7 @@ async def start_session(request: Request, exercise_name: str, current_user = Dep
 
 @router.post("/{session_id}/end")
 @limiter.limit("20/minute")
-async def end_session(request: Request, session_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+async def end_session(request: Request, session_id: int, background_tasks: BackgroundTasks, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     session = db.query(DBSession).filter(
         DBSession.id == session_id,
         DBSession.patient_id == current_user['user_id']
@@ -147,6 +149,18 @@ async def end_session(request: Request, session_id: int, current_user = Depends(
     db.commit()
     pop_live_session(session_id)
 
+    # Schedule post-session face pain analysis (runs after response is sent)
+    face_frames = pop_frame_buffer(session_id)
+    print(f"[sessions] Frame buffer for session {session_id}: {len(face_frames)} frames")
+    if face_frames:
+        background_tasks.add_task(
+            analyze_session_pain, session_id, face_frames, SessionLocal
+        )
+        print(f"[sessions] Scheduled pain analysis for session {session_id} "
+              f"({len(face_frames)} frames)")
+    else:
+        print(f"[sessions] No frames buffered for session {session_id} — pain analysis skipped")
+
     return {
         'session_id': session.id,
         'total_reps': total_reps,
@@ -178,7 +192,12 @@ async def get_my_history(request: Request, limit: int = 50, current_user = Depen
             'correct_reps': session.correct_reps,
             'accuracy': session.accuracy,
             'duration_seconds': session.duration_seconds,
-            'errors': error_list
+            'errors': error_list,
+            'avg_pain_level': session.avg_pain_level,
+            'avg_fatigue_level': session.avg_fatigue_level,
+            'predominant_emotion': session.predominant_emotion,
+            'pain_incidents': session.pain_incidents,
+            'fatigue_incidents': session.fatigue_incidents,
         })
 
     return {'sessions': sessions}

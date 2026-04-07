@@ -10,7 +10,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Helper function to check if link is active
   const isActive = (path: string) => {
@@ -59,10 +59,10 @@ export const Navbar = () => {
             {user && user.role === 'doctor' && (
               <>
                 <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
-                  Dashboard
+                  {t("navbar.doctorDashboard", i18n.language === 'vi' ? "Bảng Điều Khiển" : "Dashboard")}
                 </Link>
                 <Link to="/doctor/assistant" className={getLinkClasses('/doctor/assistant')}>
-                  Assistant
+                  {t("navbar.aiAssistant", i18n.language === 'vi' ? "Trợ Lý AI" : "AI Assistant")}
                 </Link>
               </>
             )}

@@ -25,35 +25,35 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
   return (
     <Link
       to={`/doctor/patient/${patient.id}`}
-      className="block bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow"
+      className="block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700"
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-2xl font-bold text-gray-800">{patient.full_name}</h3>
-          <p className="text-gray-600">
+          <h3 className="text-2xl font-bold text-gray-800 dark:text-white">{patient.full_name}</h3>
+          <p className="text-gray-600 dark:text-gray-400">
             {patient.age} {t("patientCard.age")} • {patient.gender}
           </p>
         </div>
-        <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+        <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold">
           {patient.username}
         </div>
       </div>
 
       {patient.last_session ? (
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <p className="text-sm text-gray-600 mb-2">{t("patientCard.lastSession")}</p>
+        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t("patientCard.lastSession")}</p>
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">{patient.last_session.exercise}</p>
-              <p className="text-sm text-gray-600">{formatDate(patient.last_session.date)}</p>
+              <p className="font-semibold text-gray-800 dark:text-white">{patient.last_session.exercise}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{formatDate(patient.last_session.date)}</p>
             </div>
             <div
               className={`text-2xl font-bold ${
                 patient.last_session.accuracy >= 80
-                  ? 'text-green-600'
+                  ? 'text-green-600 dark:text-green-400'
                   : patient.last_session.accuracy >= 60
-                  ? 'text-yellow-600'
-                  : 'text-red-600'
+                  ? 'text-yellow-600 dark:text-yellow-500'
+                  : 'text-red-600 dark:text-red-400'
               }`}
             >
               {patient.last_session.accuracy.toFixed(1)}%
@@ -61,8 +61,8 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
           </div>
         </div>
       ) : (
-        <div className="bg-gray-50 p-4 rounded-lg text-center">
-          <p className="text-gray-600">{t("patientCard.noSession")}</p>
+        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg text-center">
+          <p className="text-gray-600 dark:text-gray-400">{t("patientCard.noSession")}</p>
         </div>
       )}
     </Link>

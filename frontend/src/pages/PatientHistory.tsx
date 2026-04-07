@@ -6,6 +6,7 @@ import { SmartRecommendations } from '../components/SmartRecommendations';
 import { HeatmapCalendar } from '../components/HeatmapCalendar';
 import type { Session } from '../types';
 import { useTranslation } from 'react-i18next';
+import { PatientHistorySkeleton } from '../components/skeletons/PatientHistorySkeleton';
 
 export const PatientHistory = () => {
   const navigate = useNavigate();
@@ -151,10 +152,7 @@ export const PatientHistory = () => {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-teal-600 mx-auto"></div>
-            <p className="mt-4 text-xl text-gray-600">{t("patientHistory.loading")}</p>
-          </div>
+          <PatientHistorySkeleton />
         ) : sessions.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <p className="text-2xl text-gray-600 mb-6">{t("patientHistory.noSessions")}</p>
@@ -294,7 +292,7 @@ export const PatientHistory = () => {
                   >
                     <option value="all">{t("patientHistory.filterAllExercises")}</option>
                     {exerciseTypes.map(exercise => (
-                      <option key={exercise} value={exercise}>{exercise}</option>
+                      <option key={exercise} value={exercise}>{t(`sessionCard.exercises.${exercise}`, exercise)}</option>
                     ))}
                   </select>
 
@@ -314,7 +312,7 @@ export const PatientHistory = () => {
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition"
                   >
-                    {sortOrder === 'asc' ? '↑' + t("patientHistory.sortAsc") : '↓' + t("patientHistory.sortDesc")}
+                    {sortOrder === 'asc' ? '↑ ' + t("patientHistory.sortAsc") : '↓ ' + t("patientHistory.sortDesc")}
                   </button>
                 </div>
               </div>

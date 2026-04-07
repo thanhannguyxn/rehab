@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useInView } from '../hooks/useInView';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { GuestCoachPopup } from '../components/GuestCoachPopup';
 
 export const Landing = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export const Landing = () => {
     <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-300">
       {/* Navbar Component */}
       <Navbar />
+      {!user && <GuestCoachPopup />}
 
       {/* Hero Section - Full Screen */}
       <section 

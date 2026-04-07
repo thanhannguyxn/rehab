@@ -5,17 +5,41 @@ import { doctorAPI } from '../utils/api';
 import { PatientCard } from '../components/PatientCard';
 import type { Patient } from '../types';
 import { useTranslation } from 'react-i18next';
+import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton';
 
 export const DoctorDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { t } = useTranslation();
+  
+  // Pagination and Search states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [visibleCount, setVisibleCount] = useState(5);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     loadPatients();
   }, []);
+
+  // Filter patients based on search term
+  const filteredPatients = patients.filter(patient =>
+    patient.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    patient.username?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Load more logic
+  const currentPatients = filteredPatients.slice(0, visibleCount);
+
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + 6);
+  };
+
+  // Reset to initial count when search term changes
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [searchTerm]);
 
   const loadPatients = async () => {
     try {
@@ -34,23 +58,7 @@ export const DoctorDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-6 shadow-lg">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">{t("doctorDashboard.title")}</h1>
-            <p className="text-xl mt-1">{t("doctorDashboard.greeting")}, {user?.full_name}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
-          >
-            {t("doctorDashboard.logout")}
-          </button>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-200">
       <div className="max-w-6xl mx-auto p-6">
         {/* Exercise Management Links */}
         <div className="grid grid-cols-2 gap-4 mb-8">
@@ -72,13 +80,13 @@ export const DoctorDashboard = () => {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.totalPatients")}</p>
-            <p className="text-5xl font-bold text-blue-600">{patients.length}</p>
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.totalPatients")}</p>
+            <p className="text-5xl font-bold text-blue-600 dark:text-blue-400">{patients.length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.todaySessions")}</p>
-            <p className="text-5xl font-bold text-green-600">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.todaySessions")}</p>
+            <p className="text-5xl font-bold text-green-600 dark:text-green-400">
               {patients.filter((p) => {
                 if (!p.last_session) return false;
                 const sessionDate = new Date(p.last_session.date);
@@ -87,9 +95,9 @@ export const DoctorDashboard = () => {
               }).length}
             </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <p className="text-gray-600 text-lg mb-2">{t("doctorDashboard.avgAccuracy")}</p>
-            <p className="text-5xl font-bold text-purple-600">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.avgAccuracy")}</p>
+            <p className="text-5xl font-bold text-purple-600 dark:text-purple-400">
               {patients.filter((p) => p.last_session).length > 0
                 ? (
                     patients
@@ -104,22 +112,48 @@ export const DoctorDashboard = () => {
         </div>
 
         {/* Patients List */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">{t("doctorDashboard.patientList")}</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border dark:border-gray-800">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 md:mb-0">{t("doctorDashboard.patientList")}</h2>
+            <div className="relative w-full md:w-1/3">
+              <input
+                type="text"
+                placeholder={t("doctorDashboard.searchPatients", i18n.language === 'vi' ? "Tìm kiếm bệnh nhân" : "Search patients")}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
 
           {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-xl text-gray-600">{t("doctorDashboard.loading")}</p>
-            </div>
-          ) : patients.length === 0 ? (
-            <p className="text-center text-gray-600 py-8 text-lg">{t("doctorDashboard.empty")}</p>
-          ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {patients.map((patient) => (
-                <PatientCard key={patient.id} patient={patient} />
+              {Array.from({ length: visibleCount }).map((_, index) => (
+                <PatientCardSkeleton key={index} />
               ))}
             </div>
+          ) : filteredPatients.length === 0 ? (
+            <p className="text-center text-gray-600 dark:text-gray-400 py-8 text-lg">{t("doctorDashboard.empty")}</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {currentPatients.map((patient) => (
+                  <PatientCard key={patient.id} patient={patient} />
+                ))}
+              </div>
+              
+              {/* Load More Button */}
+              {visibleCount < filteredPatients.length && (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    onClick={handleLoadMore}
+                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-medium transition-colors shadow-sm"
+                  >
+                    {t("doctorDashboard.loadMore", i18n.language === 'vi' ? "Xem thêm" : "Load more")}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

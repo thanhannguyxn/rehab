@@ -21,7 +21,7 @@ if sys.platform == "win32":
         asyncio.set_event_loop_policy(policy_factory())
 
 # Import routers
-from routers import auth, sessions, doctor, websocket, profile, general
+from routers import auth, sessions, doctor, websocket, profile, general, agent
 
 # Import database initialization
 from db.connection import init_db
@@ -57,6 +57,7 @@ app.include_router(general.router, prefix="/api", tags=["general"])
 app.include_router(sessions.router, prefix="/api/sessions", tags=["sessions"])
 app.include_router(doctor.router, prefix="/api/doctor", tags=["doctor"])
 app.include_router(profile.router, prefix="/api/profile", tags=["profile"])
+app.include_router(agent.router, prefix="/api/agent", tags=["agent"])
 app.include_router(websocket.router, prefix="/ws/exercise", tags=["websocket"])
 
 if __name__ == "__main__":

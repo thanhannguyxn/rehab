@@ -181,10 +181,11 @@ async def get_my_history(request: Request, limit: int = 50, current_user = Depen
     for session in sessions_query:
         # Get errors for this session
         errors = db.query(SessionError).filter(SessionError.session_id == session.id).all()
-        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'count': e.count, 'severity': e.severity} for e in errors]
+        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'displayname': e.error_name, 'count': e.count, 'severity': e.severity} for e in errors]
 
         sessions.append({
             'id': session.id,
+            'exercise_id': session.exercise_name,
             'exercise_name': get_vietnamese_exercise_name(session.exercise_name),
             'start_time': (session.start_time.isoformat() if isinstance(session.start_time, datetime) else datetime.fromisoformat(session.start_time.replace('Z', '+00:00')).isoformat()) if session.start_time else None,
             'total_reps': session.total_reps,

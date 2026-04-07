@@ -111,7 +111,6 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
       {currentExercise && currentExercise.errors.length > 0 ? (
         <div className="bg-white rounded-xl p-6 mb-6 shadow-md">
           <h4 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            <span className="text-2xl">📈</span>
             {t("errorAnalytics.chartTitle")}
           </h4>
           <ResponsiveContainer width="100%" height={400}>
@@ -220,15 +219,15 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
                 <h5 className="font-bold text-gray-800 mb-3 text-lg">{error.error_name}</h5>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{t("errorAnalytics.totalCount")}:</span>
+                    <span className="text-gray-600">{t("errorAnalytics.labels.totalCount")}:</span>
                     <span className="font-bold text-xl text-orange-600">{error.total_count}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{t("errorAnalytics.avgPerSessions")}:</span>
+                    <span className="text-gray-600">{t("errorAnalytics.labels.avgPerSession")}:</span>
                     <span className="font-bold text-xl text-amber-600">{error.avg_per_session}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{t("errorAnalytics.sessions")}:</span>
+                    <span className="text-gray-600">{t("errorAnalytics.labels.sessionCount")}:</span>
                     <span className="font-bold text-xl text-teal-600">{error.session_count} {t("errorAnalytics.data.sessions")}</span>
                   </div>
                 </div>

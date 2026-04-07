@@ -51,6 +51,14 @@ if not exist .env (
     )
 )
 
+echo Running backend migration and seed data...
+python migrate_db.py
+if errorlevel 1 (
+    echo ERROR: Failed to migrate database and seed data.
+    pause
+    exit /b 1
+)
+
 echo.
 echo [2/4] Setting up Frontend...
 cd /d %~dp0frontend

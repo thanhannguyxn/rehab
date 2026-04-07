@@ -163,6 +163,13 @@ const resources = {
       },
 
       patientHistory: {
+        exercises: {
+          squat: "Bài Tập Squat",
+          arm_raise: "Bài Tập Giơ Tay",
+          calf_raise: "Bài Tập Nâng Bắp Chân",
+          single_leg_stand: "Bài Tập Đứng Một Chân"
+        },
+
         title: "Lịch Sử Luyện Tập",
         subtitle: "Xem lại các buổi tập và theo dõi tiến trình của bạn",
 
@@ -404,6 +411,7 @@ const resources = {
         home: "Trang Chủ",
         exercise: "Bài Tập",
         history: "Lịch Sử",
+        scheduleSession: "Lịch Tập",
         dashboard: "Dashboard",
 
         greeting: "Xin chào",
@@ -411,6 +419,21 @@ const resources = {
         logout: "Đăng Xuất",
 
         login: "Đăng Nhập"
+      },
+
+      schedulePage: {
+        title: "Lịch tập được giao",
+        subtitle: "Danh sách các bài tập phục hồi chức năng do bác sĩ thiết lập",
+        loading: "Đang tải danh sách...",
+        emptyTitle: "Chưa có lịch tập nào",
+        emptySubtitle: "Khi bác sĩ tạo lịch tập cho bạn, nó sẽ xuất hiện ở đây.",
+        scheduledFor: "Thời gian:",
+        doctor: "Bác sĩ:",
+        note: "Ghi chú:",
+        statusNew: "Mới",
+        statusSeen: "Đã xem",
+        btnMarkSeen: "Đánh dấu đã xem",
+        btnOpen: "Mở bài tập"
       },
 
       angleDisplay: {
@@ -583,6 +606,36 @@ const resources = {
       },
 
       sessionCard: {
+        exercises: {
+          squat: "Bài Tập Squat",
+          arm_raise: "Bài Tập Giơ Tay",
+          calf_raise: "Bài Tập Nâng Bắp Chân",
+          single_leg_stand: "Bài Tập Đứng Một Chân"
+        },
+
+        errors: {
+          title: "Lỗi phổ biến nhất:",
+
+          // Arm raise errors
+          not_high: "Góc vai chưa đủ",
+          arms_bent: "Tay không thẳng",
+          not_low: "Chưa hạ hết",
+
+          // Squat errors
+          not_deep: "Gập gối chưa đủ",
+          knees_forward: "Gối đẩy ra trước",
+          not_straight: "Chưa đứng thẳng",
+
+          // Calf raise errors
+          not_raised: "Chưa nâng đủ cao",
+          knees_bent: "Gập gối",
+          not_lowered: "Chưa hạ hết",
+
+          // Single leg stand errors
+          knee_not_bent: "Gối chưa gập đủ sâu",
+          leg_not_behind: "Chân không ra sau"
+        },
+
         stats: {
           totalReps: "Tổng số lần",
           correctReps: "Đúng kỹ thuật",
@@ -595,10 +648,6 @@ const resources = {
           good: "Tốt",
           average: "Trung bình",
           needImprovement: "Cần cải thiện"
-        },
-
-        errors: {
-          title: "Lỗi phổ biến nhất:"
         },
 
         comparison: {
@@ -858,6 +907,13 @@ const resources = {
       },
 
       patientHistory: {
+        exercises: {
+          squat: "Squat Exercise",
+          arm_raise: "Arm Raise Exercise",
+          calf_raise: "Calf Raise Exercise",
+          single_leg_stand: "Single Leg Stand Exercise"
+        },
+
         title: "Exercise History",
         subtitle: "Review your exercise sessions and track your progress",
 
@@ -1098,6 +1154,7 @@ const resources = {
         home: "Home",
         exercise: "Exercises",
         history: "History",
+        scheduleSession: "Schedule Session",
         dashboard: "Dashboard",
 
         greeting: "Hello",
@@ -1105,6 +1162,21 @@ const resources = {
         logout: "Logout",
 
         login: "Login"
+      },
+
+      schedulePage: {
+        title: "Assigned Sessions",
+        subtitle: "Your doctor-created rehabilitation schedule list",
+        loading: "Loading schedules...",
+        emptyTitle: "No scheduled sessions yet",
+        emptySubtitle: "When your doctor creates one, it will appear here.",
+        scheduledFor: "Scheduled for:",
+        doctor: "Doctor:",
+        note: "Note:",
+        statusNew: "New",
+        statusSeen: "Seen",
+        btnMarkSeen: "Mark as seen",
+        btnOpen: "Open"
       },
 
       angleDisplay: {
@@ -1282,6 +1354,36 @@ const resources = {
       },
 
       sessionCard: {
+        exercises: {
+          squat: "Squat Exercise",
+          arm_raise: "Arm Raise Exercise",
+          calf_raise: "Calf Raise Exercise",
+          single_leg_stand: "Single Leg Stand Exercise"
+        },
+
+        errors: {
+          title: "Most common errors:",
+
+          // Arm raise errors
+          not_high: "Shoulder angle not high enough",
+          arms_bent: "Arms are not straight",
+          not_low: "Not lowered completely",
+
+          // Squat errors
+          not_deep: "Knees not bent deeply enough",
+          knees_forward: "Knees moving too far forward",
+          not_straight: "Not standing fully upright",
+
+          // Calf raise errors
+          not_raised: "Not raised high enough",
+          knees_bent: "Knees are bent",
+          not_lowered: "Not lowered completely",
+
+          // Single leg stand errors
+          knee_not_bent: "Knee not bent deeply enough",
+          leg_not_behind: "Leg not positioned behind"
+        },
+
         stats: {
           totalReps: "Total reps",
           correctReps: "Correct reps",
@@ -1296,14 +1398,10 @@ const resources = {
           needImprovement: "Needs improvement"
         },
 
-        errors: {
-          title: "Most common errors:"
-        },
-
         comparison: {
           title: "Compared to previous session:",
-          accuracyIncrease: "Accuracy +{{value}}%",
-          accuracyDecrease: "Accuracy {{value}}%",
+          accuracyIncrease: "Accuracy",
+          accuracyDecrease: "Accuracy",
           accuracySame: "Accuracy unchanged",
 
           error: "errors",

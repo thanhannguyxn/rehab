@@ -13,6 +13,7 @@ pip install -r requirements.txt
 
 echo [3/5] Checking database migration...
 python migrate_db.py
+alembic upgrade head
 
 echo [4/5] Testing services...
 python -c "from services.face_service import face_service; from services.pose_service import pose; print('All services OK!')"

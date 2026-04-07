@@ -8,7 +8,7 @@ import { AngleDisplay } from '../components/AngleDisplay';
 import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
-import { API_URL } from '../utils/config';
+import { API_URL, API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
 
 interface PersonalizedParams {
@@ -54,7 +54,7 @@ export const ExercisePage = () => {
   } : undefined;
 
   const { isConnected, analysisData, sendFrame, resetCounter } = useWebSocket(
-    selectedExercise || 'squat',
+    selectedTrackingType,
     isExercising,
     customThresholds,
     sessionId
@@ -537,13 +537,17 @@ export const ExercisePage = () => {
                             video.muted = true;
                           }
                         }}
-                        src={currentExercise.video_path || (
-                          selectedExercise === 'squat' ? '/squat.mp4' :
-                          selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :
-                          selectedExercise === 'calf_raise' ? '/calf_raise.mp4' :
-                          selectedExercise === 'single_leg_stand' ? '/single_leg_stand.mp4' :
-                          ''
-                        )}
+                        src={
+                          currentExercise.video_path?.startsWith('/uploads') 
+                            ? `${API_BASE_URL}${currentExercise.video_path}` 
+                            : currentExercise.video_path || (
+                            selectedExercise === 'squat' ? '/squat.mp4' :
+                            selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :
+                            selectedExercise === 'calf_raise' ? '/calf_raise.mp4' :
+                            selectedExercise === 'single_leg_stand' ? '/single_leg_stand.mp4' :
+                            ''
+                          )
+                        }
                         onError={(e) => {
                           // Only show placeholder if video truly cannot be loaded
                           const video = e.currentTarget;

@@ -18,6 +18,15 @@ def migrate_database():
         # Initialize database with default data if needed
         init_db()
 
+        # Run Alembic migrations automatically to ensure latest schema
+        import subprocess
+        try:
+            print(" Running Alembic migrations to update schema...")
+            subprocess.run(["alembic", "upgrade", "head"], check=True)
+            print(" Alembic migrations applied successfully")
+        except Exception as e:
+            print(f" Warning: Alembic migrations failed: {e}")
+
         print(" Migration completed successfully")
         print(" All tables are now set up with SQLAlchemy ORM")
 

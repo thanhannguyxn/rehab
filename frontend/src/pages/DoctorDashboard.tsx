@@ -66,14 +66,12 @@ export const DoctorDashboard = () => {
             onClick={() => navigate('/exercise-management')}
             className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
           >
-            <span className="text-2xl">📚</span>
             <span>Quản Lý Bài Tập</span>
           </button>
           <button
             onClick={() => navigate('/exercise-management')}
             className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
           >
-            <span className="text-2xl">➕</span>
             <span>Thêm Bài Tập Mới</span>
           </button>
         </div>

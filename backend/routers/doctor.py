@@ -562,22 +562,9 @@ async def approve_pending_exercise(
     # Generate unique exercise ID
     exercise_id = f"custom_{exercise_name.lower().replace(' ', '_')}_{pending.id}"
 
-    # Copy video to production location (frontend public folder)
-    production_video_filename = f"{exercise_id}.mp4"
-    production_video_path = f"/{production_video_filename}"
-
-    # Check if we should copy to frontend public folder
-    frontend_public_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-        'frontend', 'public', production_video_filename
-    )
-
-    try:
-        shutil.copy(pending.video_path, frontend_public_path)
-    except Exception as e:
-        print(f"Warning: Could not copy video to frontend: {e}")
-        # Keep the upload path as fallback
-        production_video_path = f"/uploads/videos/{pending.doctor_id}/{os.path.basename(pending.video_path)}"
+    # Always use the upload path as the production video path
+    # since frontend/public is not shared between containers in Docker
+    production_video_path = f"/uploads/videos/{pending.doctor_id}/{os.path.basename(pending.video_path)}"
 
     # Create Exercise
     new_exercise = Exercise(

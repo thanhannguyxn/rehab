@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { API_URL } from '../utils/config';
+import { API_URL, API_BASE_URL } from '../utils/config';
 
 interface AngleRule {
   angle_name: string;
@@ -189,7 +189,12 @@ export const PendingExerciseDetail = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin text-6xl">⏳</div>
+          <div className="animate-spin text-4xl text-blue-500 mb-4">
+            <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
           <p className="text-gray-500 dark:text-gray-400 mt-4">Đang tải...</p>
         </div>
       </div>
@@ -244,7 +249,7 @@ export const PendingExerciseDetail = () => {
             onClick={() => navigate('/exercise-management')}
             className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold py-2 px-4 rounded-lg transition"
           >
-            ← Quay lại
+            Quay lại
           </button>
         </div>
 
@@ -254,7 +259,7 @@ export const PendingExerciseDetail = () => {
             <h2 className="text-xl font-bold mb-4">Video</h2>
             <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
               <video
-                src={`${API_URL}/${pending.video_path}`}
+                src={`${API_BASE_URL}/${pending.video_path}`}
                 controls
                 className="w-full h-full object-contain"
               />
@@ -281,14 +286,19 @@ export const PendingExerciseDetail = () => {
                     disabled={processing}
                     className="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50"
                   >
-                    🔄 Phân tích lại
+                    Phân tích lại
                   </button>
                 </div>
               )}
 
               {pending.status === 'PROCESSING' && (
                 <div className="text-center py-8">
-                  <div className="animate-spin text-4xl mb-4">⚙️</div>
+                  <div className="animate-spin text-4xl text-blue-500 mb-4 flex justify-center">
+                    <svg className="w-10 h-10 inline-block" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
                   <p className="text-gray-500 dark:text-gray-400">Đang phân tích video...</p>
                   <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
                     Quá trình này có thể mất 10-30 giây
@@ -332,7 +342,7 @@ export const PendingExerciseDetail = () => {
                   {pending.movement_signature?.tracking_logic && (
                     <div className="mb-4 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-400 mb-3">
-                        📐 Thông Tin Góc Khớp Theo Dõi
+                        Thông Tin Góc Khớp Theo Dõi
                       </h3>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
@@ -372,7 +382,7 @@ export const PendingExerciseDetail = () => {
                        pending.movement_signature.tracking_logic.angle_rules.length > 0 && (
                         <div className="mt-4 pt-3 border-t border-teal-200 dark:border-teal-500/30">
                           <h4 className="text-sm font-semibold text-teal-600 dark:text-teal-400 mb-2">
-                            ⚠️ Quy tắc phát hiện lỗi (AI):
+                            Quy tắc phát hiện lỗi (AI):
                           </h4>
                           <div className="space-y-2">
                             {pending.movement_signature.tracking_logic.angle_rules.map((rule, idx) => (
@@ -480,7 +490,7 @@ export const PendingExerciseDetail = () => {
                   {/* Warnings */}
                   {pending.movement_signature?.warnings && pending.movement_signature.warnings.length > 0 && (
                     <div className="bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-500/30 rounded-lg p-3">
-                      <p className="text-orange-700 dark:text-orange-400 font-semibold mb-1">⚠️ Cảnh báo:</p>
+                      <p className="text-orange-700 dark:text-orange-400 font-semibold mb-1">Cảnh báo:</p>
                       <ul className="list-disc list-inside text-orange-600 dark:text-orange-300 text-sm">
                         {pending.movement_signature.warnings.map((warning, idx) => (
                           <li key={idx}>{warning}</li>
@@ -560,14 +570,14 @@ export const PendingExerciseDetail = () => {
                   disabled={processing || !editName}
                   className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
-                  {processing ? '⏳ Đang xử lý...' : '✅ Duyệt và Thêm vào Hệ Thống'}
+                  {processing ? 'Đang xử lý...' : 'Duyệt và Thêm vào Hệ Thống'}
                 </button>
                 <button
                   onClick={handleReject}
                   disabled={processing}
                   className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
-                  {processing ? '⏳ Đang xử lý...' : '❌ Từ Chối và Xóa'}
+                  {processing ? 'Đang xử lý...' : 'Từ Chối và Xóa'}
                 </button>
               </div>
             )}

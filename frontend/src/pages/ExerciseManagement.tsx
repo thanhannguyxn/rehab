@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../utils/config';
+import { API_URL, API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
 
 interface PendingExercise {
@@ -118,13 +118,13 @@ export const ExerciseManagement = () => {
 
       // Validate file type
       if (!file.type.startsWith('video/')) {
-        alert('Chỉ chấp nhận file video!');
+        alert(t('exerciseManagement.alerts.onlyVideo'));
         return;
       }
 
       // Validate file size (max 100MB)
       if (file.size > 100 * 1024 * 1024) {
-        alert('File quá lớn! Tối đa 100MB.');
+        alert(t('exerciseManagement.alerts.fileTooLarge'));
         return;
       }
 
@@ -151,8 +151,8 @@ export const ExerciseManagement = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        alert('Upload thành công! Đang phân tích video...');
+        await response.json();
+        alert(t('exerciseManagement.alerts.uploadSuccess'));
         setSelectedFile(null);
         // Reset file input
         const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
@@ -162,11 +162,11 @@ export const ExerciseManagement = () => {
         setActiveTab('pending');
       } else {
         const error = await response.json();
-        alert(error.detail || 'Upload thất bại!');
+        alert(error.detail || t('exerciseManagement.alerts.uploadFailed'));
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Lỗi khi upload!');
+      alert(t('exerciseManagement.alerts.uploadError'));
     } finally {
       setUploading(false);
     }
@@ -204,24 +204,24 @@ export const ExerciseManagement = () => {
       });
 
       if (response.ok) {
-        alert('Đã cập nhật bài tập!');
+        alert(t('exerciseManagement.alerts.updateSuccess'));
         setEditModalOpen(false);
         setEditingExercise(null);
         loadApprovedExercises();
       } else {
         const error = await response.json();
-        alert(error.detail || 'Lỗi khi cập nhật');
+        alert(error.detail || t('exerciseManagement.alerts.updateError'));
       }
     } catch (error) {
       console.error('Error saving:', error);
-      alert('Lỗi khi cập nhật');
+      alert(t('exerciseManagement.alerts.updateError'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDeleteExercise = async (exerciseId: string) => {
-    if (!window.confirm('Bạn có chắc muốn xóa bài tập này?')) return;
+    if (!window.confirm(t('exerciseManagement.deleteConfirm'))) return;
 
     try {
       const token = sessionStorage.getItem('token');
@@ -231,15 +231,15 @@ export const ExerciseManagement = () => {
       });
 
       if (response.ok) {
-        alert('Đã xóa bài tập');
+        alert(t('exerciseManagement.deleteSuccess'));
         loadApprovedExercises();
       } else {
         const error = await response.json();
-        alert(error.detail || 'Lỗi khi xóa');
+        alert(error.detail || t('exerciseManagement.alerts.deleteErrorTitle'));
       }
     } catch (error) {
       console.error('Error deleting:', error);
-      alert('Lỗi khi xóa');
+      alert(t('exerciseManagement.alerts.deleteErrorTitle'));
     }
   };
 
@@ -253,12 +253,12 @@ export const ExerciseManagement = () => {
       'ERROR': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
     };
     const labels: Record<string, string> = {
-      'UPLOADING': 'Đang tải',
-      'PROCESSING': 'Đang xử lý',
-      'PENDING': 'Chờ duyệt',
-      'APPROVED': 'Đã duyệt',
-      'REJECTED': 'Đã từ chối',
-      'ERROR': 'Lỗi'
+      'UPLOADING': t('exerciseManagement.status.UPLOADING'),
+      'PROCESSING': t('exerciseManagement.status.PROCESSING'),
+      'PENDING': t('exerciseManagement.status.PENDING'),
+      'APPROVED': t('exerciseManagement.status.APPROVED'),
+      'REJECTED': t('exerciseManagement.status.REJECTED'),
+      'ERROR': t('exerciseManagement.status.ERROR')
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${styles[status] || styles['PENDING']}`}>
@@ -269,10 +269,10 @@ export const ExerciseManagement = () => {
 
   const getBaseExerciseLabel = (type: string) => {
     const labels: Record<string, string> = {
-      'squat': 'Squat (Gối)',
-      'arm_raise': 'Nâng Tay (Vai)',
-      'calf_raise': 'Nâng Gót (Cổ chân)',
-      'single_leg_stand': 'Đứng 1 Chân (Gối)'
+      'squat': t('exerciseManagement.baseTypes.squat'),
+      'arm_raise': t('exerciseManagement.baseTypes.arm_raise'),
+      'calf_raise': t('exerciseManagement.baseTypes.calf_raise'),
+      'single_leg_stand': t('exerciseManagement.baseTypes.single_leg_stand')
     };
     return labels[type] || type;
   };
@@ -284,9 +284,9 @@ export const ExerciseManagement = () => {
       'hard': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
     };
     const labels: Record<string, string> = {
-      'easy': 'Dễ',
-      'medium': 'Trung bình',
-      'hard': 'Khó'
+      'easy': t('exerciseManagement.difficulty.easy'),
+      'medium': t('exerciseManagement.difficulty.medium'),
+      'hard': t('exerciseManagement.difficulty.hard')
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${styles[level] || styles['medium']}`}>
@@ -302,31 +302,31 @@ export const ExerciseManagement = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-black bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
-              Quản Lý Bài Tập
+              {t('exerciseManagement.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Upload video bài tập để hệ thống tự động nhận diện và thêm vào hệ thống
+              {t('exerciseManagement.subtitle')}
             </p>
           </div>
           <button
             onClick={() => navigate('/doctor')}
             className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold py-2 px-4 rounded-lg transition"
           >
-            ← Quay lại
+            {t('exerciseManagement.back')}
           </button>
         </div>
 
         {/* Upload Card */}
         <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Upload Video Bài Tập Mới
+            {t('exerciseManagement.uploadCardTitle')}
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* File Input */}
             <div>
               <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
-                Chọn file video
+                {t('exerciseManagement.fileInputLabel')}
               </label>
               <input
                 type="file"
@@ -335,7 +335,7 @@ export const ExerciseManagement = () => {
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               />
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                Hỗ trợ: MP4, AVI, MOV, WebM (tối đa 100MB)
+                {t('exerciseManagement.fileSupportText')}
               </p>
 
               {/* Upload Button */}
@@ -344,7 +344,7 @@ export const ExerciseManagement = () => {
                 disabled={!selectedFile || uploading}
                 className="w-full mt-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
               >
-                {uploading ? '⏳ Đang Upload...' : '📤 Upload và Phân Tích'}
+                {uploading ? t('exerciseManagement.uploading') : t('exerciseManagement.uploadBtn')}
               </button>
             </div>
 
@@ -353,7 +353,7 @@ export const ExerciseManagement = () => {
               {selectedFile ? (
                 <div>
                   <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
-                    Xem trước
+                    {t('exerciseManagement.previewLabel')}
                   </label>
                   <video
                     src={URL.createObjectURL(selectedFile)}
@@ -362,7 +362,7 @@ export const ExerciseManagement = () => {
                     style={{ maxHeight: '300px' }}
                   />
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    📄 {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                    {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </p>
                 </div>
               ) : (
@@ -370,7 +370,7 @@ export const ExerciseManagement = () => {
                   <div className="text-center">
                     <span className="text-5xl">🎥</span>
                     <p className="text-gray-500 dark:text-gray-400 mt-2">
-                      Chọn video để xem trước
+                      {t('exerciseManagement.noVideoPreview')}
                     </p>
                   </div>
                 </div>
@@ -389,7 +389,7 @@ export const ExerciseManagement = () => {
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
           >
-            📋 Bài Tập Đã Duyệt ({approvedList.length})
+            {t('exerciseManagement.tabApproved')} ({approvedList.length})
           </button>
           <button
             onClick={() => setActiveTab('pending')}
@@ -399,7 +399,7 @@ export const ExerciseManagement = () => {
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
           >
-            ⏳ Chờ Duyệt ({pendingList.length})
+            {t('exerciseManagement.tabPending')} ({pendingList.length})
           </button>
         </div>
 
@@ -408,21 +408,21 @@ export const ExerciseManagement = () => {
           <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Danh Sách Bài Tập
+                {t('exerciseManagement.listTitle')}
               </h2>
               <button
                 onClick={loadApprovedExercises}
                 className="text-teal-600 dark:text-teal-400 hover:underline"
               >
-                🔄 Làm mới
+                {t('exerciseManagement.refresh')}
               </button>
             </div>
 
             {approvedList.length === 0 ? (
               <div className="text-center py-8">
-                <span className="text-5xl">📭</span>
+                <span className="text-5xl"></span>
                 <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  Chưa có bài tập nào
+                  {t('exerciseManagement.emptyApproved')}
                 </p>
               </div>
             ) : (
@@ -440,30 +440,30 @@ export const ExerciseManagement = () => {
                           </h3>
                           {exercise.is_default && (
                             <span className="px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 rounded-full text-xs font-semibold">
-                              Mặc định
+                              {t('exerciseManagement.defaultBadge')}
                             </span>
                           )}
                           {getDifficultyBadge(exercise.difficulty_level)}
                         </div>
 
                         <p className="text-gray-600 dark:text-gray-400 mb-3">
-                          {exercise.description || 'Không có mô tả'}
+                          {exercise.description || t('exerciseManagement.noDesc')}
                         </p>
 
                         {/* Angle Tracking Info */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 mb-3">
                           <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            📐 Góc Khớp Theo Dõi
+                            {t('exerciseManagement.angleTrackingTitle')}
                           </h4>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Loại:</span>
+                              <span className="text-gray-500 dark:text-gray-400">{t('exerciseManagement.typeLabel')}</span>
                               <span className="ml-1 font-semibold text-teal-600 dark:text-teal-400">
                                 {getBaseExerciseLabel(exercise.base_exercise_type)}
                               </span>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Góc chính:</span>
+                              <span className="text-gray-500 dark:text-gray-400">{t('exerciseManagement.primaryAngleLabel')}</span>
                               <span className="ml-1 font-semibold">
                                 {exercise.angle_tracking?.primary_angles?.map(
                                   a => exercise.angle_tracking.angle_names_vi[a] || a
@@ -471,11 +471,11 @@ export const ExerciseManagement = () => {
                               </span>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Down:</span>
+                              <span className="text-gray-500 dark:text-gray-400">{t('exerciseManagement.downLabel')}</span>
                               <span className="ml-1 font-semibold">{exercise.down_threshold}°</span>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Up:</span>
+                              <span className="text-gray-500 dark:text-gray-400">{t('exerciseManagement.upLabel')}</span>
                               <span className="ml-1 font-semibold">{exercise.up_threshold}°</span>
                             </div>
                           </div>
@@ -486,10 +486,10 @@ export const ExerciseManagement = () => {
 
                         {/* Exercise Stats */}
                         <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-                          <span>🔄 {exercise.target_reps} reps</span>
-                          <span>⏱️ {Math.floor(exercise.duration_seconds / 60)} phút</span>
+                          <span>{exercise.target_reps} {t('exerciseManagement.repsLabel')}</span>
+                          <span>{Math.floor(exercise.duration_seconds / 60)} {t('exerciseManagement.minutesLabel')}</span>
                           {exercise.angle_rules?.length > 0 && (
-                            <span>⚠️ {exercise.angle_rules.length} quy tắc góc</span>
+                            <span>{exercise.angle_rules.length} {t('exerciseManagement.rulesLabel')}</span>
                           )}
                         </div>
 
@@ -497,7 +497,7 @@ export const ExerciseManagement = () => {
                         {exercise.angle_rules?.length > 0 && (
                           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                             <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                              Quy tắc phát hiện lỗi:
+                              {t('exerciseManagement.rulesPreviewTitle')}
                             </h5>
                             <div className="flex flex-wrap gap-2">
                               {exercise.angle_rules.slice(0, 3).map((rule, idx) => (
@@ -510,7 +510,7 @@ export const ExerciseManagement = () => {
                               ))}
                               {exercise.angle_rules.length > 3 && (
                                 <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs">
-                                  +{exercise.angle_rules.length - 3} thêm
+                                  +{exercise.angle_rules.length - 3} {t('exerciseManagement.moreRules')}
                                 </span>
                               )}
                             </div>
@@ -526,14 +526,14 @@ export const ExerciseManagement = () => {
                             className="p-2 bg-blue-100 hover:bg-blue-200 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 text-blue-600 dark:text-blue-400 rounded-lg transition"
                             title="Chỉnh sửa"
                           >
-                            ✏️
+                            {t('exerciseManagement.editBtn')}
                           </button>
                           <button
                             onClick={() => handleDeleteExercise(exercise.id)}
                             className="p-2 bg-red-100 hover:bg-red-200 dark:bg-red-500/20 dark:hover:bg-red-500/30 text-red-600 dark:text-red-400 rounded-lg transition"
                             title="Xóa"
                           >
-                            🗑️
+                            {t('exerciseManagement.deleteBtn')}
                           </button>
                         </div>
                       )}
@@ -550,26 +550,26 @@ export const ExerciseManagement = () => {
           <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Bài Tập Chờ Duyệt
+                {t('exerciseManagement.pendingTitle')}
               </h2>
               <button
                 onClick={loadPendingExercises}
                 className="text-teal-600 dark:text-teal-400 hover:underline"
               >
-                🔄 Làm mới
+                {t('exerciseManagement.refresh')}
               </button>
             </div>
 
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin text-4xl">⏳</div>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">Đang tải...</p>
+              
+              <p className="text-gray-500 dark:text-gray-400 mt-2">{t('exerciseManagement.loading')}</p>
             </div>
           ) : pendingList.length === 0 ? (
             <div className="text-center py-8">
-              <span className="text-5xl">📭</span>
+              <span className="text-5xl"></span>
               <p className="text-gray-500 dark:text-gray-400 mt-2">
-                Chưa có bài tập nào được upload
+                {t('exerciseManagement.emptyApproved')} được upload
               </p>
             </div>
           ) : (
@@ -584,7 +584,7 @@ export const ExerciseManagement = () => {
                   <div className="aspect-video bg-gray-200 dark:bg-gray-800 relative">
                     {pending.thumbnail_path ? (
                       <img
-                        src={`${API_URL}/${pending.thumbnail_path}`}
+                        src={`${API_BASE_URL}/${pending.thumbnail_path}`}
                         alt="Thumbnail"
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -593,7 +593,7 @@ export const ExerciseManagement = () => {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-4xl">🎬</span>
+                        <span className="text-xl font-bold text-gray-400">Video</span>
                       </div>
                     )}
                     <div className="absolute top-2 right-2">
@@ -604,13 +604,13 @@ export const ExerciseManagement = () => {
                   {/* Info */}
                   <div className="p-4">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                      {pending.detected_type || 'Đang phân tích...'}
+                      {pending.detected_type || t('exerciseManagement.analyzing')}
                     </h3>
 
                     {pending.confidence && pending.confidence > 0 && (
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                          Độ tin cậy:
+                          {t('exerciseManagement.confidenceLabel')}
                         </span>
                         <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div
@@ -626,7 +626,7 @@ export const ExerciseManagement = () => {
 
                     {pending.error_message && (
                       <p className="text-sm text-red-600 dark:text-red-400 truncate">
-                        ⚠️ {pending.error_message}
+                        {pending.error_message}
                       </p>
                     )}
 
@@ -649,30 +649,30 @@ export const ExerciseManagement = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Chỉnh Sửa Bài Tập
+                  {t('exerciseManagement.modalTitle')}
                 </h2>
                 <button
                   onClick={() => { setEditModalOpen(false); setEditingExercise(null); }}
                   className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
-                  ✕
+                  {t('exerciseManagement.cancelBtn')}
                 </button>
               </div>
 
               {/* Angle Tracking Info (Read-only) */}
               <div className="bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded-lg p-4 mb-6">
                 <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-400 mb-2">
-                  📐 Thông Tin Góc Khớp
+                  {t('exerciseManagement.angleInfoTitle')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-gray-600 dark:text-gray-400">Loại bài tập:</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('exerciseManagement.baseTypeLabel')}</span>
                     <span className="ml-2 font-semibold text-gray-900 dark:text-white">
                       {getBaseExerciseLabel(editingExercise.base_exercise_type)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600 dark:text-gray-400">Góc theo dõi:</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('exerciseManagement.primaryAngleLabel')}</span>
                     <span className="ml-2 font-semibold text-gray-900 dark:text-white">
                       {editingExercise.angle_tracking?.primary_angles?.map(
                         a => editingExercise.angle_tracking.angle_names_vi[a] || a
@@ -689,7 +689,7 @@ export const ExerciseManagement = () => {
                 {/* Name */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Tên bài tập *
+                    {t('exerciseManagement.exerciseNameLabel')}
                   </label>
                   <input
                     type="text"
@@ -702,7 +702,7 @@ export const ExerciseManagement = () => {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Mô tả
+                    {t('exerciseManagement.exerciseDescLabel')}
                   </label>
                   <textarea
                     value={editForm.description}
@@ -715,17 +715,17 @@ export const ExerciseManagement = () => {
                 {/* Base Exercise Type */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Loại bài tập (ảnh hưởng đến góc khớp theo dõi)
+                    {t('exerciseManagement.baseTypeSelectLabel')}
                   </label>
                   <select
                     value={editForm.base_exercise_type}
                     onChange={(e) => setEditForm({ ...editForm, base_exercise_type: e.target.value })}
                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
-                    <option value="squat">Squat (Gối trái/phải)</option>
-                    <option value="arm_raise">Nâng Tay (Vai trái/phải)</option>
-                    <option value="calf_raise">Nâng Gót (Cổ chân trái/phải)</option>
-                    <option value="single_leg_stand">Đứng 1 Chân (Gối)</option>
+                    <option value="squat">{t('exerciseManagement.baseTypes.squat')}</option>
+                    <option value="arm_raise">{t('exerciseManagement.baseTypes.arm_raise')}</option>
+                    <option value="calf_raise">{t('exerciseManagement.baseTypes.calf_raise')}</option>
+                    <option value="single_leg_stand">{t('exerciseManagement.baseTypes.single_leg_stand')}</option>
                   </select>
                 </div>
 
@@ -770,7 +770,7 @@ export const ExerciseManagement = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                      Số rep mục tiêu
+                      {t('exerciseManagement.targetRepsLabel')}
                     </label>
                     <input
                       type="number"
@@ -781,7 +781,7 @@ export const ExerciseManagement = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                      Thời gian (giây)
+                      {t('exerciseManagement.durationLabel')}
                     </label>
                     <input
                       type="number"
@@ -795,16 +795,16 @@ export const ExerciseManagement = () => {
                 {/* Difficulty */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Độ khó
+                    {t('exerciseManagement.difficultyLabel')}
                   </label>
                   <select
                     value={editForm.difficulty_level}
                     onChange={(e) => setEditForm({ ...editForm, difficulty_level: e.target.value })}
                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
-                    <option value="easy">Dễ</option>
-                    <option value="medium">Trung bình</option>
-                    <option value="hard">Khó</option>
+                    <option value="easy">{t('exerciseManagement.difficulty.easy')}</option>
+                    <option value="medium">{t('exerciseManagement.difficulty.medium')}</option>
+                    <option value="hard">{t('exerciseManagement.difficulty.hard')}</option>
                   </select>
                 </div>
 
@@ -812,7 +812,7 @@ export const ExerciseManagement = () => {
                 {editingExercise.angle_rules?.length > 0 && (
                   <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-500/30 rounded-lg p-4">
                     <h4 className="text-sm font-semibold text-orange-700 dark:text-orange-400 mb-2">
-                      ⚠️ Quy tắc phát hiện lỗi hiện tại
+                      {t('exerciseManagement.existingRulesTitle')}
                     </h4>
                     <div className="space-y-2">
                       {editingExercise.angle_rules.map((rule, idx) => (
@@ -842,13 +842,13 @@ export const ExerciseManagement = () => {
                   disabled={saving || !editForm.name}
                   className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
-                  {saving ? '⏳ Đang lưu...' : '💾 Lưu thay đổi'}
+                  {saving ? t('exerciseManagement.saving') : t('exerciseManagement.saveBtn')}
                 </button>
                 <button
                   onClick={() => { setEditModalOpen(false); setEditingExercise(null); }}
                   className="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold py-3 rounded-lg transition"
                 >
-                  Hủy
+                  {t('exerciseManagement.cancelBtn')}
                 </button>
               </div>
             </div>

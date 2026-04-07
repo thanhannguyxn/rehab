@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from limiter import limiter
+import os
 
 if sys.platform == "win32":
     # Avoid noisy Proactor transport connection-reset tracebacks on Windows.
@@ -36,6 +37,9 @@ seed_exercises()
 app = FastAPI(title="Rehab System V3")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+if not os.path.exists('uploads'):
+    os.makedirs('uploads')
 
 # Mount static files directory for music and assets
 app.mount("/static", StaticFiles(directory="."), name="static")

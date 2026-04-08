@@ -38,8 +38,14 @@ export const ExercisePage = () => {
 
   const { t } = useTranslation();
 
-  const selectedExerciseObj = exercises.find((ex) => ex.id === selectedExercise);
-  const selectedTrackingType = selectedExerciseObj?.base_exercise_type || selectedExercise || 'squat';
+  const currentExercise = exercises.find((ex) => ex.id === selectedExercise);
+  const selectedExerciseObj = currentExercise;
+  const selectedTrackingType = currentExercise?.base_exercise_type || selectedExercise || 'squat';
+
+  // Ưu tiên target_reps của bài do bác sĩ giao (is_default === false), sau đó đến AI, cuối cùng là mặc định
+  const targetReps = (currentExercise && currentExercise.is_default === false && currentExercise.target_reps)
+    ? currentExercise.target_reps
+    : (personalizedParams?.max_reps || currentExercise?.target_reps || 15);
 
   // Track last announced rep and error to avoid repetition
   const lastAnnouncedRep = useRef<number>(0);
@@ -50,7 +56,7 @@ export const ExercisePage = () => {
   const customThresholds = personalizedParams ? {
     down_angle: personalizedParams.down_angle,
     up_angle: personalizedParams.up_angle,
-    max_reps: personalizedParams.max_reps
+    max_reps: targetReps
   } : undefined;
 
   const { isConnected, analysisData, sendFrame, resetCounter } = useWebSocket(
@@ -193,11 +199,6 @@ export const ExercisePage = () => {
   const handleReset = () => {
     resetCounter();
   };
-
-  const currentExercise = exercises.find((ex) => ex.id === selectedExercise);
-
-  // Use personalized reps if available, otherwise use default
-  const targetReps = personalizedParams?.max_reps || currentExercise?.target_reps || 15;
 
   // Timer countdown effect with voice warnings
   useEffect(() => {

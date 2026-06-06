@@ -127,3 +127,23 @@ export interface ExerciseErrorAnalytics {
 export interface ErrorAnalyticsResponse {
   analytics: ExerciseErrorAnalytics[];
 }
+
+// ============= Progression Suggestion Types =============
+
+export interface ProgressionSuggestion {
+  id: number;
+  patient_id: number;
+  patient_name: string;
+  exercise_name: string;
+  avg_accuracy: number;
+  trigger_session_count: number;
+  current_reps: number | null;
+  suggested_reps: number | null;
+  current_difficulty: number | null;
+  suggested_difficulty: number | null;
+  current_rest_seconds: number | null;
+  suggested_rest_seconds: number | null;
+  status: 'pending' | 'approved' | 'rejected';
+  doctor_note: string | null;
+  created_at: string;
+}

@@ -13,7 +13,7 @@ interface ChatMessage {
 }
 
 const RATE_LIMIT_COOLDOWN_SECONDS = 20;
-const WELCOME_MSG = "I'm your Patient Coach. Ask me about your exercises, progress, or anything related to your rehabilitation journey!";
+const WELCOME_MSG = "Tôi là Huấn Luyện Viên của bạn. Hãy hỏi tôi về bài tập, tiến trình, hoặc bất cứ điều gì liên quan đến hành trình phục hồi của bạn!";
 
 function renderMessageContent(content: string) {
   const lines = content.split('\n').map((line) => line.trim()).filter(Boolean);
@@ -44,7 +44,7 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `Welcome ${patientName}! ${WELCOME_MSG}`,
+      content: `Xin chào ${patientName}! ${WELCOME_MSG}`,
     },
   ]);
   const [input, setInput] = useState('');
@@ -71,7 +71,7 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
           {
             id: welcomeId,
             role: 'assistant',
-            content: `Welcome back ${patientName}! ${WELCOME_MSG}`,
+            content: `Chào mừng trở lại ${patientName}! ${WELCOME_MSG}`,
           },
         ];
 
@@ -122,19 +122,19 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
 
     try {
       const data = await agentAPI.patientChat(trimmed, exerciseType || undefined);
-      pushMessage('assistant', data.reply || 'No response returned from coach.');
+      pushMessage('assistant', data.reply || 'Huấn luyện viên không trả về phản hồi.');
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } };
       const status = err?.response?.status;
       if (status === 429) {
         setCooldownUntil(Date.now() + RATE_LIMIT_COOLDOWN_SECONDS * 1000);
-        setErrorText(`Rate limit reached. Please retry in ${RATE_LIMIT_COOLDOWN_SECONDS}s.`);
+        setErrorText(`Đã đạt giới hạn gửi tin. Vui lòng thử lại sau ${RATE_LIMIT_COOLDOWN_SECONDS}s.`);
       } else {
-        setErrorText('Could not contact Patient Coach. Please try again.');
+        setErrorText('Không thể kết nối Huấn Luyện Viên. Vui lòng thử lại.');
       }
       pushMessage(
         'assistant',
-        'I am temporarily unavailable. Continue with slow controlled reps and stop if pain increases.'
+        'Tôi tạm thời không khả dụng. Hãy tiếp tục tập chậm và kiểm soát, và dừng lại nếu cơn đau tăng lên.'
       );
     } finally {
       setIsSending(false);
@@ -150,11 +150,11 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
         {
           id: 'welcome',
           role: 'assistant',
-          content: `Welcome ${patientName}! ${WELCOME_MSG}`,
+          content: `Xin chào ${patientName}! ${WELCOME_MSG}`,
         },
       ]);
     } catch {
-      setErrorText('Could not clear chat history. Please try again.');
+      setErrorText('Không thể xóa lịch sử trò chuyện. Vui lòng thử lại.');
     } finally {
       setIsClearing(false);
     }
@@ -186,10 +186,10 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Patient Coach</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Huấn Luyện Viên</h3>
               {exerciseType && (
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Currently helping with {exerciseType}
+                  Đang hỗ trợ bài tập: {exerciseType}
                 </p>
               )}
             </div>
@@ -198,7 +198,7 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
               <button
                 onClick={handleClearChat}
                 disabled={isClearing}
-                title="Clear chat history"
+                title="Xóa lịch sử trò chuyện"
                 className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-500 dark:text-gray-400 disabled:opacity-50"
                 aria-label="Clear chat"
               >
@@ -241,7 +241,7 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
             {isSending && (
               <div className="flex justify-start">
                 <div className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200 text-sm">
-                  Coach is thinking...
+                  Huấn luyện viên đang suy nghĩ...
                 </div>
               </div>
             )}
@@ -253,20 +253,20 @@ export function PatientCoachChat({ exerciseType }: PatientCoachChatProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={3}
-              placeholder="Ask about your form, progress, or next step..."
+              placeholder="Hỏi về tư thế tập, tiến trình, hoặc bước tiếp theo..."
               className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
               disabled={isSending || remainingCooldown > 0}
             />
             <div className="flex items-center justify-between gap-2">
               <p className="text-xs text-gray-600 dark:text-gray-400 min-h-[16px] flex-1">
-                {remainingCooldown > 0 ? `Retry in ${remainingCooldown}s` : errorText || ''}
+                {remainingCooldown > 0 ? `Thử lại sau ${remainingCooldown}s` : errorText || ''}
               </p>
               <button
                 type="submit"
                 disabled={!canSend}
                 className="px-4 py-2 rounded-lg text-sm font-semibold bg-[#0369a1] hover:bg-[#0284c7] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                Send
+                Gửi
               </button>
             </div>
           </form>

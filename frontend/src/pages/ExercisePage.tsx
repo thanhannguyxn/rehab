@@ -43,10 +43,8 @@ export const ExercisePage = () => {
   const currentExercise = exercises.find((ex) => ex.id === selectedExercise);
   const selectedTrackingType = currentExercise?.base_exercise_type || selectedExercise || 'squat';
 
-  // Ưu tiên target_reps của bài do bác sĩ giao (is_default === false), sau đó đến AI, cuối cùng là mặc định
-  const targetReps = (currentExercise && currentExercise.is_default === false && currentExercise.target_reps)
-    ? currentExercise.target_reps
-    : (personalizedParams?.max_reps || currentExercise?.target_reps || 15);
+  // target_reps từ /exercises đã được cá nhân hoá (bao gồm tiến độ bác sĩ duyệt), luôn ưu tiên nó
+  const targetReps = currentExercise?.target_reps || personalizedParams?.max_reps || 15;
 
   // Track last announced rep and error to avoid repetition
   const lastAnnouncedRep = useRef<number>(0);
@@ -540,8 +538,10 @@ export const ExercisePage = () => {
                           }
                         }}
                         src={
-                          currentExercise.video_path?.startsWith('/uploads') 
-                            ? `${API_BASE_URL}${currentExercise.video_path}` 
+                          currentExercise.video_path?.startsWith('https://')
+                            ? currentExercise.video_path
+                            : currentExercise.video_path?.startsWith('/uploads')
+                            ? `${API_BASE_URL}${currentExercise.video_path}`
                             : currentExercise.video_path || (
                             selectedExercise === 'squat' ? '/squat.mp4' :
                             selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :

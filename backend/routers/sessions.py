@@ -5,10 +5,11 @@ from sqlalchemy import func
 from datetime import datetime
 from typing import Optional
 
-from models import DBSession, SessionFrame, SessionError, get_db
+from models import DBSession, SessionFrame, SessionError, Exercise, get_db
 from routers.auth import get_current_user
 from services.session_runtime import start_live_session, get_live_session, pop_live_session, pop_frame_buffer
 from services.pain_analysis_task import analyze_session_pain
+from services.progression_service import check_and_create_suggestion
 from db.connection import SessionLocal
 from limiter import limiter
 
@@ -47,6 +48,17 @@ ERROR_NAMES = {
 def get_vietnamese_exercise_name(exercise_type: str) -> str:
     """Convert exercise type to Vietnamese name"""
     return EXERCISE_NAMES.get(exercise_type, exercise_type)
+
+
+def _run_progression_check(patient_id: int, exercise_name: str) -> None:
+    """Background task: open its own DB session and run the progression check."""
+    db = SessionLocal()
+    try:
+        check_and_create_suggestion(db, patient_id, exercise_name)
+    except Exception as exc:
+        print(f"[progression] check failed for patient={patient_id} exercise={exercise_name}: {exc}")
+    finally:
+        db.close()
 
 def get_vietnamese_error_name(error_name: str) -> str:
     """Convert error name to Vietnamese - handles legacy English error names"""
@@ -149,6 +161,15 @@ async def end_session(request: Request, session_id: int, background_tasks: Backg
     db.commit()
     pop_live_session(session_id)
 
+    # Check if patient qualifies for a progression suggestion (background, non-blocking)
+    exercise_name_for_progression = session.exercise_name
+    patient_id_for_progression = session.patient_id
+    background_tasks.add_task(
+        _run_progression_check,
+        patient_id_for_progression,
+        exercise_name_for_progression,
+    )
+
     # Schedule post-session face pain analysis (runs after response is sent)
     face_frames = pop_frame_buffer(session_id)
     print(f"[sessions] Frame buffer for session {session_id}: {len(face_frames)} frames")
@@ -179,6 +200,18 @@ async def get_my_history(request: Request, limit: int = 50, current_user = Depen
         DBSession.patient_id == current_user['user_id']
     ).order_by(DBSession.start_time.desc()).limit(limit).all()
 
+    # Build display name lookup: exercise_id → Exercise.name from DB
+    exercise_ids = {s.exercise_name for s in sessions_query}
+    exercise_name_map: dict = {}
+    if exercise_ids:
+        rows = db.query(Exercise.id, Exercise.name).filter(Exercise.id.in_(exercise_ids)).all()
+        exercise_name_map = {row.id: row.name for row in rows}
+
+    def _display_name(exercise_id: str) -> str:
+        if exercise_id in exercise_name_map:
+            return exercise_name_map[exercise_id]
+        return get_vietnamese_exercise_name(exercise_id)
+
     sessions = []
     for session in sessions_query:
         # Get errors for this session using preloaded relationship
@@ -187,7 +220,7 @@ async def get_my_history(request: Request, limit: int = 50, current_user = Depen
         sessions.append({
             'id': session.id,
             'exercise_id': session.exercise_name,
-            'exercise_name': get_vietnamese_exercise_name(session.exercise_name),
+            'exercise_name': _display_name(session.exercise_name),
             'start_time': (session.start_time.isoformat() if isinstance(session.start_time, datetime) else datetime.fromisoformat(session.start_time.replace('Z', '+00:00')).isoformat()) if session.start_time else None,
             'total_reps': session.total_reps,
             'correct_reps': session.correct_reps,

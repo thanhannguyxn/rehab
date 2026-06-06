@@ -55,7 +55,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
     if (accuracy >= 60) {
       return {
         text: t("sessionCard.performance.average"),
-        className: 'bg-blue-600 text-[#075985]'
+        className: 'bg-amber-400 text-amber-900'
       };
     }
     return {

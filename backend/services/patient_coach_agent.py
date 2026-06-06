@@ -10,7 +10,7 @@ from urllib import error, request
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from models import User, DBSession, SessionError, UserExerciseLimits, ChatMessage, ConversationRole
+from models import User, DBSession, SessionError, UserExerciseLimits, ChatMessage, ConversationRole, PatientSchedule, ProgressionSuggestion
 from settings import LLM_API_BASE_URL, LLM_API_KEY, LLM_MODEL
 
 _AGENT_TYPE = "patient_coach"
@@ -85,13 +85,43 @@ _MILD_DISCOMFORT_KEYWORDS = [
 ]
 
 _PROFILE_CONSENT_PHRASES = [
+    # English
     "yes show my profile",
     "yes, show my profile",
     "i consent to show my profile",
     "you can show my profile",
-    "toi dong y cho xem ho so",
+    "show my profile",
+    "allow profile",
+    "i allow",
+    "i agree",
+    "yes please",
+    # Vietnamese có dấu
     "vâng cho xem hồ sơ",
+    "cho xem hồ sơ",
+    "tôi cho phép",
+    "tôi đồng ý",
+    "được xem hồ sơ",
+    "cho phép xem hồ sơ",
+    "tôi cho phép xem hồ sơ",
+    "tôi đồng ý cho xem hồ sơ",
+    "đồng ý xem hồ sơ",
+    "xem hồ sơ đi",
+    "ok xem đi",
+    "ừ cho xem",
+    "vâng",
+    "ok",
+    "đồng ý",
+    # Vietnamese không dấu
+    "toi cho phep",
+    "toi dong y",
     "vang cho xem ho so",
+    "cho phep xem ho so",
+    "toi cho phep xem ho so",
+    "dong y xem ho so",
+    "xem ho so di",
+    "ok xem di",
+    "u cho xem",
+    "dong y",
 ]
 
 _PROFILE_DATA_REQUEST_KEYWORDS = [
@@ -305,6 +335,39 @@ def _build_patient_context(db: Session, user_id: int, exercise_type: Optional[st
             .first()
         )
 
+    recent_progressions = (
+        db.query(ProgressionSuggestion)
+        .filter(
+            ProgressionSuggestion.patient_id == user_id,
+            ProgressionSuggestion.status == "approved",
+        )
+        .order_by(ProgressionSuggestion.updated_at.desc())
+        .limit(3)
+        .all()
+    )
+
+    upcoming_schedules = (
+        db.query(PatientSchedule)
+        .filter(
+            PatientSchedule.patient_id == user_id,
+            PatientSchedule.scheduled_for >= datetime.utcnow(),
+        )
+        .order_by(PatientSchedule.scheduled_for.asc())
+        .limit(5)
+        .all()
+    )
+
+    past_schedules = (
+        db.query(PatientSchedule)
+        .filter(
+            PatientSchedule.patient_id == user_id,
+            PatientSchedule.scheduled_for < datetime.utcnow(),
+        )
+        .order_by(PatientSchedule.scheduled_for.desc())
+        .limit(3)
+        .all()
+    )
+
     return {
         "profile": {
             "full_name": user.full_name,
@@ -326,6 +389,33 @@ def _build_patient_context(db: Session, user_id: int, exercise_type: Optional[st
         },
         "avg_accuracy": round(float(avg_accuracy or 0.0), 2),
         "recurring_errors": [{"name": name, "count": int(count)} for name, count in recurring_errors],
+        "recent_progressions": [
+            {
+                "exercise_name": p.exercise_name,
+                "prev_reps": p.current_reps,
+                "new_reps": p.suggested_reps,
+                "prev_difficulty": p.current_difficulty,
+                "new_difficulty": p.suggested_difficulty,
+                "approved_at": p.updated_at.isoformat() if p.updated_at else None,
+            }
+            for p in recent_progressions
+        ],
+        "upcoming_schedules": [
+            {
+                "exercise_name": s.exercise_name,
+                "scheduled_for": s.scheduled_for.isoformat() if s.scheduled_for else None,
+                "note": s.note,
+            }
+            for s in upcoming_schedules
+        ],
+        "past_schedules": [
+            {
+                "exercise_name": s.exercise_name,
+                "scheduled_for": s.scheduled_for.isoformat() if s.scheduled_for else None,
+                "note": s.note,
+            }
+            for s in past_schedules
+        ],
         "saved_limits": {
             "max_depth_angle": saved_limit.max_depth_angle if saved_limit else None,
             "min_raise_angle": saved_limit.min_raise_angle if saved_limit else None,
@@ -377,15 +467,15 @@ def _save_message(
 
 
 def _call_chat_completion(messages: List[Dict[str, str]]) -> str:
-    """Call LLM API with fallback if key missing or request fails."""
+    """Call OpenAI-compatible API (Groq). messages uses role/content dicts."""
     if not LLM_API_KEY:
         return (
-            "Patient Coach is configured but LLM_API_KEY is missing. Please set it in backend/.env. "
-            "For now: keep today light, focus on form, and stop if pain increases."
+            "Huấn luyện viên đã được cấu hình nhưng thiếu LLM_API_KEY. Vui lòng đặt giá trị trong backend/.env. "
+            "Trong thời gian này: hãy tập nhẹ nhàng, tập trung vào tư thế, và dừng lại nếu cơn đau tăng lên."
         )
 
     endpoint = LLM_API_BASE_URL.rstrip("/") + "/chat/completions"
-    payload = {
+    payload: Dict[str, Any] = {
         "model": LLM_MODEL,
         "temperature": 0.4,
         "max_tokens": 800,
@@ -398,54 +488,33 @@ def _call_chat_completion(messages: List[Dict[str, str]]) -> str:
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {LLM_API_KEY}",
+            "User-Agent": "Mozilla/5.0 (compatible; rehab-chatbot/1.0)",
         },
         method="POST",
     )
 
     for attempt in range(2):
         try:
-            with request.urlopen(req, timeout=25) as response:
+            with request.urlopen(req, timeout=60) as response:
                 raw = response.read().decode("utf-8")
                 data = json.loads(raw)
                 return data["choices"][0]["message"]["content"].strip()
         except error.HTTPError as exc:
             body = exc.read().decode("utf-8", errors="ignore")
-            if exc.code == 401:
-                return (
-                    "The LLM API key is invalid or expired. Please update LLM_API_KEY in backend/.env "
-                    "and restart the backend."
-                )
-            if exc.code == 403:
-                return (
-                    "The LLM provider rejected access (403 Forbidden). Check key permissions, model access, "
-                    "or provider region/account restrictions, then retry."
-                )
+            try:
+                err_msg = json.loads(body).get("error", {}).get("message", "")
+            except Exception:
+                err_msg = body[:200] if body else ""
+            if exc.code in (401, 403):
+                return f"API key không hợp lệ (HTTP {exc.code}): {err_msg}"
             if exc.code == 429:
-                retry_after_raw = exc.headers.get("Retry-After") if getattr(exc, "headers", None) else None
                 if attempt == 0:
-                    wait_seconds = 2
-                    if retry_after_raw and retry_after_raw.isdigit():
-                        wait_seconds = max(1, min(int(retry_after_raw), 10))
-                    time.sleep(wait_seconds)
+                    time.sleep(2)
                     continue
-                if (
-                    "insufficient_quota" in body
-                    or "exceeded your current quota" in body.lower()
-                    or "rate limit" in body.lower()
-                ):
-                    return (
-                        "The LLM account hit quota or rate limits. Wait 10-30 seconds and retry, "
-                        "or switch to another key/provider."
-                    )
-            return (
-                "The LLM service returned an error. Keep the session gentle today, focus on controlled reps, "
-                "and stop if pain rises."
-            )
-        except (error.URLError, KeyError, IndexError, json.JSONDecodeError):
-            return (
-                "I could not reach the LLM service right now. Keep the session gentle today, "
-                "focus on slow controlled reps, and stop if pain rises."
-            )
+                return f"Đã đạt giới hạn API: {err_msg or 'Rate limit.'}"
+            return f"Lỗi API HTTP {exc.code}: {err_msg or body[:200]}"
+        except (error.URLError, TimeoutError, OSError, KeyError, IndexError, json.JSONDecodeError) as exc:
+            return f"Không thể kết nối dịch vụ AI: {exc}"
 
 
 # ---------------------------------------------------------------------------
@@ -462,9 +531,7 @@ def generate_patient_coach_reply(
     Generate patient coach reply with conversation memory, safety checks, and LLM.
     All user/assistant messages are persisted to the database.
     """
-    profile_consent = _has_profile_consent(user_message)
-    response_style = _detect_response_style(user_message)
-
+    profile_consent = True
     safety_level, safety_message, skip_llm = _assess_safety_level(user_message)
 
     # Load conversation history BEFORE saving the new user message
@@ -485,30 +552,12 @@ def generate_patient_coach_reply(
             db,
             user_id=user_id,
             role=ConversationRole.assistant,
-            content=safety_message or "Please pause and prioritize safety.",
+            content=safety_message or "Vui lòng dừng lại và ưu tiên an toàn.",
             metadata={"safety_escalation": safety_level in {"moderate", "severe"}, "used_llm": False},
         )
         return {
-            "reply": safety_message or "Please pause and prioritize safety.",
+            "reply": safety_message or "Vui lòng dừng lại và ưu tiên an toàn.",
             "safety_escalation": safety_level in {"moderate", "severe"},
-            "used_llm": False,
-        }
-
-    if _requests_personal_profile(user_message) and not profile_consent:
-        response_text = (
-            "I can help with your exercise safely, but I will keep personal profile details private by default. "
-            "If you want your full profile summary, reply exactly: yes show my profile"
-        )
-        _save_message(
-            db,
-            user_id=user_id,
-            role=ConversationRole.assistant,
-            content=response_text,
-            metadata={"used_llm": False, "safety_escalation": False},
-        )
-        return {
-            "reply": response_text,
-            "safety_escalation": False,
             "used_llm": False,
         }
 
@@ -528,38 +577,70 @@ def generate_patient_coach_reply(
         )
 
     system_prompt = (
-        "You are a rehabilitation Patient Coach Agent specializing in personalized exercise guidance. "
-        "You have access to the patient's complete exercise history and progress data. "
-        "COMMUNICATION STYLE: use simple language and follow this mapping exactly: "
-        "if user asks 'how to' style questions, reply as numbered steps; "
-        "if user asks 'why', reply as a short paragraph explanation; "
-        "if user asks for summary/recap, reply as concise bullet points; "
-        "otherwise choose the clearest concise format. "
-        "PRIVACY RULE: do not reveal detailed profile fields (full_name, age, gender, bmi, medical_conditions, "
-        "injury_type) unless the user explicitly consents with the phrase 'yes show my profile' in the current "
-        "message. Without consent, keep profile details minimal and non-identifying. "
-        "SAFETY LADDER: mild discomfort => suggest modify/slow down; "
-        "moderate persistent pain => stop session and suggest doctor contact; "
-        "severe red flags => emergency advice immediately. "
-        "When asked about progress or history, summarize total sessions, unique exercises, avg accuracy, trend, "
-        "and recurring errors from context. "
-        "Do not diagnose diseases or prescribe medication. "
-        "If user reports severe symptoms, instruct immediate stop and seek medical care."
+        "Bạn là Huấn Luyện Viên Phục Hồi Chức Năng chuyên nghiệp. "
+        "Luôn trả lời bằng tiếng Việt, đúng trọng tâm câu hỏi, tối đa 150 từ trừ khi được yêu cầu chi tiết.\n\n"
+
+        "BÀI TẬP HỆ THỐNG (chỉ đề xuất 4 bài này):\n"
+        "- arm_raise → Nâng tay: bài tập phục hồi vai/cánh tay, tập trung vào biên độ và kiểm soát\n"
+        "- squat → Squat: bài tập chân/đầu gối, chú ý góc gập và trọng tâm\n"
+        "- calf_raise → Nâng gót chân: phục hồi cổ chân/bắp chân, cân bằng và sức mạnh\n"
+        "- single_leg_stand → Đứng một chân: thăng bằng và ổn định khớp\n"
+        "QUAN TRỌNG: Khi nói chuyện CHỈ dùng tên tiếng Việt. KHÔNG BAO GIỜ viết tên kỹ thuật (arm_raise, squat, calf_raise, single_leg_stand) hay đặt chúng trong ngoặc đơn.\n\n"
+
+        "PHÂN TÍCH DỮ LIỆU BỆNH NHÂN:\n"
+        "- Dùng recent_sessions để nhận xét xu hướng: độ chính xác tăng/giảm, số reps, thời gian\n"
+        "- Dùng recurring_errors để chỉ ra lỗi kỹ thuật cụ thể và cách sửa\n"
+        "- Dùng accuracy_trend (số dương = cải thiện, số âm = giảm) để đánh giá tiến trình\n"
+        "- Dùng saved_limits (max_reps_per_set, difficulty_score, injury_risk_score) để điều chỉnh cường độ\n"
+        "- Dùng pain_level (0-10) và mobility_level để cá nhân hóa lời khuyên\n"
+        "- Dùng injury_type và medical_conditions để cảnh báo rủi ro phù hợp\n\n"
+
+        "KHẢ NĂNG TƯ VẤN:\n"
+        "- Giải thích tại sao độ chính xác cao/thấp dựa trên lỗi thường gặp\n"
+        "- Đề xuất tăng/giảm cường độ dựa trên xu hướng tiến trình\n"
+        "- So sánh buổi tập gần nhất với trung bình để đánh giá\n"
+        "- Gợi ý kỹ thuật sửa lỗi cụ thể theo từng bài tập\n"
+        "- Đề xuất thứ tự bài tập hợp lý cho buổi tập tiếp theo\n"
+        "- Giải thích mục đích y học của từng bài tập với chấn thương cụ thể\n"
+        "- Hướng dẫn khởi động/thư giãn phù hợp\n\n"
+
+        "TĂNG CẤP ĐỘ (recent_progressions trong dữ liệu):\n"
+        "- Nếu recent_progressions không rỗng: chủ động chúc mừng bệnh nhân đã được tăng cấp độ\n"
+        "- Nêu rõ bài tập nào, số reps tăng từ bao nhiêu lên bao nhiêu\n"
+        "- Nhắc nhở bệnh nhân giữ kỹ thuật đúng khi tập với cường độ mới\n"
+        "- Chỉ đề cập khi liên quan đến câu hỏi hoặc lần đầu trong cuộc trò chuyện\n\n"
+
+        "LỊCH TẬP (upcoming_schedules / past_schedules trong dữ liệu):\n"
+        "- Khi người dùng hỏi về lịch tập: kiểm tra upcoming_schedules và past_schedules trong context\n"
+        "- Nếu upcoming_schedules không rỗng: liệt kê từng mục (exercise_name + scheduled_for + note nếu có)\n"
+        "- Nếu upcoming_schedules rỗng: báo 'Hiện chưa có lịch tập nào được đặt' — DỪNG LẠI, không thêm gì khác\n"
+        "- Không tự ý giải thích bài tập hay đưa hướng dẫn kỹ thuật khi người dùng chỉ hỏi về lịch\n\n"
+
+        "QUY TẮC:\n"
+        "1. Trả lời ĐÚNG câu hỏi, KHÔNG thêm thông tin ngoài phạm vi câu hỏi\n"
+        "2. Nếu profile_sharing_consent=true trong dữ liệu: dùng toàn bộ thông tin hồ sơ để tư vấn cá nhân hóa, không hỏi lại\n"
+        "3. Không nhắc nhở an toàn định kỳ — chỉ khi người dùng báo triệu chứng\n"
+        "4. Không chẩn đoán bệnh hoặc kê đơn thuốc\n"
+        "5. Câu hỏi có/không → trả lời có/không trước, sau đó mới thêm chi tiết nếu cần\n\n"
+
+        "ĐỊNH DẠNG:\n"
+        "TUYỆT ĐỐI KHÔNG dùng ký hiệu markdown: không **, không *chữ*, không #, không __.\n"
+        "Tiêu đề mục chỉ viết hoa chữ cái đầu tiên, ví dụ: Tổng quan, Lỗi kỹ thuật, Khuyến nghị.\n"
+        "- 'cách làm/hướng dẫn' → bước đánh số (1. 2. 3.)\n"
+        "- 'tại sao/giải thích' → đoạn văn ngắn\n"
+        "- 'tóm tắt/tiến trình/lịch sử' → gạch đầu dòng (-)\n"
+        "- Câu hỏi thường → 1-3 câu trực tiếp, không cần tiêu đề\n\n"
+
+        "AN TOÀN (chỉ khi người dùng báo triệu chứng):\n"
+        "- Khó chịu nhẹ → giảm tốc độ, biên độ, số reps\n"
+        "- Đau dai dẳng/sưng → dừng buổi tập, nghỉ ngơi, liên hệ bác sĩ\n"
+        "- Đau ngực/chóng mặt/khó thở/tê liệt → dừng ngay, gọi cấp cứu"
     )
 
     user_payload = {
         "user_message": user_message,
         "profile_sharing_consent": profile_consent,
-        "response_style_request": response_style,
         "context": context,
-        "response_format": {
-            "style": "short_supportive",
-            "must_include": [
-                "one clear next action or insight",
-                "one form reminder",
-                "one safety reminder",
-            ],
-        },
     }
 
     # Prepend conversation history to give the LLM short-term memory
@@ -571,6 +652,8 @@ def generate_patient_coach_reply(
     llm_messages.append({"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)})
 
     reply = _call_chat_completion(llm_messages)
+    # Strip markdown the model might still produce despite the prompt ban
+    reply = reply.replace("**", "").replace("__", "")
 
     _save_message(
         db,

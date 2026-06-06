@@ -33,22 +33,27 @@ except ImportError:
 
 
 class ExerciseRecognizer:
-    """AI để nhận diện động tác từ video using OpenAI API"""
+    """AI để nhận diện động tác từ video using OpenAI-compatible API"""
 
     def __init__(self):
         self.openai_client = None
         if not openai:
             return
 
-        # Support both legacy and standard env names.
-        api_key = os.getenv('OPENAI_API_KEY') or os.getenv('APP_OPENAI_API_KEY')
+        # Use the same LLM settings as other agents (Cerebras / any OpenAI-compatible API)
+        from settings import LLM_API_KEY, LLM_API_BASE_URL, LLM_MODEL
+        self._llm_model = LLM_MODEL
+
+        api_key = LLM_API_KEY or os.getenv('OPENAI_API_KEY') or os.getenv('APP_OPENAI_API_KEY')
+        base_url = LLM_API_BASE_URL or None
+
         if not api_key:
             return
 
         try:
-            self.openai_client = openai.OpenAI(api_key=api_key)
+            self.openai_client = openai.OpenAI(api_key=api_key, base_url=base_url)
         except Exception as e:
-            print(f"OpenAI client init error: {e}")
+            print(f"LLM client init error: {e}")
             self.openai_client = None
 
     def analyze_video(self, video_path: str) -> Dict:
@@ -323,25 +328,46 @@ class ExerciseRecognizer:
 
 Analyze and respond with JSON only."""
 
-        # Call OpenAI API
-        response = self.openai_client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a physical therapy expert. Analyze exercise movement data and respond with structured JSON only."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.3,
-            response_format={"type": "json_object"}
-        )
+        # Call LLM API — try with json_object format first, fall back without it
+        try:
+            response = self.openai_client.chat.completions.create(
+                model=self._llm_model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a physical therapy expert. Analyze exercise movement data and respond with structured JSON only."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.3,
+                response_format={"type": "json_object"}
+            )
+        except Exception:
+            response = self.openai_client.chat.completions.create(
+                model=self._llm_model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a physical therapy expert. Analyze exercise movement data and respond with structured JSON only."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.3,
+            )
 
-        # Parse and return
-        result = json.loads(response.choices[0].message.content)
+        # Parse response — strip markdown code fences if present
+        raw = response.choices[0].message.content.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        result = json.loads(raw.strip())
         return result
 
     def _fallback_analysis(self, angle_timeseries: Dict[str, List[float]], frame_count: int) -> Dict:

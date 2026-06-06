@@ -80,6 +80,19 @@ class PendingExercise(Base):
     doctor = relationship("User", foreign_keys=[doctor_id])
 
 
+class PatientExerciseAssignment(Base):
+    """Doctor assigns a custom exercise to a specific patient."""
+    __tablename__ = "patient_exercise_assignments"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    patient_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    exercise_id = Column(String(100), ForeignKey('exercises.id'), nullable=False, index=True)
+    assigned_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    note = Column(Text)
+    is_active = Column(Boolean, default=True, nullable=False)
+    assigned_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
 class ExerciseAngleRule(Base):
     """
     Configurable angle rules for error detection per exercise

@@ -35,10 +35,15 @@ ALLOWED_ORIGINS = [o.strip() for o in _origins_raw.split(",") if o.strip()]
 # Set to "true" in production (requires HTTPS)
 COOKIE_SECURE = os.getenv("COOKIE_SECURE", "false").lower() == "true"
 
-# LLM settings for AI agents (OpenAI-compatible chat completion API)
+# LLM settings for AI agents (OpenAI-compatible API)
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
-LLM_API_BASE_URL = os.getenv("LLM_API_BASE_URL", "https://api.openai.com/v1")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+LLM_API_BASE_URL = os.getenv("LLM_API_BASE_URL", "https://api.groq.com/openai/v1")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+
+# Cloudinary settings for video/image storage
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "")
 
 # Email (SMTP) settings for sending patient credentials
 SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")

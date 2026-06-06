@@ -6,7 +6,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from sqlalchemy.orm import Session
 
-from models import User, UserRole, PatientSchedule
+from models import User, UserRole, PatientSchedule, ProgressionSuggestion
+from services.progression_service import apply_suggestion
 
 
 # ---------------------------------------------------------------------------
@@ -14,6 +15,53 @@ from models import User, UserRole, PatientSchedule
 # ---------------------------------------------------------------------------
 
 TOOL_DEFINITIONS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "list_progression_suggestions",
+            "description": (
+                "List pending progression suggestions for the doctor's patients. "
+                "Call this when the doctor asks about patients ready to level up, "
+                "progression reviews, or which patients have improved enough to increase difficulty."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Filter by status. Use 'pending' to see only unreviewed suggestions.",
+                        "enum": ["pending", "approved", "rejected"]
+                    }
+                },
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "approve_progression_suggestion",
+            "description": (
+                "Approve a progression suggestion. This immediately updates the patient's "
+                "exercise limits (reps, difficulty, rest time). Only call after confirming "
+                "the doctor wants to approve."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "suggestion_id": {
+                        "type": "integer",
+                        "description": "The ID of the ProgressionSuggestion to approve."
+                    },
+                    "note": {
+                        "type": "string",
+                        "description": "Optional clinical note from the doctor to attach to this approval."
+                    }
+                },
+                "required": ["suggestion_id"]
+            }
+        }
+    },
     {
         "type": "function",
         "function": {
@@ -264,6 +312,83 @@ def _tool_create_schedule(
 # Tool dispatcher
 # ---------------------------------------------------------------------------
 
+def _tool_list_progression_suggestions(
+    db: Session,
+    doctor_id: int,
+    status: Optional[str] = "pending",
+) -> Dict[str, Any]:
+    query = db.query(ProgressionSuggestion).filter(
+        ProgressionSuggestion.doctor_id == doctor_id
+    )
+    if status:
+        query = query.filter(ProgressionSuggestion.status == status)
+    suggestions = query.order_by(ProgressionSuggestion.created_at.desc()).limit(20).all()
+
+    if not suggestions:
+        return {
+            "status": "success",
+            "count": 0,
+            "suggestions": [],
+            "message": f"Không có đề xuất tăng cấp độ nào ({status or 'tất cả'}).",
+        }
+
+    patient_ids = list({s.patient_id for s in suggestions})
+    names = {
+        p.id: p.full_name
+        for p in db.query(User).filter(User.id.in_(patient_ids)).all()
+    }
+
+    items = []
+    for s in suggestions:
+        items.append({
+            "suggestion_id": s.id,
+            "patient_id": s.patient_id,
+            "patient_name": names.get(s.patient_id, f"ID {s.patient_id}"),
+            "exercise_name": s.exercise_name,
+            "avg_accuracy": s.avg_accuracy,
+            "trigger_sessions": s.trigger_session_count,
+            "current_reps": s.current_reps,
+            "suggested_reps": s.suggested_reps,
+            "current_difficulty": s.current_difficulty,
+            "suggested_difficulty": s.suggested_difficulty,
+            "current_rest_seconds": s.current_rest_seconds,
+            "suggested_rest_seconds": s.suggested_rest_seconds,
+            "status": s.status,
+            "created_at": s.created_at.isoformat() if s.created_at else None,
+        })
+
+    return {"status": "success", "count": len(items), "suggestions": items}
+
+
+def _tool_approve_progression_suggestion(
+    db: Session,
+    doctor_id: int,
+    suggestion_id: int,
+    note: Optional[str] = None,
+) -> Dict[str, Any]:
+    suggestion = db.query(ProgressionSuggestion).filter(
+        ProgressionSuggestion.id == suggestion_id,
+        ProgressionSuggestion.doctor_id == doctor_id,
+    ).first()
+
+    if not suggestion:
+        return {"status": "error", "message": f"Không tìm thấy đề xuất ID {suggestion_id}."}
+    if suggestion.status != "pending":
+        return {"status": "error", "message": f"Đề xuất này đã ở trạng thái '{suggestion.status}'."}
+
+    patient = db.query(User).filter(User.id == suggestion.patient_id).first()
+    apply_suggestion(db, suggestion, doctor_note=note)
+
+    return {
+        "status": "success",
+        "message": (
+            f"Đã duyệt đề xuất cho {patient.full_name if patient else suggestion.patient_id}: "
+            f"{suggestion.exercise_name} — reps {suggestion.current_reps} → {suggestion.suggested_reps}, "
+            f"difficulty {suggestion.current_difficulty} → {suggestion.suggested_difficulty}."
+        ),
+    }
+
+
 def execute_tool(
     db: Session,
     doctor_id: int,
@@ -277,6 +402,10 @@ def execute_tool(
         return _tool_get_patient_details(db, doctor_id, **arguments)
     elif tool_name == "create_patient_schedule":
         return _tool_create_schedule(db, doctor_id, **arguments)
+    elif tool_name == "list_progression_suggestions":
+        return _tool_list_progression_suggestions(db, doctor_id, **arguments)
+    elif tool_name == "approve_progression_suggestion":
+        return _tool_approve_progression_suggestion(db, doctor_id, **arguments)
     else:
         return {
             "status": "error",

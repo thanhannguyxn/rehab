@@ -5,6 +5,7 @@ import re
 import unicodedata
 from datetime import timedelta, datetime
 from typing import Any, Dict, List, Optional
+from urllib import request as _url_request
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -21,12 +22,22 @@ _MAX_HISTORY_MESSAGES = 20
 # ---------------------------------------------------------------------------
 
 _EXERCISE_ALIASES = {
-    "arm_raise": ["arm_raise", "arm raise", "arm-raise", "giơ tay", "gio tay"],
-    "squat": ["squat"],
-    "calf_raise": ["calf_raise", "calf raise", "calf-raise", "nâng bắp chân", "nang bap chan"],
+    "arm_raise": [
+        "arm_raise", "arm raise", "arm-raise",
+        "nâng tay", "nang tay", "giơ tay", "gio tay",
+        "nâng cánh tay", "nang canh tay",
+    ],
+    "squat": ["squat", "gập gối", "gap goi", "ngồi xổm", "ngoi xom"],
+    "calf_raise": [
+        "calf_raise", "calf raise", "calf-raise",
+        "nâng gót chân", "nang got chan",
+        "nâng gót", "nang got",
+        "nâng bắp chân", "nang bap chan",
+    ],
     "single_leg_stand": [
         "single_leg_stand", "single leg stand", "single-leg-stand",
         "đứng một chân", "dung mot chan",
+        "đứng 1 chân", "dung 1 chan",
     ],
 }
 
@@ -131,8 +142,8 @@ def _try_create_schedule_from_message(
     if not exercise_name:
         return {
             "reply": (
-                "I detected a scheduling request, but I could not identify the exercise type. "
-                "Please use one of: arm_raise, squat, calf_raise, single_leg_stand."
+                "Tôi phát hiện yêu cầu lên lịch, nhưng không xác định được loại bài tập. "
+                "Vui lòng sử dụng một trong các loại: arm_raise, squat, calf_raise, single_leg_stand."
             ),
             "used_llm": False,
         }
@@ -140,7 +151,7 @@ def _try_create_schedule_from_message(
     patient_ref = _extract_patient_reference(user_message)
     if not patient_ref:
         return {
-            "reply": "I detected a scheduling request, but I could not identify the patient name after 'for/cho'.",
+            "reply": "Tôi phát hiện yêu cầu lên lịch, nhưng không xác định được tên bệnh nhân sau 'for/cho'.",
             "used_llm": False,
         }
 
@@ -148,8 +159,8 @@ def _try_create_schedule_from_message(
     if not patient:
         return {
             "reply": (
-                f"I could not find patient '{patient_ref}' in your panel. "
-                "Please use the exact patient full name shown in your patient context list."
+                f"Không tìm thấy bệnh nhân '{patient_ref}' trong danh sách của bạn. "
+                "Vui lòng sử dụng đúng họ tên bệnh nhân được hiển thị trong danh sách."
             ),
             "used_llm": False,
         }
@@ -169,8 +180,8 @@ def _try_create_schedule_from_message(
     if existing:
         return {
             "reply": (
-                f"A schedule already exists for {patient.full_name}: {exercise_name} on "
-                f"{scheduled_for.strftime('%Y-%m-%d')}. I did not create a duplicate."
+                f"Đã tồn tại lịch tập cho {patient.full_name}: {exercise_name} vào "
+                f"{scheduled_for.strftime('%Y-%m-%d')}. Tôi không tạo bản trùng lặp."
             ),
             "used_llm": False,
         }
@@ -189,8 +200,8 @@ def _try_create_schedule_from_message(
 
     return {
         "reply": (
-            f"Schedule created successfully for {patient.full_name}: {exercise_name} on "
-            f"{scheduled_for.strftime('%Y-%m-%d')}. The patient will see this when they log in."
+            f"Đã tạo lịch tập thành công cho {patient.full_name}: {exercise_name} vào "
+            f"{scheduled_for.strftime('%Y-%m-%d')}. Bệnh nhân sẽ thấy lịch này khi đăng nhập."
         ),
         "used_llm": False,
     }
@@ -369,16 +380,12 @@ def _save_message(
 # ---------------------------------------------------------------------------
 
 def _call_llm_with_tools(messages: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Call LLM with optional tool-calling.
-    Returns the full response dict (includes tool_call if present).
-    Falls back gracefully when LLM_API_KEY is missing.
-    """
+    """Call OpenAI-compatible API (Groq) with tool calling support."""
     if not LLM_API_KEY:
         return {
             "content": (
-                "Doctor Assistant is configured but LLM_API_KEY is missing. "
-                "Please set it in backend/.env."
+                "Trợ lý bác sĩ đã được cấu hình nhưng thiếu LLM_API_KEY. "
+                "Vui lòng đặt giá trị trong backend/.env."
             ),
             "tool_call": None,
         }
@@ -393,34 +400,65 @@ def _call_llm_with_tools(messages: List[Dict[str, Any]]) -> Dict[str, Any]:
         "tool_choice": "auto",
     }
 
-    req = __import__("urllib.request", fromlist=["Request"]).Request(
+    req = _url_request.Request(
         endpoint,
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {LLM_API_KEY}",
+            "User-Agent": "Mozilla/5.0 (compatible; rehab-chatbot/1.0)",
         },
         method="POST",
     )
 
-    try:
-        import urllib.error as _ue
-        with __import__("urllib.request", fromlist=["urlopen"]).urlopen(req, timeout=30) as resp:
-            raw = resp.read().decode("utf-8")
-            data = json.loads(raw)
-            choice = data["choices"][0]
-            msg = choice["message"]
+    from urllib import error as _url_error
+    import time as _time
+
+    for attempt in range(2):
+        try:
+            with _url_request.urlopen(req, timeout=60) as resp:
+                raw = resp.read().decode("utf-8")
+                data = json.loads(raw)
+                choice = data["choices"][0]
+                msg = choice["message"]
+                tool_calls = msg.get("tool_calls") or []
+                return {
+                    "content": msg.get("content") or "",
+                    "tool_call": tool_calls[0] if tool_calls else None,
+                    "finish_reason": choice.get("finish_reason"),
+                }
+        except _url_error.HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="ignore")
+            try:
+                err_msg = json.loads(body).get("error", {}).get("message", "")
+            except Exception:
+                err_msg = body[:200]
+            if exc.code == 429:
+                if attempt == 0:
+                    _time.sleep(2)
+                    continue
+                return {
+                    "content": "API đã đạt giới hạn tốc độ. Vui lòng thử lại sau vài giây.",
+                    "tool_call": None,
+                    "finish_reason": "error",
+                }
+            if exc.code in (401, 403):
+                return {
+                    "content": f"API key không hợp lệ (HTTP {exc.code}). Vui lòng kiểm tra cấu hình.",
+                    "tool_call": None,
+                    "finish_reason": "error",
+                }
             return {
-                "content": msg.get("content") or "",
-                "tool_call": msg.get("tool_call"),
-                "finish_reason": choice.get("finish_reason"),
+                "content": f"Lỗi API HTTP {exc.code}: {err_msg or 'Không có chi tiết.'}",
+                "tool_call": None,
+                "finish_reason": "error",
             }
-    except Exception as exc:
-        return {
-            "content": f"I could not reach the LLM service ({type(exc).__name__}). Please try again.",
-            "tool_call": None,
-            "finish_reason": "error",
-        }
+        except Exception as exc:
+            return {
+                "content": f"Không thể kết nối dịch vụ AI ({type(exc).__name__}). Vui lòng thử lại.",
+                "tool_call": None,
+                "finish_reason": "error",
+            }
 
 
 # ---------------------------------------------------------------------------
@@ -475,19 +513,54 @@ def generate_doctor_assistant_reply(
         )
 
     system_prompt = (
-        "You are a Doctor Assistant for rehabilitation clinicians. "
-        "Help with concise, practical, non-diagnostic coaching and care-planning insights. "
-        "When discussing patient data, use only provided context. "
-        "Prefer concise bullets for plans and concise paragraph for direct explanations. "
-        "Never provide medication prescriptions or definitive diagnosis. "
-        "If severe symptom patterns are discussed, recommend urgent clinical evaluation.\n"
-        "You have access to tools: create_patient_schedule, list_doctor_patients, get_patient_details.\n"
-        "Use create_patient_schedule when a doctor explicitly asks to schedule or assign an exercise to a patient "
-        "(provide patient_id as integer, exercise_name, scheduled_for in ISO 8601 format, and optional note).\n"
-        "Use list_doctor_patients to get a list of all patients under this doctor.\n"
-        "Use get_patient_details to look up a specific patient's full record by ID.\n"
-        "Call tools proactively when needed rather than guessing. "
-        "After a tool executes, incorporate its result into your response naturally."
+        "Bạn là Trợ Lý Bác Sĩ Phục Hồi Chức Năng chuyên nghiệp. "
+        "Luôn trả lời bằng tiếng Việt, chính xác, dựa trên dữ liệu thực tế được cung cấp.\n\n"
+
+        "TÊN BÀI TẬP:\n"
+        "Trong câu trả lời LUÔN dùng tên tiếng Việt, KHÔNG bao giờ viết tên kỹ thuật hay đặt chúng trong ngoặc:\n"
+        "  arm_raise → Nâng tay\n"
+        "  squat → Squat\n"
+        "  calf_raise → Nâng gót chân\n"
+        "  single_leg_stand → Đứng một chân\n"
+        "(Chỉ dùng tên kỹ thuật khi gọi tool, không bao giờ hiển thị ra cho bác sĩ)\n\n"
+
+        "PHÂN TÍCH LÂM SÀNG:\n"
+        "- session_count + last_session → đánh giá tuân thủ điều trị\n"
+        "- avg_accuracy + recurring_errors → chất lượng kỹ thuật\n"
+        "- accuracy_trend dương = tiến triển tốt, âm = cần điều chỉnh\n"
+        "- pain_level + mobility_level + injury_type → mức rủi ro\n"
+        "- Không tập >7 ngày = nguy cơ bỏ điều trị\n"
+        "- Độ chính xác <60% liên tục = cần hướng dẫn lại kỹ thuật\n"
+        "- Độ chính xác >90% ổn định = có thể tăng cường độ\n\n"
+
+        "CÔNG CỤ — gọi chủ động khi cần:\n"
+        "- list_doctor_patients: danh sách tổng quan tất cả bệnh nhân\n"
+        "- get_patient_details(patient_id): chi tiết 1 bệnh nhân\n"
+        "- create_patient_schedule(patient_id, exercise_name, scheduled_for, note): lên lịch tập\n"
+        "- list_progression_suggestions(status): đề xuất tăng cấp độ (status: pending/approved/rejected)\n"
+        "- approve_progression_suggestion(suggestion_id, note): duyệt đề xuất tăng cấp độ\n\n"
+
+        "QUY TẮC:\n"
+        "1. Chỉ dùng dữ liệu thực từ context, không bịa thêm\n"
+        "2. Không kê đơn thuốc hoặc chẩn đoán bệnh chính thức\n"
+        "3. Sau khi tool trả kết quả, phân tích và đưa nhận xét lâm sàng — không liệt kê dữ liệu thô\n\n"
+
+        "ĐỊNH DẠNG BẮT BUỘC:\n"
+        "TUYỆT ĐỐI KHÔNG dùng ký hiệu markdown: không **, không *, không #, không •.\n"
+        "Bullet dùng dấu gạch ngang: -\n"
+        "Tiêu đề section: chỉ viết hoa chữ cái đầu tiên của tiêu đề, không viết hoa toàn bộ.\n\n"
+        "Cấu trúc cho câu trả lời phân tích bệnh nhân:\n\n"
+        "Nhận xét chính\n"
+        "[1-2 câu tóm tắt tình trạng và xu hướng nổi bật nhất]\n\n"
+        "Đề xuất tiếp theo\n"
+        "- [hành động cụ thể 1]\n"
+        "- [hành động cụ thể 2]\n\n"
+        "Rủi ro cần lưu ý\n"
+        "- [cảnh báo hoặc dấu hiệu cần theo dõi]\n\n"
+        "Chỉ số theo dõi\n"
+        "- [chỉ số 1: mục tiêu cụ thể]\n"
+        "- [chỉ số 2: mục tiêu cụ thể]\n\n"
+        "Với câu hỏi ngắn: trả lời thẳng 1-3 câu, không dùng template trên."
     )
 
     user_payload = {
@@ -503,7 +576,7 @@ def generate_doctor_assistant_reply(
         },
     }
 
-    # Build messages for the LLM
+    # Build messages for the LLM (OpenAI-compatible format)
     llm_messages: List[Dict[str, Any]] = [
         {"role": "system", "content": system_prompt},
     ]
@@ -517,7 +590,7 @@ def generate_doctor_assistant_reply(
     # Handle tool calls: execute up to 5 rounds to allow chained calls
     max_rounds = 5
     current_content = response.get("content") or ""
-    tool_call = response.get("tool_call")
+    tool_call = response.get("tool_call")  # OpenAI format: {"id": "...", "function": {"name": "...", "arguments": "..."}}
 
     for _round in range(max_rounds):
         if tool_call is None:
@@ -525,24 +598,23 @@ def generate_doctor_assistant_reply(
 
         tool_name = tool_call.get("function", {}).get("name", "")
         if tool_name not in TOOL_NAMES:
-            current_content += f"\n[Unknown tool '{tool_name}' ignored]"
+            current_content += f"\n[Công cụ không xác định '{tool_name}' bị bỏ qua]"
             break
 
         raw_args = tool_call["function"].get("arguments", "{}")
         try:
             arguments = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
         except json.JSONDecodeError:
-            current_content += "\n[Invalid tool arguments]"
+            current_content += "\n[Tham số công cụ không hợp lệ]"
             break
 
         tool_result = execute_tool(db, doctor_id, tool_name, arguments)
         tool_result_str = build_tool_result_message(tool_result)
 
-        # Add tool result as a special assistant message with a tool call role
         llm_messages.append({
             "role": "assistant",
-            "content": current_content,
-            "tool_call": tool_call,
+            "content": current_content or None,
+            "tool_calls": [tool_call],
         })
         llm_messages.append({
             "role": "tool",
@@ -550,17 +622,16 @@ def generate_doctor_assistant_reply(
             "content": tool_result_str,
         })
 
-        # Make next LLM call with tool result
         response = _call_llm_with_tools(llm_messages)
         current_content = response.get("content") or ""
         tool_call = response.get("tool_call")
 
     # If no content was generated, use a fallback
-    final_reply = current_content.strip()
+    final_reply = current_content.strip().replace("**", "")
     if not final_reply:
         final_reply = (
-            "I processed your request but did not generate a response. "
-            "Please try rephrasing your question."
+            "Tôi đã xử lý yêu cầu của bạn nhưng không tạo được phản hồi. "
+            "Vui lòng thử diễn đạt lại câu hỏi của bạn."
         )
 
     # Persist assistant reply

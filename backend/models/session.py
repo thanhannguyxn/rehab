@@ -95,3 +95,34 @@ class PatientSchedule(Base):
     note = Column(Text)
     is_read = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class ProgressionSuggestion(Base):
+    __tablename__ = "progression_suggestions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    patient_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    doctor_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    exercise_name = Column(String(255), nullable=False)
+
+    # What triggered the suggestion
+    trigger_session_count = Column(Integer, nullable=False)
+    avg_accuracy = Column(Float, nullable=False)
+    trigger_session_ids = Column(Text)  # JSON list of session IDs
+
+    # Current limits (snapshot at time of suggestion)
+    current_reps = Column(Integer)
+    current_difficulty = Column(Float)
+    current_rest_seconds = Column(Integer)
+
+    # Suggested new limits
+    suggested_reps = Column(Integer)
+    suggested_difficulty = Column(Float)
+    suggested_rest_seconds = Column(Integer)
+
+    # Workflow
+    status = Column(String(20), nullable=False, default='pending', index=True)  # pending / approved / rejected
+    doctor_note = Column(Text)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)

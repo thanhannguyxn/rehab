@@ -7,6 +7,20 @@ import os
 from datetime import datetime
 
 
+def _upload_to_cloudinary_if_configured(local_video: str, local_thumbnail: str | None):
+    """Upload video (and thumbnail if exists) to Cloudinary. Returns (video_url, thumb_url)."""
+    try:
+        from services.cloudinary_service import upload_video, upload_image, is_configured
+        if not is_configured():
+            return None, None
+        video_url = upload_video(local_video)
+        thumb_url = upload_image(local_thumbnail) if local_thumbnail and os.path.exists(local_thumbnail) else None
+        return video_url, thumb_url
+    except Exception as exc:
+        print(f"[cloudinary] upload failed: {exc}")
+        return None, None
+
+
 def analyze_video_task(pending_id: int, video_path: str, db_session_factory):
     """
     Background task to analyze uploaded video
@@ -75,6 +89,24 @@ def analyze_video_task(pending_id: int, video_path: str, db_session_factory):
 
         pending.updated_at = datetime.utcnow()
         db.commit()
+
+        # Upload to Cloudinary and replace local paths
+        cloud_video, cloud_thumb = _upload_to_cloudinary_if_configured(
+            video_path, pending.thumbnail_path
+        )
+        if cloud_video:
+            pending.video_path = cloud_video
+            if cloud_thumb:
+                pending.thumbnail_path = cloud_thumb
+            pending.updated_at = datetime.utcnow()
+            db.commit()
+            # Clean up local files after successful cloud upload
+            try:
+                os.remove(video_path)
+                if pending.thumbnail_path and os.path.exists(str(pending.thumbnail_path)):
+                    pass  # thumbnail_path now points to cloudinary URL
+            except OSError:
+                pass
 
         print(f"Video analysis completed for pending_id={pending_id}, type={pending.detected_exercise_type}")
 

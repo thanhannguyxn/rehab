@@ -33,9 +33,9 @@ function renderMessageContent(content: string) {
 }
 
 const STARTER_PROMPTS = [
-  'Summarize high-risk patients in my panel this week.',
-  'What trend should I monitor for this selected patient?',
-  'Give me a concise rehab plan for the next 7 days based on history.',
+  'Tóm tắt bệnh nhân nguy cơ cao trong tuần này.',
+  'Xu hướng nào cần theo dõi cho bệnh nhân đang chọn?',
+  'Lập kế hoạch phục hồi ngắn gọn cho 7 ngày tới dựa trên lịch sử.',
 ];
 
 export function DoctorAssistantPage() {
@@ -57,8 +57,8 @@ export function DoctorAssistantPage() {
       id: 'welcome',
       role: 'assistant',
       content:
-        `Welcome ${doctorName}! I can help you review patient trends, highlight risks, and draft next-step rehab plans. ` +
-        'Select a patient on the left for focused analysis, or ask about your whole panel.',
+        `Xin chào Bác sĩ ${doctorName}! Tôi có thể giúp bạn xem xu hướng bệnh nhân, nhận diện rủi ro và lập kế hoạch phục hồi tiếp theo. ` +
+        'Chọn bệnh nhân bên trái để phân tích chi tiết, hoặc hỏi về toàn bộ danh sách của bạn.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -80,7 +80,7 @@ export function DoctorAssistantPage() {
         const data = await doctorAPI.getPatients();
         setPatients(data.patients || []);
       } catch (error) {
-        setErrorText('Could not load patient list for assistant context.');
+        setErrorText('Không thể tải danh sách bệnh nhân.');
       } finally {
         setIsLoadingPatients(false);
       }
@@ -103,16 +103,16 @@ export function DoctorAssistantPage() {
   const resetThreadForScope = (patientId: number | null) => {
     const scopePatient = patientId ? patients.find((p) => p.id === patientId) : null;
     const scopeText = scopePatient
-      ? `Current scope: ${scopePatient.full_name} (ID ${scopePatient.id}).`
-      : 'Current scope: all patients in your panel.';
+      ? `Đang xem: ${scopePatient.full_name} (ID ${scopePatient.id}).`
+      : 'Đang xem: toàn bộ bệnh nhân của bạn.';
 
     setMessages([
       {
         id: 'welcome',
         role: 'assistant',
         content:
-          `Welcome ${doctorName}! I can help you review patient trends, highlight risks, and draft next-step rehab plans. ` +
-          `${scopeText} Ask for a summary, risk signals, or next actions.`,
+          `Xin chào Bác sĩ ${doctorName}! Tôi có thể giúp bạn xem xu hướng bệnh nhân, nhận diện rủi ro và lập kế hoạch phục hồi tiếp theo. ` +
+          `${scopeText} Hỏi về tóm tắt, tín hiệu rủi ro hoặc hành động tiếp theo.`,
       },
     ]);
     setErrorText(null);
@@ -148,10 +148,10 @@ export function DoctorAssistantPage() {
 
     try {
       const data = await agentAPI.doctorChat(trimmed, selectedPatientId || undefined);
-      pushMessage('assistant', data.reply || 'No response returned from assistant.');
+      pushMessage('assistant', data.reply || 'Trợ lý không trả về phản hồi.');
     } catch (error) {
-      setErrorText('Could not contact Doctor Assistant. Please try again.');
-      pushMessage('assistant', 'Doctor Assistant is temporarily unavailable. Please retry shortly.');
+      setErrorText('Không thể kết nối Trợ Lý Bác Sĩ. Vui lòng thử lại.');
+      pushMessage('assistant', 'Trợ Lý Bác Sĩ tạm thời không khả dụng. Vui lòng thử lại sau.');
     } finally {
       setIsSending(false);
     }
@@ -166,28 +166,28 @@ export function DoctorAssistantPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8">
         <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Doctor Assistant</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Trợ Lý Bác Sĩ</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            AI support for patient document reading, trend analysis, and next-step clinical planning.
+            Hỗ trợ AI phân tích hồ sơ bệnh nhân, xu hướng điều trị và lập kế hoạch lâm sàng.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-5">
           <aside className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/80 p-4 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Patient Context</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Danh Sách Bệnh Nhân</h2>
               <button
                 onClick={() => choosePatient(null)}
                 className="text-xs px-2.5 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
-                Clear
+                Xóa chọn
               </button>
             </div>
 
             {isLoadingPatients ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">Loading patients...</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Đang tải...</p>
             ) : patients.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No patients found in your panel.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Không tìm thấy bệnh nhân nào.</p>
             ) : (
               <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
                 {patients.map((patient) => {
@@ -216,18 +216,18 @@ export function DoctorAssistantPage() {
             )}
 
             <div className="mt-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Current scope</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Phạm vi hiện tại</p>
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">
-                {selectedPatient ? `${selectedPatient.full_name} (ID ${selectedPatient.id})` : 'All patients in your panel'}
+                {selectedPatient ? `${selectedPatient.full_name} (ID ${selectedPatient.id})` : 'Tất cả bệnh nhân của bạn'}
               </p>
             </div>
           </aside>
 
           <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/80 shadow-sm flex flex-col min-h-[72vh]">
             <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Assistant Workspace</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Không Gian Làm Việc</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Ask for trend summaries, risk flags, adherence insights, and suggested rehab next actions.
+                Hỏi về xu hướng, tín hiệu rủi ro, tuân thủ điều trị và bước lâm sàng tiếp theo.
               </p>
             </div>
 
@@ -262,7 +262,7 @@ export function DoctorAssistantPage() {
               {isSending && (
                 <div className="flex justify-start">
                   <div className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200 text-sm">
-                    Assistant is analyzing...
+                    Trợ lý đang phân tích...
                   </div>
                 </div>
               )}
@@ -273,7 +273,7 @@ export function DoctorAssistantPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 rows={3}
-                placeholder="Ask the assistant to analyze patient trends, risk signals, or recommend next rehab actions..."
+                placeholder="Hỏi trợ lý về xu hướng bệnh nhân, tín hiệu rủi ro hoặc kế hoạch phục hồi tiếp theo..."
                 className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
                 disabled={isSending}
               />
@@ -285,7 +285,7 @@ export function DoctorAssistantPage() {
                   disabled={isSending || !input.trim()}
                   className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#0369a1] hover:bg-[#0284c7] text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send
+                  Gửi
                 </button>
               </div>
             </form>

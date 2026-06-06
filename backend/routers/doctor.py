@@ -10,9 +10,10 @@ import json
 import shutil
 import threading
 
-from models import User, UserRole, DBSession, SessionError, SessionFrame, PendingExercise, Exercise, ExerciseAngleRule, get_db
+from models import User, UserRole, DBSession, SessionError, SessionFrame, PendingExercise, Exercise, ExerciseAngleRule, ProgressionSuggestion, get_db
 from routers.auth import get_current_user
 from limiter import limiter
+from services.progression_service import apply_suggestion
 from db.connection import SessionLocal
 from fastapi_cache.decorator import cache
 from sqlalchemy.orm import selectinload
@@ -232,6 +233,16 @@ async def get_patient_history(request: Request, patient_id: int, limit: int = 20
         DBSession.patient_id == patient_id
     ).order_by(DBSession.start_time.desc()).limit(limit).all()
 
+    # Build display name lookup from Exercise table for custom exercises
+    exercise_ids = {s.exercise_name for s in sessions_query}
+    ex_name_map: dict = {}
+    if exercise_ids:
+        rows = db.query(Exercise.id, Exercise.name).filter(Exercise.id.in_(exercise_ids)).all()
+        ex_name_map = {row.id: row.name for row in rows}
+
+    def _ex_display_name(eid: str) -> str:
+        return ex_name_map.get(eid) or get_vietnamese_exercise_name(eid)
+
     sessions = []
     for session in sessions_query:
         # Get errors using preloaded relationship to avoid N+1 query
@@ -239,7 +250,7 @@ async def get_patient_history(request: Request, patient_id: int, limit: int = 20
 
         sessions.append({
             'id': session.id,
-            'exercise_name': get_vietnamese_exercise_name(session.exercise_name),
+            'exercise_name': _ex_display_name(session.exercise_name),
             'start_time': (session.start_time.isoformat() if isinstance(session.start_time, datetime) else datetime.fromisoformat(session.start_time.replace('Z', '+00:00')).isoformat()) if session.start_time else None,
             'total_reps': session.total_reps,
             'correct_reps': session.correct_reps,
@@ -578,17 +589,19 @@ async def approve_pending_exercise(
     # Generate unique exercise ID
     exercise_id = f"custom_{exercise_name.lower().replace(' ', '_')}_{pending.id}"
 
-    # Always use the upload path as the production video path
-    # since frontend/public is not shared between containers in Docker
-    production_video_path = f"/uploads/videos/{pending.doctor_id}/{os.path.basename(pending.video_path)}"
+    # If video was already uploaded to Cloudinary, use that URL directly
+    if pending.video_path and pending.video_path.startswith("https://"):
+        production_video_path = pending.video_path
+    else:
+        production_video_path = f"/uploads/videos/{pending.doctor_id}/{os.path.basename(pending.video_path)}"
 
-    # Create Exercise
+    # Create Exercise — start conservative so patients can build up via progression
     new_exercise = Exercise(
         id=exercise_id,
         name=exercise_name,
         description=exercise_desc,
-        target_reps=15,  # Default
-        duration_seconds=300,  # Default
+        target_reps=8,
+        duration_seconds=180,
         base_exercise_type=base_exercise_type,  # For tracking - determines angle calculation
         down_threshold=thresholds['down_threshold'],
         up_threshold=thresholds['up_threshold'],
@@ -1080,3 +1093,126 @@ async def get_patient_emotion_trends(patient_id: int, db: Session = Depends(get_
             'emotion_distribution': emotion_counts
         }
     }
+
+
+# ============================================================
+# PROGRESSION SUGGESTIONS ENDPOINTS
+# ============================================================
+
+@router.get("/progression-suggestions")
+@limiter.limit("30/minute")
+async def list_progression_suggestions(
+    request: Request,
+    status: Optional[str] = None,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Return all progression suggestions for patients under this doctor."""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
+
+    query = db.query(ProgressionSuggestion).filter(
+        ProgressionSuggestion.doctor_id == current_user['user_id']
+    )
+    if status:
+        query = query.filter(ProgressionSuggestion.status == status)
+
+    suggestions = query.order_by(ProgressionSuggestion.created_at.desc()).limit(50).all()
+
+    patient_ids = list({s.patient_id for s in suggestions})
+    patients = {
+        p.id: p.full_name
+        for p in db.query(User).filter(User.id.in_(patient_ids)).all()
+    } if patient_ids else {}
+
+    return {
+        'suggestions': [
+            {
+                'id': s.id,
+                'patient_id': s.patient_id,
+                'patient_name': patients.get(s.patient_id, f'ID {s.patient_id}'),
+                'exercise_name': s.exercise_name,
+                'avg_accuracy': s.avg_accuracy,
+                'trigger_session_count': s.trigger_session_count,
+                'current_reps': s.current_reps,
+                'suggested_reps': s.suggested_reps,
+                'current_difficulty': s.current_difficulty,
+                'suggested_difficulty': s.suggested_difficulty,
+                'current_rest_seconds': s.current_rest_seconds,
+                'suggested_rest_seconds': s.suggested_rest_seconds,
+                'status': s.status,
+                'doctor_note': s.doctor_note,
+                'created_at': s.created_at.isoformat() if s.created_at else None,
+            }
+            for s in suggestions
+        ]
+    }
+
+
+@router.post("/progression-suggestions/{suggestion_id}/approve")
+@limiter.limit("20/minute")
+async def approve_progression_suggestion(
+    request: Request,
+    suggestion_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Approve a progression suggestion → immediately updates UserExerciseLimits."""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
+
+    suggestion = db.query(ProgressionSuggestion).filter(
+        ProgressionSuggestion.id == suggestion_id,
+        ProgressionSuggestion.doctor_id == current_user['user_id'],
+    ).first()
+
+    if not suggestion:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đề xuất")
+    if suggestion.status != 'pending':
+        raise HTTPException(status_code=400, detail=f"Đề xuất đã ở trạng thái '{suggestion.status}'")
+
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+
+    apply_suggestion(db, suggestion, doctor_note=body.get('note'))
+
+    return {'ok': True, 'message': 'Đã duyệt và cập nhật giới hạn bài tập.'}
+
+
+@router.post("/progression-suggestions/{suggestion_id}/reject")
+@limiter.limit("20/minute")
+async def reject_progression_suggestion(
+    request: Request,
+    suggestion_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Reject a progression suggestion without changing exercise limits."""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
+
+    suggestion = db.query(ProgressionSuggestion).filter(
+        ProgressionSuggestion.id == suggestion_id,
+        ProgressionSuggestion.doctor_id == current_user['user_id'],
+    ).first()
+
+    if not suggestion:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đề xuất")
+    if suggestion.status != 'pending':
+        raise HTTPException(status_code=400, detail=f"Đề xuất đã ở trạng thái '{suggestion.status}'")
+
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+
+    suggestion.status = 'rejected'
+    suggestion.doctor_note = body.get('note')
+    suggestion.updated_at = datetime.utcnow()
+    db.commit()
+
+    return {'ok': True, 'message': 'Đã từ chối đề xuất.'}

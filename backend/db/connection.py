@@ -90,11 +90,18 @@ def migrate_db():
     """Idempotent column migrations for existing tables."""
     from sqlalchemy import inspect, text
     inspector = inspect(engine)
+
     existing_cols = {col['name'] for col in inspector.get_columns('users')}
     with engine.connect() as conn:
         if 'email' not in existing_cols:
             conn.execute(text('ALTER TABLE users ADD COLUMN email VARCHAR(255) NULL'))
             conn.commit()
+
+    # Create progression_suggestions table if it does not exist yet.
+    # SQLAlchemy create_all with checkfirst=True handles this safely.
+    from models.session import ProgressionSuggestion
+    from models.base import Base
+    ProgressionSuggestion.__table__.create(bind=engine, checkfirst=True)
 
 
 def ensure_default_exercises(db):
@@ -191,57 +198,6 @@ def init_db():
                 injury_type="knee_pain",
                 mobility_level=MobilityLevel.beginner,
                 pain_level=3,
-                created_at=datetime.utcnow(),
-                doctor_id=doctor.id
-            )
-            db.add(patient)
-
-        # Seed 100 deterministic dummy patients for team development.
-        dummy_prefix = "dummy_patient_"
-        existing_dummy_usernames = {
-            row[0]
-            for row in db.query(User.username)
-            .filter(User.username.like(f"{dummy_prefix}%"))
-            .all()
-        }
-
-        for idx in range(1, 101):
-            username = f"{dummy_prefix}{idx:03d}"
-            if username in existing_dummy_usernames:
-                continue
-
-            age = 58 + (idx % 25)
-            height_cm = 150.0 + float(idx % 25)
-            weight_kg = 48.0 + float((idx * 3) % 35)
-            bmi = round(weight_kg / ((height_cm / 100.0) ** 2), 1)
-            gender = Gender.male if idx % 2 == 0 else Gender.female
-            mobility = [
-                MobilityLevel.beginner,
-                MobilityLevel.intermediate,
-                MobilityLevel.advanced,
-            ][idx % 3]
-            pain_level = idx % 8
-            injury_type = [
-                "knee_pain",
-                "shoulder_pain",
-                "back_pain",
-                "balance_issue",
-            ][idx % 4]
-
-            patient = User(
-                username=username,
-                password_hash=hash_password("patient123"),
-                role=UserRole.patient,
-                full_name=f"Dummy Patient {idx:03d}",
-                age=age,
-                gender=gender,
-                height_cm=height_cm,
-                weight_kg=weight_kg,
-                bmi=bmi,
-                medical_conditions='["hypertension"]' if idx % 5 == 0 else "[]",
-                injury_type=injury_type,
-                mobility_level=mobility,
-                pain_level=pain_level,
                 created_at=datetime.utcnow(),
                 doctor_id=doctor.id
             )

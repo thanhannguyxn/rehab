@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { LoginResponse, Exercise, Session, Patient, ErrorAnalyticsResponse } from './types';
+import type { LoginResponse, Exercise, Session, Patient, ErrorAnalyticsResponse, ProgressionSuggestion } from './types';
 import { API_URL } from './config';
 
 // ─── In-memory access token storage ──────────────────────────────────────────
@@ -204,6 +204,21 @@ export const doctorAPI = {
 
   async getPatientErrorAnalytics(patientId: number): Promise<ErrorAnalyticsResponse> {
     const { data } = await api.get(`/doctor/patient/${patientId}/error-analytics`);
+    return data;
+  },
+
+  async getProgressionSuggestions(status?: string): Promise<{ suggestions: ProgressionSuggestion[] }> {
+    const { data } = await api.get('/doctor/progression-suggestions', { params: status ? { status } : {} });
+    return data;
+  },
+
+  async approveProgression(id: number, note?: string): Promise<{ ok: boolean }> {
+    const { data } = await api.post(`/doctor/progression-suggestions/${id}/approve`, { note });
+    return data;
+  },
+
+  async rejectProgression(id: number, note?: string): Promise<{ ok: boolean }> {
+    const { data } = await api.post(`/doctor/progression-suggestions/${id}/reject`, { note });
     return data;
   },
 };

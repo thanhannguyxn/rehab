@@ -215,7 +215,7 @@ export const PendingExerciseDetail = () => {
             <h2 className="text-xl font-bold mb-4">Video</h2>
             <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
               <video
-                src={`${API_BASE_URL}/${pending.video_path}`}
+                src={pending.video_path?.startsWith('https://') ? pending.video_path : `${API_BASE_URL}/${pending.video_path}`}
                 controls
                 className="w-full h-full object-contain"
               />

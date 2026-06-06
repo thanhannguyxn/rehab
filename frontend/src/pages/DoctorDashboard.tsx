@@ -9,6 +9,7 @@ import { CreatePatientModal, SuccessCredentialsPopup } from '../components/Creat
 import type { Patient } from '../types';
 import { useTranslation } from 'react-i18next';
 import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton';
+import { ProgressionSuggestionsPanel } from '../components/ProgressionSuggestionsPanel';
 
 export const DoctorDashboard = () => {
   const { user, logout } = useAuth();
@@ -114,6 +115,9 @@ export const DoctorDashboard = () => {
             </p>
           </div>
         </div>
+
+        {/* Progression Suggestions */}
+        <ProgressionSuggestionsPanel />
 
         {/* Patients List */}
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border dark:border-gray-800">

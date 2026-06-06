@@ -9,7 +9,7 @@ interface ChatMessage {
 }
 
 const RATE_LIMIT_COOLDOWN_SECONDS = 15;
-const WELCOME_MSG = "I'm your Doctor Assistant. Ask about patient trends, clinical insights, or schedule exercises for your patients!";
+const WELCOME_MSG = "Tôi là Trợ Lý Bác Sĩ của bạn. Hãy hỏi về xu hướng bệnh nhân, thông tin lâm sàng, hoặc lên lịch bài tập cho bệnh nhân!";
 
 function renderMessageContent(content: string) {
   const lines = content.split('\n').map((line) => line.trim()).filter(Boolean);
@@ -40,7 +40,7 @@ export function DoctorAssistantChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `Welcome ${doctorName}! ${WELCOME_MSG}`,
+      content: `Xin chào Bác sĩ ${doctorName}! ${WELCOME_MSG}`,
     },
   ]);
   const [input, setInput] = useState('');
@@ -66,7 +66,7 @@ export function DoctorAssistantChat() {
           {
             id: 'welcome',
             role: 'assistant',
-            content: `Welcome back ${doctorName}! ${WELCOME_MSG}`,
+            content: `Chào mừng trở lại Bác sĩ ${doctorName}! ${WELCOME_MSG}`,
           },
         ];
 
@@ -117,19 +117,19 @@ export function DoctorAssistantChat() {
 
     try {
       const data = await agentAPI.doctorChat(trimmed);
-      pushMessage('assistant', data.reply || 'No response returned from assistant.');
+      pushMessage('assistant', data.reply || 'Trợ lý không trả về phản hồi.');
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } };
       const status = err?.response?.status;
       if (status === 429) {
         setCooldownUntil(Date.now() + RATE_LIMIT_COOLDOWN_SECONDS * 1000);
-        setErrorText(`Rate limit reached. Please retry in ${RATE_LIMIT_COOLDOWN_SECONDS}s.`);
+        setErrorText(`Đã đạt giới hạn gửi tin. Vui lòng thử lại sau ${RATE_LIMIT_COOLDOWN_SECONDS}s.`);
       } else {
-        setErrorText('Could not contact Doctor Assistant. Please try again.');
+        setErrorText('Không thể kết nối Trợ Lý Bác Sĩ. Vui lòng thử lại.');
       }
       pushMessage(
         'assistant',
-        'Doctor Assistant is temporarily unavailable. Please review patient dashboards and retry shortly.'
+        'Trợ lý tạm thời không khả dụng. Vui lòng xem bảng điều khiển bệnh nhân và thử lại sau.'
       );
     } finally {
       setIsSending(false);
@@ -145,11 +145,11 @@ export function DoctorAssistantChat() {
         {
           id: 'welcome',
           role: 'assistant',
-          content: `Welcome ${doctorName}! ${WELCOME_MSG}`,
+          content: `Xin chào Bác sĩ ${doctorName}! ${WELCOME_MSG}`,
         },
       ]);
     } catch {
-      setErrorText('Could not clear chat history. Please try again.');
+      setErrorText('Không thể xóa lịch sử trò chuyện. Vui lòng thử lại.');
     } finally {
       setIsClearing(false);
     }
@@ -181,9 +181,9 @@ export function DoctorAssistantChat() {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Doctor Assistant</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Trợ Lý Bác Sĩ</h3>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Clinical planning and patient summary support
+                Hỗ trợ lập kế hoạch lâm sàng và tóm tắt bệnh nhân
               </p>
             </div>
             <div className="flex items-center gap-1">
@@ -191,7 +191,7 @@ export function DoctorAssistantChat() {
               <button
                 onClick={handleClearChat}
                 disabled={isClearing}
-                title="Clear chat history"
+                title="Xóa lịch sử trò chuyện"
                 className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-500 dark:text-gray-400 disabled:opacity-50"
                 aria-label="Clear chat"
               >
@@ -235,7 +235,7 @@ export function DoctorAssistantChat() {
             {isSending && (
               <div className="flex justify-start">
                 <div className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200 text-sm">
-                  Assistant is thinking...
+                  Trợ lý đang suy nghĩ...
                 </div>
               </div>
             )}
@@ -247,20 +247,20 @@ export function DoctorAssistantChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={3}
-              placeholder="Ask about a patient trend, risk signal, or next clinical action..."
+              placeholder="Hỏi về xu hướng bệnh nhân, tín hiệu rủi ro, hoặc hành động lâm sàng tiếp theo..."
               className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
               disabled={isSending || remainingCooldown > 0}
             />
             <div className="flex items-center justify-between gap-2">
               <p className="text-xs text-gray-600 dark:text-gray-400 min-h-[16px] flex-1">
-                {remainingCooldown > 0 ? `Retry in ${remainingCooldown}s` : errorText || ''}
+                {remainingCooldown > 0 ? `Thử lại sau ${remainingCooldown}s` : errorText || ''}
               </p>
               <button
                 type="submit"
                 disabled={!canSend}
                 className="px-4 py-2 rounded-lg text-sm font-semibold bg-[#0369a1] hover:bg-[#0284c7] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                Send
+                Gửi
               </button>
             </div>
           </form>

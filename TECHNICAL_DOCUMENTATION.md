@@ -26,7 +26,7 @@
           │                  │
           │ HTTP POST/GET    │ HTTP POST
           │                  │
-┌─────────▼──────────────────▼────────────────────────────┐
+┌───────────────────────────────────────────────────────┐
 │                    Backend (FastAPI)                     │
 │  ┌──────────────────────────────────────────────────┐  │
 │  │             API Endpoints                         │  │
@@ -35,7 +35,7 @@
 │  │  • POST /api/personalized-params                 │  │
 │  └──────────┬───────────────────────────────────────┘  │
 │             │                                            │
-│  ┌──────────▼───────────────────────────────────────┐  │
+│  ┌─────────────────────────────────────────────────┐  │
 │  │       AI Personalization Engine                   │  │
 │  │  ┌────────────────────┐  ┌────────────────────┐ │  │
 │  │  │ BiometricFeatures  │  │ Personalization    │ │  │
@@ -44,7 +44,7 @@
 │  │  └────────────────────┘  └────────────────────┘ │  │
 │  └──────────┬───────────────────────────────────────┘  │
 │             │                                            │
-│  ┌──────────▼───────────────────────────────────────┐  │
+│  ┌─────────────────────────────────────────────────┐  │
 │  │            SQLite Database                        │  │
 │  │  • users (biometric data)                        │  │
 │  │  • user_exercise_limits (personalized params)   │  │
@@ -531,9 +531,9 @@ Get token from `/api/auth/login` endpoint.
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/api/profile/update` | Update user profile | ✅ |
-| GET | `/api/profile/me` | Get current user profile | ✅ |
-| POST | `/api/personalized-params` | Get personalized exercise params | ✅ |
+| POST | `/api/profile/update` | Update user profile | |
+| GET | `/api/profile/me` | Get current user profile | |
+| POST | `/api/personalized-params` | Get personalized exercise params | |
 
 ### **Detailed API Specs**
 

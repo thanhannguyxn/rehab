@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { API_URL, API_BASE_URL } from '../utils/config';
+import { API_BASE_URL } from '../utils/config';
+import { exerciseManagementAPI } from '../utils/api';
 
 interface AngleRule {
   angle_name: string;
@@ -57,31 +58,26 @@ export const PendingExerciseDetail = () => {
   const [editDownThreshold, setEditDownThreshold] = useState<number | ''>('');
   const [editUpThreshold, setEditUpThreshold] = useState<number | ''>('');
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadPendingDetail();
   }, [id]);
 
   const loadPendingDetail = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/pending/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPending(data);
-        // Initialize edit form with detected values
-        setEditName(data.manual_exercise_name || data.detected_exercise_type || '');
-        setEditDescription(data.manual_description || data.movement_signature?.description || '');
-        setEditDownThreshold(data.detected_thresholds?.down_threshold || '');
-        setEditUpThreshold(data.detected_thresholds?.up_threshold || '');
-      } else {
-        alert('Không tìm thấy bài tập');
-        navigate('/exercise-management');
-      }
+      const data = await exerciseManagementAPI.getPendingDetail(id!) as PendingExerciseDetail;
+      setPending(data);
+      setEditName(data.manual_exercise_name || data.detected_exercise_type || '');
+      setEditDescription(data.manual_description || data.movement_signature?.description || '');
+      setEditDownThreshold(data.detected_thresholds?.down_threshold || '');
+      setEditUpThreshold(data.detected_thresholds?.up_threshold || '');
     } catch (error) {
       console.error('Error loading pending detail:', error);
+      alert('Không tìm thấy bài tập');
+      navigate('/exercise-management');
     } finally {
       setLoading(false);
     }
@@ -92,43 +88,22 @@ export const PendingExerciseDetail = () => {
 
     setProcessing(true);
     try {
-      const token = sessionStorage.getItem('token');
-
-      // First update manual values if changed
-      await fetch(`${API_URL}/doctor/exercises/pending/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      await exerciseManagementAPI.updatePending(id!, {
+        manual_exercise_name: editName,
+        manual_description: editDescription,
+        manual_thresholds: {
+          down_threshold: editDownThreshold || null,
+          up_threshold: editUpThreshold || null,
+          hysteresis: 5.0,
         },
-        body: JSON.stringify({
-          manual_exercise_name: editName,
-          manual_description: editDescription,
-          manual_thresholds: {
-            down_threshold: editDownThreshold || null,
-            up_threshold: editUpThreshold || null,
-            hysteresis: 5.0
-          }
-        })
       });
 
-      // Then approve
-      const response = await fetch(`${API_URL}/doctor/exercises/approve/${id}`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert(`Thành công! Bài tập "${data.exercise_id}" đã được thêm vào hệ thống.`);
-        navigate('/exercise-management');
-      } else {
-        const error = await response.json();
-        alert(error.detail || 'Lỗi khi duyệt bài tập');
-      }
-    } catch (error) {
-      console.error('Error approving:', error);
-      alert('Lỗi khi duyệt bài tập');
+      const data = await exerciseManagementAPI.approve(id!) as { exercise_id: string };
+      alert(`Thành công! Bài tập "${data.exercise_id}" đã được thêm vào hệ thống.`);
+      navigate('/exercise-management');
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || 'Lỗi khi duyệt bài tập');
     } finally {
       setProcessing(false);
     }
@@ -139,22 +114,12 @@ export const PendingExerciseDetail = () => {
 
     setProcessing(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/pending/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        alert('Đã xóa bài tập');
-        navigate('/exercise-management');
-      } else {
-        const error = await response.json();
-        alert(error.detail || 'Lỗi khi xóa');
-      }
-    } catch (error) {
-      console.error('Error rejecting:', error);
-      alert('Lỗi khi xóa');
+      await exerciseManagementAPI.deletePending(id!);
+      alert('Đã xóa bài tập');
+      navigate('/exercise-management');
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || 'Lỗi khi xóa');
     } finally {
       setProcessing(false);
     }
@@ -165,21 +130,12 @@ export const PendingExerciseDetail = () => {
 
     setProcessing(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/reanalyze/${id}`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        alert('Đang phân tích lại video...');
-        loadPendingDetail();
-      } else {
-        const error = await response.json();
-        alert(error.detail || 'Lỗi');
-      }
-    } catch (error) {
-      console.error('Error re-analyzing:', error);
+      await exerciseManagementAPI.reanalyze(id!);
+      alert('Đang phân tích lại video...');
+      loadPendingDetail();
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || 'Lỗi');
     } finally {
       setProcessing(false);
     }
@@ -189,7 +145,7 @@ export const PendingExerciseDetail = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin text-4xl text-blue-500 mb-4">
+          <div className="animate-spin text-4xl text-[#0369a1] mb-4">
             <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -207,10 +163,10 @@ export const PendingExerciseDetail = () => {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      'UPLOADING': 'bg-blue-500',
+      'UPLOADING': 'bg-[#0369a1]',
       'PROCESSING': 'bg-yellow-500',
       'PENDING': 'bg-green-500',
-      'APPROVED': 'bg-teal-500',
+      'APPROVED': 'bg-[#0369a1]',
       'REJECTED': 'bg-gray-500',
       'ERROR': 'bg-red-500'
     };
@@ -235,7 +191,7 @@ export const PendingExerciseDetail = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-black bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-black text-[#0369a1]">
               Chi Tiết Bài Tập
             </h1>
             <div className="flex items-center gap-4 mt-2">
@@ -255,7 +211,7 @@ export const PendingExerciseDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Video Preview */}
-          <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
             <h2 className="text-xl font-bold mb-4">Video</h2>
             <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
               <video
@@ -274,7 +230,7 @@ export const PendingExerciseDetail = () => {
           {/* Right: Analysis Results */}
           <div className="space-y-6">
             {/* AI Analysis */}
-            <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
               <h2 className="text-xl font-bold mb-4">Kết Quả Phân Tích AI</h2>
 
               {pending.status === 'ERROR' && (
@@ -293,7 +249,7 @@ export const PendingExerciseDetail = () => {
 
               {pending.status === 'PROCESSING' && (
                 <div className="text-center py-8">
-                  <div className="animate-spin text-4xl text-blue-500 mb-4 flex justify-center">
+                  <div className="animate-spin text-4xl text-[#0369a1] mb-4 flex justify-center">
                     <svg className="w-10 h-10 inline-block" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -313,7 +269,7 @@ export const PendingExerciseDetail = () => {
                     <label className="block text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">
                       Loại bài tập phát hiện:
                     </label>
-                    <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                    <p className="text-2xl font-bold text-[#0284c7] dark:text-blue-600">
                       {pending.detected_exercise_type || 'Không xác định'}
                     </p>
                   </div>
@@ -327,11 +283,11 @@ export const PendingExerciseDetail = () => {
                       <div className="flex items-center gap-4">
                         <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                           <div
-                            className="bg-gradient-to-r from-teal-500 to-cyan-500 h-3 rounded-full"
+                            className="bg-[#0369a1] h-3 rounded-full"
                             style={{ width: `${pending.confidence_score * 100}%` }}
                           />
                         </div>
-                        <span className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                        <span className="text-lg font-bold text-[#0284c7] dark:text-blue-600">
                           {Math.round(pending.confidence_score * 100)}%
                         </span>
                       </div>
@@ -340,8 +296,8 @@ export const PendingExerciseDetail = () => {
 
                   {/* Tracking Logic Info */}
                   {pending.movement_signature?.tracking_logic && (
-                    <div className="mb-4 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-400 mb-3">
+                    <div className="mb-4 bg-blue-50 dark:bg-[#075985]/30 border border-blue-200 dark:border-[#0369a1]/30 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-[#0284c7] dark:text-blue-600 mb-3">
                         Thông Tin Góc Khớp Theo Dõi
                       </h3>
                       <div className="space-y-2 text-sm">
@@ -380,8 +336,8 @@ export const PendingExerciseDetail = () => {
                       {/* Angle Rules from AI */}
                       {pending.movement_signature.tracking_logic.angle_rules &&
                        pending.movement_signature.tracking_logic.angle_rules.length > 0 && (
-                        <div className="mt-4 pt-3 border-t border-teal-200 dark:border-teal-500/30">
-                          <h4 className="text-sm font-semibold text-teal-600 dark:text-teal-400 mb-2">
+                        <div className="mt-4 pt-3 border-t border-blue-200 dark:border-[#0369a1]/30">
+                          <h4 className="text-sm font-semibold text-[#0284c7] dark:text-blue-600 mb-2">
                             Quy tắc phát hiện lỗi (AI):
                           </h4>
                           <div className="space-y-2">
@@ -401,7 +357,7 @@ export const PendingExerciseDetail = () => {
                                       ? 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
                                       : rule.error_severity === 'medium'
                                       ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
-                                      : 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400'
+                                      : 'bg-blue-100 text-[#0284c7] dark:bg-[#0369a1]/20 dark:text-blue-600'
                                   }`}>
                                     {rule.error_severity || 'medium'}
                                   </span>
@@ -430,7 +386,7 @@ export const PendingExerciseDetail = () => {
                         {pending.movement_signature.primary_joints.map((joint, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 rounded text-sm"
+                            className="px-2 py-1 bg-blue-100 text-[#0284c7] dark:bg-[#0369a1]/20 dark:text-blue-600 rounded text-sm"
                           >
                             {joint}
                           </span>
@@ -504,7 +460,7 @@ export const PendingExerciseDetail = () => {
 
             {/* Manual Edit Form */}
             {(pending.status === 'PENDING' || pending.status === 'ERROR') && (
-              <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
                 <h2 className="text-xl font-bold mb-4">Chỉnh Sửa (Tuỳ chọn)</h2>
 
                 <div className="space-y-4">
@@ -568,14 +524,14 @@ export const PendingExerciseDetail = () => {
                 <button
                   onClick={handleApprove}
                   disabled={processing || !editName}
-                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
                   {processing ? 'Đang xử lý...' : 'Duyệt và Thêm vào Hệ Thống'}
                 </button>
                 <button
                   onClick={handleReject}
                   disabled={processing}
-                  className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
+                  className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
                   {processing ? 'Đang xử lý...' : 'Từ Chối và Xóa'}
                 </button>

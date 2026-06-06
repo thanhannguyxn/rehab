@@ -21,9 +21,9 @@ export const Navbar = () => {
   const getLinkClasses = (path: string) => {
     const baseClasses = "transition font-medium";
     if (isActive(path)) {
-      return `${baseClasses} text-teal-500 dark:text-teal-400 font-semibold`;
+      return `${baseClasses} text-[#0369a1] dark:text-blue-600 font-semibold`;
     }
-    return `${baseClasses} text-gray-500 dark:text-gray-400 hover:text-teal-500`;
+    return `${baseClasses} text-gray-500 dark:text-gray-400 hover:text-[#0369a1]`;
   };
 
   return (
@@ -32,7 +32,7 @@ export const Navbar = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <span className="text-2xl font-bold bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-[#0369a1] dark:text-blue-600">
               Rehab AI
             </span>
           </Link>
@@ -81,7 +81,7 @@ export const Navbar = () => {
               >
                 {/* Avatar Button */}
                 <button className="flex items-center gap-3 hover:opacity-80 transition">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-semibold shadow-lg">
+                  <div className="w-10 h-10 rounded-full bg-[#0369a1] flex items-center justify-center text-white font-semibold shadow-lg">
                     {user.full_name.charAt(0).toUpperCase()}
                   </div>
                 </button>
@@ -100,7 +100,7 @@ export const Navbar = () => {
                             navigate('/profile');
                             setShowUserDropdown(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-gray-700 hover:text-teal-600 dark:hover:text-teal-400 transition font-medium flex items-center gap-2"
+                          className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-[#0284c7] dark:hover:text-blue-600 transition font-medium flex items-center gap-2"
                         >
                           {t("navbar.profile")}
                         </button>
@@ -122,7 +122,7 @@ export const Navbar = () => {
             ) : (
               <Link
                 to="/login-choice"
-                className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-6 py-2.5 rounded-lg font-semibold transition shadow-lg shadow-teal-500/30"
+                className="bg-[#0369a1] hover:bg-[#0284c7] text-white px-6 py-2.5 rounded-lg font-semibold transition shadow-lg shadow-[#0369a1]/30"
               >
                 {t("navbar.login")}
               </Link>

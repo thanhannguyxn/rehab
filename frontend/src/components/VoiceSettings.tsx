@@ -42,7 +42,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
+      <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
               onClick={() => handleEnabledChange(!enabled)}
               className={`relative w-14 h-8 rounded-full transition ${
                 enabled
-                  ? 'bg-gradient-to-r from-teal-500 to-cyan-500'
+                  ? 'bg-[#0369a1]'
                   : 'bg-gray-300 dark:bg-gray-600'
               }`}
             >
@@ -101,7 +101,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
             value={rate}
             onChange={(e) => handleRateChange(parseFloat(e.target.value))}
             disabled={!enabled}
-            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500 disabled:opacity-50"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#0369a1] disabled:opacity-50"
           />
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
             <span>{t("voiceSettings.rate.slow")}</span>
@@ -125,7 +125,7 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
             value={volume}
             onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
             disabled={!enabled}
-            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500 disabled:opacity-50"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#0369a1] disabled:opacity-50"
           />
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
             <span>{t("voiceSettings.volume.low")}</span>
@@ -152,8 +152,8 @@ export const VoiceSettings = ({ isOpen, onClose }: VoiceSettingsProps) => {
         </button>
 
         {/* Info */}
-        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <p className="text-xs text-blue-800 dark:text-blue-300">
+        <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <p className="text-xs text-[#075985] dark:text-blue-300">
             <strong>{t("voiceSettings.tip.title")}</strong> {t("voiceSettings.tip.content")}
           </p>
         </div>

@@ -16,11 +16,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: public.ecr.aws/docker/library/redis:alpine
+    container_name: rehab-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
   backend:
     build: ./backend
     container_name: rehab-backend
     environment:
       - DATABASE_URL=mysql+pymysql://root:123456@mysql:3306/rehab_v3
+      - REDIS_URL=redis://redis:6379/0
     ports:
       - "8000:8000"
     volumes:

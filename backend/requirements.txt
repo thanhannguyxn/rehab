@@ -16,3 +16,5 @@ cryptography>=42.0.0
 slowapi==0.1.9
 python-multipart>=0.0.7
 openai>=1.0.0
+fastapi-cache2[redis]
+redis

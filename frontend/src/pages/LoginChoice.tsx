@@ -9,7 +9,7 @@ export const LoginChoice = () => {
       <div className="max-w-5xl w-full">
         <div className="text-center mb-8">
           <div className="mb-3">
-            <span className="text-4xl font-bold bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">Rehab AI</span>
+            <span className="text-4xl font-bold text-[#0369a1] dark:text-blue-600">Rehab AI</span>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">{t("loginChoice.title")}</h1>
           <p className="text-xl text-gray-600 dark:text-gray-400">{t("loginChoice.subtitle")}</p>
@@ -22,8 +22,8 @@ export const LoginChoice = () => {
             className="group bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:scale-105 border border-gray-200 dark:border-gray-700"
           >
             <div className="text-center">
-              <div className="bg-teal-100 dark:bg-teal-900/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-teal-200 dark:group-hover:bg-teal-800/50 transition">
-                <svg className="w-14 h-14 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-blue-100 dark:bg-[#075985]/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-blue-200 dark:group-hover:bg-[#075985]/50 transition">
+                <svg className="w-14 h-14 text-[#0284c7] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
@@ -31,7 +31,7 @@ export const LoginChoice = () => {
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-5">
                 {t("loginChoice.patientSubtitle")}
               </p>
-              <div className="bg-teal-600 group-hover:bg-teal-700 dark:bg-teal-500 dark:group-hover:bg-teal-600 text-white px-7 py-3 rounded-lg font-bold text-lg inline-block transition">
+              <div className="bg-[#0284c7] group-hover:bg-[#0284c7] dark:bg-[#0369a1] dark:group-hover:bg-[#0284c7] text-white px-7 py-3 rounded-lg font-bold text-lg inline-block transition">
                 {t("loginChoice.login")} →
               </div>
             </div>
@@ -43,8 +43,8 @@ export const LoginChoice = () => {
             className="group bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:scale-105 border border-gray-200 dark:border-gray-700"
           >
             <div className="text-center">
-              <div className="bg-green-100 dark:bg-green-900/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition">
-                <svg className="w-14 h-14 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-blue-100 dark:bg-[#075985]/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-blue-200 dark:group-hover:bg-[#075985]/50 transition">
+                <svg className="w-14 h-14 text-[#0284c7] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
@@ -52,7 +52,7 @@ export const LoginChoice = () => {
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-5">
                 {t("loginChoice.doctorSubtitle")}
               </p>
-              <div className="bg-green-600 group-hover:bg-green-700 dark:bg-green-500 dark:group-hover:bg-green-600 text-white px-7 py-3 rounded-lg font-bold text-lg inline-block transition">
+              <div className="bg-[#0284c7] group-hover:bg-[#0284c7] dark:bg-[#0369a1] dark:group-hover:bg-[#0284c7] text-white px-7 py-3 rounded-lg font-bold text-lg inline-block transition">
                 {t("loginChoice.login")} →
               </div>
             </div>
@@ -62,7 +62,7 @@ export const LoginChoice = () => {
         <div className="text-center mt-8">
           <Link
             to="/"
-            className="text-lg text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-semibold"
+            className="text-lg text-[#0284c7] dark:text-blue-600 hover:text-[#0284c7] dark:hover:text-blue-300 font-semibold"
           >
             ← {t("loginChoice.backToHome")}
           </Link>

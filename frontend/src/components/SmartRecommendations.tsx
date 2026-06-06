@@ -142,7 +142,7 @@ export const SmartRecommendations = ({ sessions }: SmartRecommendationsProps) =>
       case 'warning':
         return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-200';
       case 'info':
-        return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200';
+        return 'bg-blue-50 dark:bg-[#075985]/20 border-blue-200 dark:border-[#075985] text-[#075985] dark:text-blue-200';
       case 'tip':
         return 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-200';
       default:

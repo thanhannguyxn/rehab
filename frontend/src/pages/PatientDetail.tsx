@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doctorAPI } from '../utils/api';
 import { SessionCard } from '../components/SessionCard';
@@ -24,8 +24,12 @@ export const PatientDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { t, i18n } = useTranslation();
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
     if (patientId) {
+      if (didFetch.current) return;
+      didFetch.current = true;
       loadPatientHistory();
     }
   }, [patientId]);
@@ -115,14 +119,14 @@ export const PatientDetail = () => {
           <div className="flex gap-4">
             <button
               onClick={() => navigate(`/doctor/assistant?patientId=${patientId}`)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition"
+              className="bg-[#0284c7] hover:bg-[#0284c7] text-white px-6 py-3 rounded-lg font-semibold text-lg transition"
             >
               {i18n.language === 'en' ? 'AI Assistant' : 'Trợ Lý AI'}
             </button>
             <button
               onClick={generatePDF}
               disabled={sessions.length === 0}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#0284c7] hover:bg-[#0284c7] text-white px-6 py-3 rounded-lg font-semibold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {t("patientDetail.exportPDF")}
             </button>
@@ -139,7 +143,7 @@ export const PatientDetail = () => {
       <div className="max-w-6xl mx-auto p-6">
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#0284c7] mx-auto"></div>
             <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">{t("patientDetail.loading")}</p>
           </div>
         ) : sessions.length === 0 ? (
@@ -158,7 +162,7 @@ export const PatientDetail = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center">
                 <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("patientDetail.totalSessions")}</p>
-                <p className="text-5xl font-bold text-blue-600">{sessions.length}</p>
+                <p className="text-5xl font-bold text-[#0284c7]">{sessions.length}</p>
               </div>
               <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center">
                 <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("patientDetail.avgAccuracy")}</p>

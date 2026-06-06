@@ -86,6 +86,17 @@ def create_tables():
     Base.metadata.create_all(bind=engine)
 
 
+def migrate_db():
+    """Idempotent column migrations for existing tables."""
+    from sqlalchemy import inspect, text
+    inspector = inspect(engine)
+    existing_cols = {col['name'] for col in inspector.get_columns('users')}
+    with engine.connect() as conn:
+        if 'email' not in existing_cols:
+            conn.execute(text('ALTER TABLE users ADD COLUMN email VARCHAR(255) NULL'))
+            conn.commit()
+
+
 def ensure_default_exercises(db):
     """Ensure built-in exercises exist without removing custom exercises."""
     from datetime import datetime
@@ -141,10 +152,24 @@ def init_db():
             db.add(doctor)
             db.flush()
 
+        # Second doctor account for testing the new auth flow.
+        doctor2 = db.query(User).filter(User.username == "doctor2").first()
+        if not doctor2:
+            doctor2 = User(
+                username="doctor2",
+                password_hash=hash_password("Doctor@2024"),
+                role=UserRole.doctor,
+                full_name="BS. Le Thi D",
+                created_at=datetime.utcnow()
+            )
+            db.add(doctor2)
+            db.flush()
+
         # Ensure default demo patients exist.
         default_patients = [
             ("patient1", "patient123", "Tran Thi B", 65, Gender.female),
             ("patient2", "patient123", "Le Van C", 70, Gender.male),
+            ("patient3", "Patient@2024", "Pham Van D", 55, Gender.male),
         ]
 
         for username, password, name, age, gender in default_patients:
@@ -159,9 +184,9 @@ def init_db():
                 full_name=name,
                 age=age,
                 gender=gender,
-                height_cm=160.0,
-                weight_kg=58.0,
-                bmi=22.7,
+                height_cm=165.0,
+                weight_kg=62.0,
+                bmi=22.8,
                 medical_conditions="[]",
                 injury_type="knee_pain",
                 mobility_level=MobilityLevel.beginner,

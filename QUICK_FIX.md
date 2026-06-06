@@ -1,6 +1,6 @@
-# ⚡ Khắc Phục Lỗi Backend Nhanh
+# Khắc Phục Lỗi Backend Nhanh
 
-## 🔍 Chẩn Đoán Nhanh
+## Chẩn Đoán Nhanh
 
 ### Bước 1: Kiểm tra Virtual Environment
 ```cmd
@@ -72,9 +72,9 @@ python migrate_db.py
 python main.py
 ```
 
-## 🚨 Lỗi Phổ Biến & Cách Fix
+## Lỗi Phổ Biến & Cách Fix
 
-### ❌ `ModuleNotFoundError: No module named 'limiter'`
+### `ModuleNotFoundError: No module named 'limiter'`
 **Fix:**
 ```cmd
 # Tạo file limiter.py trong thư mục backend
@@ -84,13 +84,13 @@ echo. >> limiter.py
 echo limiter = Limiter(key_func=get_remote_address) >> limiter.py
 ```
 
-### ❌ Database Connection Error
+### Database Connection Error
 **Fix:**
 1. Kiểm tra MySQL đang chạy: `net start mysql`
 2. Kiểm tra thông tin kết nối trong `.env`
 3. Tạo database: `CREATE DATABASE rehab_v3;`
 
-### ❌ `ImportError: cannot import name 'init_db'`
+### `ImportError: cannot import name 'init_db'`
 **Fix:**
 ```cmd
 # Kiểm tra file models/__init__.py tồn tại
@@ -100,7 +100,7 @@ dir models\__init__.py
 echo. > models\__init__.py
 ```
 
-### ❌ Port 8000 already in use
+### Port 8000 already in use
 **Fix:**
 ```cmd
 # Tìm process đang dùng port
@@ -110,7 +110,7 @@ netstat -ano | findstr :8000
 taskkill /PID PID_NUMBER /F
 ```
 
-## 🏃‍♂️ Script Chạy Nhanh
+## Script Chạy Nhanh
 
 **Tạo file `fix-backend.bat`:**
 ```batch
@@ -139,7 +139,7 @@ pause
 
 **Lưu script này và chạy:** `fix-backend.bat`
 
-## 📋 Checklist Trước Khi Chạy
+## Checklist Trước Khi Chạy
 
 - [ ] Python 3.10+ đã cài đặt
 - [ ] MySQL Server đang chạy
@@ -149,7 +149,7 @@ pause
 - [ ] Database `rehab_v3` đã được tạo
 - [ ] Migration đã chạy thành công
 
-## 🆘 Nếu Vẫn Lỗi
+## Nếu Vẫn Lỗi
 
 **Gửi thông tin sau để được hỗ trợ:**
 

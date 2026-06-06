@@ -48,17 +48,15 @@ export const Landing = () => {
           isHeroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-white to-gray-100 dark:from-gray-900 dark:via-black dark:to-gray-900 transition-colors duration-300"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(20,184,166,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(6,182,212,0.1),transparent_50%)]"></div>
+        {/* Background */}
+        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-900 transition-colors duration-300"></div>
         
         <div className="relative max-w-6xl mx-auto px-6 py-20 text-center z-10">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-gray-200/80 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-full mb-8">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-600 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0369a1]"></span>
             </span>
             <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{t("landing.heroBadge")}</span>
           </div>
@@ -66,7 +64,7 @@ export const Landing = () => {
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
             <span className="block text-gray-900 dark:text-white mb-2">{t("landing.heroTitle1")}</span>
-            <span className="block bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 dark:from-teal-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+            <span className="block text-[#0369a1] dark:text-blue-600">
               {t("landing.heroTitle2")}
             </span>
           </h1>
@@ -80,7 +78,7 @@ export const Landing = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
             <button
               onClick={handleGetStarted}
-              className="group bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-xl shadow-teal-500/30 hover:shadow-2xl hover:shadow-teal-500/40 transform hover:scale-105"
+              className="group bg-[#0369a1] hover:bg-[#0284c7] text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-xl shadow-[#0369a1]/30 hover:shadow-2xl hover:shadow-[#0369a1]/40 transform hover:scale-105"
             >
               {t("landing.getStarted")}
               <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
@@ -98,19 +96,19 @@ export const Landing = () => {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto pt-8 border-t border-gray-300 dark:border-gray-800">
             <div>
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
+              <div className="text-3xl md:text-4xl font-bold text-[#0369a1] dark:text-blue-600 mb-1">
                 4+
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats1Title")}</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
+              <div className="text-3xl md:text-4xl font-bold text-[#0369a1] dark:text-blue-600 mb-1">
                 95%+
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats2Title")}</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
+              <div className="text-3xl md:text-4xl font-bold text-[#0369a1] dark:text-blue-600 mb-1">
                 {t("landing.stats3Subtitle")}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">{t("landing.stats3Title")}</div>
@@ -130,7 +128,7 @@ export const Landing = () => {
       <section 
         ref={featuresRef}
         id="features" 
-        className={`py-32 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-black dark:to-gray-900 transition-all duration-700 ${
+        className={`py-32 bg-gray-50 dark:bg-black transition-all duration-700 ${
           isFeaturesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
@@ -148,9 +146,9 @@ export const Landing = () => {
           {/* Feature Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Feature 1 */}
-            <div className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-teal-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-300">
-              <div className="bg-gradient-to-br from-teal-500/20 to-cyan-500/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-teal-500 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-[#0369a1]/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-[#0369a1]/20 transition-all duration-300">
+              <div className="bg-[#0369a1]/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-[#0369a1] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
@@ -162,9 +160,9 @@ export const Landing = () => {
             </div>
 
             {/* Feature 2 */}
-            <div className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-cyan-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300">
-              <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-cyan-500 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-[#0369a1]/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-[#0369a1]/20 transition-all duration-300">
+              <div className="bg-[#0369a1]/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-[#0369a1] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
@@ -175,9 +173,9 @@ export const Landing = () => {
             </div>
 
             {/* Feature 3 */}
-            <div className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-purple-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300">
-              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-[#0369a1]/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-[#0369a1]/20 transition-all duration-300">
+              <div className="bg-[#0369a1]/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-[#0369a1] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
@@ -188,9 +186,9 @@ export const Landing = () => {
             </div>
 
             {/* Feature 4 */}
-            <div className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-green-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300">
-              <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-[#0369a1]/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-[#0369a1]/20 transition-all duration-300">
+              <div className="bg-[#0369a1]/20 p-4 rounded-xl w-fit mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-[#0369a1] dark:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
@@ -212,7 +210,7 @@ export const Landing = () => {
         }`}
       >
         {/* Background Decoration */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-teal-500 to-transparent"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-[#0369a1] opacity-40"></div>
         
         <div className="max-w-7xl mx-auto px-6 relative">
           {/* Section Header */}
@@ -228,12 +226,12 @@ export const Landing = () => {
           {/* Steps */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {/* Connecting Lines */}
-            <div className="hidden md:block absolute top-24 left-0 right-0 h-0.5 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 opacity-30"></div>
+            <div className="hidden md:block absolute top-24 left-0 right-0 h-0.5 bg-[#0369a1] opacity-30"></div>
 
             {/* Step 1 */}
             <div className="relative">
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
-                <div className="bg-gradient-to-br from-teal-500 to-cyan-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-teal-500/50">
+              <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
+                <div className="bg-[#0369a1] text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#0369a1]/50">
                   1
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step1Title")}</h3>
@@ -245,8 +243,8 @@ export const Landing = () => {
 
             {/* Step 2 */}
             <div className="relative">
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
-                <div className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-cyan-500/50">
+              <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
+                <div className="bg-[#0369a1] text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#0369a1]/50">
                   2
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step2Title")}</h3>
@@ -258,8 +256,8 @@ export const Landing = () => {
 
             {/* Step 3 */}
             <div className="relative">
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-blue-500/50">
+              <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-2xl text-center relative z-10 transition-colors duration-300">
+                <div className="bg-[#0369a1] text-white w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#0369a1]/50">
                   3
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("landing.step3Title")}</h3>
@@ -298,14 +296,14 @@ export const Landing = () => {
               { name: t("landing.exercise3Title"), desc: t("landing.exercise3Subtitle") },
               { name: t("landing.exercise4Title"), desc: t("landing.exercise4Subtitle") },
             ].map((exercise, idx) => (
-              <div key={idx} className="group bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-800 hover:border-teal-500/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-300 cursor-pointer">
+              <div key={idx} className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-[#0369a1]/50 p-8 rounded-2xl hover:shadow-2xl hover:shadow-[#0369a1]/20 transition-all duration-300 cursor-pointer">
                 <div className="flex items-center gap-4 mb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{exercise.name}</h3>
                     <p className="text-gray-600 dark:text-gray-400">{exercise.desc}</p>
                   </div>
                 </div>
-                <div className="flex items-center text-teal-500 dark:text-teal-400 font-semibold group-hover:translate-x-2 transition-transform">
+                <div className="flex items-center text-[#0369a1] dark:text-blue-600 font-semibold group-hover:translate-x-2 transition-transform">
                   {t("landing.findOutMore")} →
                 </div>
               </div>
@@ -317,12 +315,11 @@ export const Landing = () => {
       {/* CTA Section */}
       <section 
         ref={ctaRef}
-        className={`py-32 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-black dark:to-gray-900 relative overflow-hidden transition-all duration-700 ${
+        className={`py-32 bg-gray-50 dark:bg-gray-900 relative overflow-hidden transition-all duration-700 ${
           isCtaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         {/* Background Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15),transparent_70%)]"></div>
         
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
@@ -333,7 +330,7 @@ export const Landing = () => {
           </p>
           <button
             onClick={handleGetStarted}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-10 py-5 rounded-xl font-bold text-xl transition shadow-2xl shadow-teal-500/40 hover:shadow-teal-500/60 transform hover:scale-105"
+            className="inline-flex items-center gap-2 bg-[#0369a1] hover:bg-[#0284c7] text-white px-10 py-5 rounded-xl font-bold text-xl transition shadow-2xl shadow-[#0369a1]/40 hover:shadow-[#0369a1]/60 transform hover:scale-105"
           >
             {t("landing.ctaButton")}
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

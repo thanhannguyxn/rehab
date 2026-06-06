@@ -1,13 +1,13 @@
-# 🚀 Tối Ưu Hóa Hiệu Suất Nhận Diện Cảm Xúc
+# Tối Ưu Hóa Hiệu Suất Nhận Diện Cảm Xúc
 
-## 📊 **Vấn Đề Ban Đầu**
+## **Vấn Đề Ban Đầu**
 Tính năng nhận diện cảm xúc realtime gây lag cho hệ thống do:
 - Xử lý MediaPipe Face Mesh mỗi frame (25-30 FPS)
 - Độ phân giải frame cao (640x480 hoặc lớn hơn)
 - Thuật toán cảm xúc phức tạp chạy liên tục
 - Thiếu cache và optimization
 
-## ⚡ **Các Tối Ưu Hóa Đã Thực Hiện**
+## **Các Tối Ưu Hóa Đã Thực Hiện**
 
 ### 1. **Giảm Tần Suất Xử Lý (Frame Skipping)**
 ```python
@@ -51,7 +51,7 @@ if face_result:
 
 #### **3 Chế Độ Hiệu Suất:**
 
-**🎯 High Accuracy (Chính xác cao)**
+**High Accuracy (Chính xác cao)**
 ```python
 FaceMesh(
     max_num_faces=1,
@@ -62,7 +62,7 @@ FaceMesh(
 emotion_process_interval = 8  # Chậm hơn
 ```
 
-**⚖️ Balanced (Cân bằng - Mặc định)**
+**Balanced (Cân bằng - Mặc định)**
 ```python
 FaceMesh(
     max_num_faces=1,
@@ -73,7 +73,7 @@ FaceMesh(
 emotion_process_interval = 5  # Vừa phải
 ```
 
-**⚡ High Speed (Tốc độ cao)**
+**High Speed (Tốc độ cao)**
 ```python
 FaceMesh(
     max_num_faces=1,
@@ -87,10 +87,10 @@ emotion_process_interval = 3  # Nhanh nhất
 ### 5. **User Controls**
 
 #### **Frontend Controls:**
-- ✅ Toggle BẬT/TẮT nhận diện cảm xúc
-- ✅ Chọn chế độ hiệu suất (High Speed/Balanced/High Accuracy)
-- ✅ Lưu preferences vào localStorage
-- ✅ Real-time switching không cần restart
+- Toggle BẬT/TẮT nhận diện cảm xúc
+- Chọn chế độ hiệu suất (High Speed/Balanced/High Accuracy)
+- Lưu preferences vào localStorage
+- Real-time switching không cần restart
 
 #### **Backend API:**
 ```python
@@ -107,7 +107,7 @@ emotion_process_interval = 3  # Nhanh nhất
 }
 ```
 
-## 📈 **Kết Quả Đo Lường**
+## **Kết Quả Đo Lường**
 
 ### **Trước Tối Ưu:**
 - Frame processing: ~25-30 FPS
@@ -123,32 +123,32 @@ emotion_process_interval = 3  # Nhanh nhất
 | **Balanced** | 320x240 | Mỗi 5 frames | ~80% | Ít |
 | **High Accuracy** | 320x240 | Mỗi 8 frames | ~75% | Chấp nhận được |
 
-## 🎯 **Khuyến Nghị Sử Dụng**
+## **Khuyến Nghị Sử Dụng**
 
-### **Chế độ High Speed (⚡)**
+### **Chế độ High Speed ()**
 - **Khi nào**: Máy yếu, cần tốc độ tối đa
 - **Trade-off**: Ít chính xác hơn, có thể miss một số cảm xúc
 - **Phù hợp**: Demo, máy cũ, laptop văn phòng
 
-### **Chế độ Balanced (⚖️) - Khuyến nghị**
+### **Chế độ Balanced () - Khuyến nghị**
 - **Khi nào**: Sử dụng hàng ngày
 - **Trade-off**: Cân bằng tốt giữa tốc độ và độ chính xác
 - **Phù hợp**: Hầu hết người dùng
 
-### **Chế độ High Accuracy (🎯)**
+### **Chế độ High Accuracy ()**
 - **Khi nào**: Cần độ chính xác cao, máy mạnh
 - **Trade-off**: Chậm hơn, cần CPU tốt
 - **Phù hợp**: Nghiên cứu, máy gaming/workstation
 
-## 🔧 **Cách Sử Dụng**
+## **Cách Sử Dụng**
 
 ### **Trong Ứng Dụng:**
 1. Vào trang **Exercise**
-2. Click **"😊 Nhận diện cảm xúc: BẬT"** để bật/tắt
+2. Click **"Nhận diện cảm xúc: BẬT"** để bật/tắt
 3. Khi bật, chọn **"Chế độ hiệu suất"**:
-   - ⚡ Tốc độ cao (ít chính xác)
-   - ⚖️ Cân bằng (khuyên dùng)
-   - 🎯 Chính xác cao (chậm hơn)
+   - Tốc độ cao (ít chính xác)
+   - Cân bằng (khuyên dùng)
+   - Chính xác cao (chậm hơn)
 4. Cài đặt được lưu tự động
 
 ### **Kiểm Tra Hiệu Suất:**
@@ -156,7 +156,7 @@ emotion_process_interval = 3  # Nhanh nhất
 - Quan sát **CPU usage** khi exercise
 - So sánh trước/sau khi bật emotion tracking
 
-## 🚨 **Lưu Ý Quan Trọng**
+## **Lưu Ý Quan Trọng**
 
 ### **Không Nên:**
 - Dùng High Accuracy trên máy yếu (< 4GB RAM, CPU cũ)
@@ -173,13 +173,13 @@ emotion_process_interval = 3  # Nhanh nhất
 - **Không chính xác**: Chuyển sang Balanced hoặc High Accuracy
 - **Không hoạt động**: Check browser cho phép camera
 
-## 📱 **Tương Thích**
+## **Tương Thích**
 
 ### **Browsers:**
-- ✅ Chrome (khuyến nghị)
-- ✅ Firefox
-- ✅ Edge
-- ⚠️ Safari (có thể chậm hơn)
+- Chrome (khuyến nghị)
+- Firefox
+- Edge
+- Safari (có thể chậm hơn)
 
 ### **Hardware:**
 - **Minimum**: 4GB RAM, integrated graphics

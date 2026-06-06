@@ -2,6 +2,83 @@ import axios from 'axios';
 import type { LoginResponse, Exercise, Session, Patient, ErrorAnalyticsResponse } from './types';
 import { API_URL } from './config';
 
+// ─── In-memory access token storage ──────────────────────────────────────────
+// Never stored in localStorage/sessionStorage — lives only in JS heap.
+// Cleared automatically on page refresh; re-populated by the silent refresh on mount.
+
+let _accessToken: string | null = null;
+
+export const setAccessToken = (token: string | null) => { _accessToken = token; };
+export const getAccessToken = () => _accessToken;
+
+// ─── Axios instance ───────────────────────────────────────────────────────────
+
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true, // send HttpOnly refresh-token cookie on every request
+});
+
+api.interceptors.request.use((config) => {
+  if (_accessToken) {
+    config.headers.Authorization = `Bearer ${_accessToken}`;
+  }
+  return config;
+});
+
+// ─── 401 → silent refresh → retry ────────────────────────────────────────────
+
+let _isRefreshing = false;
+let _refreshQueue: ((token: string) => void)[] = [];
+
+const _flushQueue = (token: string) => {
+  _refreshQueue.forEach((cb) => cb(token));
+  _refreshQueue = [];
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const original = error.config;
+
+    // Only retry once, and never retry the refresh endpoint itself
+    const isRefreshEndpoint = original?.url?.includes('/auth/refresh');
+    if (error.response?.status !== 401 || original?._retry || isRefreshEndpoint) {
+      return Promise.reject(error);
+    }
+
+    if (_isRefreshing) {
+      // Another request already triggered a refresh — queue this one
+      return new Promise((resolve) => {
+        _refreshQueue.push((token) => {
+          original.headers.Authorization = `Bearer ${token}`;
+          resolve(api(original));
+        });
+      });
+    }
+
+    original._retry = true;
+    _isRefreshing = true;
+
+    try {
+      const { data } = await api.post<LoginResponse>('/auth/refresh');
+      setAccessToken(data.access_token);
+      _flushQueue(data.access_token);
+      original.headers.Authorization = `Bearer ${data.access_token}`;
+      return api(original);
+    } catch (refreshError) {
+      setAccessToken(null);
+      _refreshQueue = [];
+      // Notify AuthContext to clear user state
+      window.dispatchEvent(new Event('auth:logout'));
+      return Promise.reject(refreshError);
+    } finally {
+      _isRefreshing = false;
+    }
+  },
+);
+
+// ─── Response types ───────────────────────────────────────────────────────────
+
 interface PatientChatResponse {
   reply: string;
   safety_escalation: boolean;
@@ -29,36 +106,15 @@ export interface ChatHistoryEntry {
   metadata?: Record<string, unknown>;
 }
 
-// Get token from sessionStorage
-const getToken = () => sessionStorage.getItem('token');
-
-// Create axios instance with auth
-const api = axios.create({
-  baseURL: API_URL,
-});
-
-// Add token to requests automatically
-api.interceptors.request.use((config) => {
-  const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// ============= AUTH APIs =============
+// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export const authAPI = {
   async login(username: string, password: string, role: string): Promise<LoginResponse> {
-    const response = await axios.post(`${API_URL}/auth/login`, {
-      username,
-      password,
-      role,
-    });
-    return response.data;
+    const { data } = await api.post<LoginResponse>('/auth/login', { username, password, role });
+    return data;
   },
 
-  async register(data: {
+  async register(payload: {
     username: string;
     password: string;
     full_name: string;
@@ -66,126 +122,208 @@ export const authAPI = {
     gender?: string;
     role?: string;
   }): Promise<LoginResponse> {
-    const response = await axios.post(`${API_URL}/auth/register`, data);
-    return response.data;
+    const { data } = await api.post<LoginResponse>('/auth/register', payload);
+    return data;
+  },
+
+  async refreshToken(): Promise<LoginResponse> {
+    const { data } = await api.post<LoginResponse>('/auth/refresh');
+    return data;
+  },
+
+  async logoutUser(): Promise<void> {
+    await api.post('/auth/logout');
+  },
+
+  async createPatient(payload: {
+    full_name: string;
+    username: string;
+    email?: string;
+    age?: number;
+    gender?: string;
+    height_cm?: number;
+    weight_kg?: number;
+    injury_type?: string;
+    medical_conditions?: string;
+    mobility_level?: string;
+    pain_level?: number;
+    doctor_notes?: string;
+  }): Promise<{ user: Patient; plain_password: string; email_sent: boolean }> {
+    const { data } = await api.post('/auth/create-patient', payload);
+    return data;
   },
 };
 
-// ============= EXERCISE APIs =============
+// ─── Exercises ────────────────────────────────────────────────────────────────
 
 export const exerciseAPI = {
   async getExercises(): Promise<{ exercises: Exercise[] }> {
-    const response = await api.get('/exercises');
-    return response.data;
+    const { data } = await api.get('/exercises');
+    return data;
   },
 };
 
-// ============= SESSION APIs =============
+// ─── Sessions ─────────────────────────────────────────────────────────────────
 
 export const sessionAPI = {
   async startSession(exerciseName: string): Promise<{ session_id: number }> {
-    const response = await api.post('/sessions/start', null, {
+    const { data } = await api.post('/sessions/start', null, {
       params: { exercise_name: exerciseName },
     });
-    return response.data;
+    return data;
   },
 
   async endSession(sessionId: number): Promise<Session> {
-    const response = await api.post(`/sessions/${sessionId}/end`);
-    return response.data;
+    const { data } = await api.post(`/sessions/${sessionId}/end`);
+    return data;
   },
 
-  async getMyHistory(limit: number = 20): Promise<{ sessions: Session[] }> {
-    const response = await api.get('/sessions/my-history', {
-      params: { limit },
-    });
-    return response.data;
+  async getMyHistory(limit = 20): Promise<{ sessions: Session[] }> {
+    const { data } = await api.get('/sessions/my-history', { params: { limit } });
+    return data;
   },
 
   async getErrorAnalytics(): Promise<ErrorAnalyticsResponse> {
-    const response = await api.get('/sessions/error-analytics');
-    return response.data;
+    const { data } = await api.get('/sessions/error-analytics');
+    return data;
   },
 };
 
-// ============= DOCTOR APIs =============
+// ─── Doctor ───────────────────────────────────────────────────────────────────
 
 export const doctorAPI = {
   async getPatients(): Promise<{ patients: Patient[] }> {
-    const response = await api.get('/doctor/patients');
-    return response.data;
+    const { data } = await api.get('/doctor/patients');
+    return data;
   },
 
-  async getPatientHistory(
-    patientId: number,
-    limit: number = 20
-  ): Promise<{ sessions: Session[] }> {
-    const response = await api.get(`/doctor/patient/${patientId}/history`, {
-      params: { limit },
-    });
-    return response.data;
+  async getPatientHistory(patientId: number, limit = 20): Promise<{ sessions: Session[] }> {
+    const { data } = await api.get(`/doctor/patient/${patientId}/history`, { params: { limit } });
+    return data;
   },
 
   async getPatientErrorAnalytics(patientId: number): Promise<ErrorAnalyticsResponse> {
-    const response = await api.get(`/doctor/patient/${patientId}/error-analytics`);
-    return response.data;
+    const { data } = await api.get(`/doctor/patient/${patientId}/error-analytics`);
+    return data;
   },
 };
 
-// ============= AGENT APIs =============
+// ─── Exercise management (doctor) ─────────────────────────────────────────────
+
+export const exerciseManagementAPI = {
+  async getPendingList(): Promise<{ pending_exercises: unknown[] }> {
+    const { data } = await api.get('/doctor/exercises/pending');
+    return data;
+  },
+
+  async getApprovedList(): Promise<{ exercises: unknown[] }> {
+    const { data } = await api.get('/doctor/exercises');
+    return data;
+  },
+
+  async upload(file: File): Promise<unknown> {
+    const form = new FormData();
+    form.append('file', file);
+    const { data } = await api.post('/doctor/exercises/upload', form);
+    return data;
+  },
+
+  async updateExercise(id: string, payload: unknown): Promise<unknown> {
+    const { data } = await api.put(`/doctor/exercises/${id}`, payload);
+    return data;
+  },
+
+  async deleteExercise(id: string): Promise<unknown> {
+    const { data } = await api.delete(`/doctor/exercises/${id}`);
+    return data;
+  },
+
+  async getPendingDetail(id: string): Promise<unknown> {
+    const { data } = await api.get(`/doctor/exercises/pending/${id}`);
+    return data;
+  },
+
+  async updatePending(id: string, payload: unknown): Promise<unknown> {
+    const { data } = await api.put(`/doctor/exercises/pending/${id}`, payload);
+    return data;
+  },
+
+  async approve(id: string): Promise<unknown> {
+    const { data } = await api.post(`/doctor/exercises/approve/${id}`);
+    return data;
+  },
+
+  async reanalyze(id: string): Promise<unknown> {
+    const { data } = await api.post(`/doctor/exercises/reanalyze/${id}`);
+    return data;
+  },
+
+  async deletePending(id: string): Promise<unknown> {
+    const { data } = await api.delete(`/doctor/exercises/pending/${id}`);
+    return data;
+  },
+};
+
+// ─── Profile ──────────────────────────────────────────────────────────────────
+
+export const profileAPI = {
+  async getMe(): Promise<Record<string, unknown>> {
+    const { data } = await api.get('/profile/me');
+    return data;
+  },
+
+  async update(payload: Record<string, unknown>): Promise<Record<string, unknown>> {
+    const { data } = await api.post('/profile/update', payload);
+    return data;
+  },
+
+  async getPersonalizedParams(exerciseType: string): Promise<Record<string, unknown>> {
+    const { data } = await api.post('/personalized-params', { exercise_type: exerciseType });
+    return data;
+  },
+};
+
+// ─── Agent / Chat ─────────────────────────────────────────────────────────────
 
 export const agentAPI = {
-  // --- Patient chat ---
   async patientChat(message: string, exerciseType?: string): Promise<PatientChatResponse> {
-    const response = await api.post('/agent/patient/chat', {
-      message,
-      exercise_type: exerciseType,
-    });
-    return response.data;
+    const { data } = await api.post('/agent/patient/chat', { message, exercise_type: exerciseType });
+    return data;
   },
 
   async getPatientChatHistory(limit = 40): Promise<ChatHistoryEntry[]> {
-    const response = await api.get('/agent/patient/history', {
-      params: { limit },
-    });
-    return response.data;
+    const { data } = await api.get('/agent/patient/history', { params: { limit } });
+    return data;
   },
 
   async clearPatientChatHistory(): Promise<{ ok: boolean; deleted: number }> {
-    const response = await api.delete('/agent/patient/history');
-    return response.data;
+    const { data } = await api.delete('/agent/patient/history');
+    return data;
   },
 
-  // --- Doctor chat ---
   async doctorChat(message: string, patientId?: number): Promise<DoctorChatResponse> {
-    const response = await api.post('/agent/doctor/chat', {
-      message,
-      patient_id: patientId,
-    });
-    return response.data;
+    const { data } = await api.post('/agent/doctor/chat', { message, patient_id: patientId });
+    return data;
   },
 
   async getDoctorChatHistory(limit = 40): Promise<ChatHistoryEntry[]> {
-    const response = await api.get('/agent/doctor/history', {
-      params: { limit },
-    });
-    return response.data;
+    const { data } = await api.get('/agent/doctor/history', { params: { limit } });
+    return data;
   },
 
   async clearDoctorChatHistory(): Promise<{ ok: boolean; deleted: number }> {
-    const response = await api.delete('/agent/doctor/history');
-    return response.data;
+    const { data } = await api.delete('/agent/doctor/history');
+    return data;
   },
 
-  // --- Notifications / Schedules ---
   async getPatientNotifications(): Promise<{ notifications: PatientScheduleNotification[] }> {
-    const response = await api.get('/agent/patient/notifications');
-    return response.data;
+    const { data } = await api.get('/agent/patient/notifications');
+    return data;
   },
 
   async markPatientNotificationRead(scheduleId: number): Promise<{ ok: boolean }> {
-    const response = await api.post(`/agent/patient/notifications/${scheduleId}/read`);
-    return response.data;
+    const { data } = await api.post(`/agent/patient/notifications/${scheduleId}/read`);
+    return data;
   },
 
   async getPatientSchedules(): Promise<{
@@ -199,10 +337,9 @@ export const agentAPI = {
       created_at: string;
     }>;
   }> {
-    const response = await api.get('/agent/patient/schedules');
-    return response.data;
+    const { data } = await api.get('/agent/patient/schedules');
+    return data;
   },
 };
 
-// Export default api instance for custom calls
 export default api;

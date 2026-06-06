@@ -55,7 +55,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
     if (accuracy >= 60) {
       return {
         text: t("sessionCard.performance.average"),
-        className: 'bg-blue-400 text-blue-900'
+        className: 'bg-blue-600 text-[#075985]'
       };
     }
     return {
@@ -114,21 +114,21 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
 
       {/* Main Stats */}
       <div className="grid grid-cols-4 gap-3 mb-4">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-lg text-center">
+        <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center">
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.totalReps")}</p>
-          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{session.total_reps}</p>
+          <p className="text-2xl font-bold text-[#0284c7] dark:text-blue-600">{session.total_reps}</p>
         </div>
-        <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-lg text-center">
+        <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center">
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.correctReps")}</p>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400">{session.correct_reps}</p>
         </div>
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-lg text-center">
+        <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center">
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.duration")}</p>
           <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
             {formatDuration(session.duration_seconds)}
           </p>
         </div>
-        <div className="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30 p-4 rounded-lg text-center">
+        <div className="bg-blue-50 dark:bg-[#075985]/30 p-4 rounded-lg text-center">
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t("sessionCard.stats.accuracy")}</p>
           <p className={`text-2xl font-bold ${getAccuracyColor(session.accuracy)}`}>
             {session.accuracy.toFixed(1)}%
@@ -138,7 +138,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
 
       {/* Top 3 Errors */}
       {top3Errors.length > 0 && (
-        <div className="mb-4 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+        <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
             <span>{t("sessionCard.errors.title")}</span>
           </p>
@@ -189,7 +189,7 @@ export const SessionCard = ({ session, previousSession }: SessionCardProps) => {
 
       {/* Comparison with Previous Session */}
       {comparison && (
-        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
             <span>{t("sessionCard.comparison.title")}</span>
           </p>

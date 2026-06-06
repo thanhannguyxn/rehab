@@ -1,6 +1,6 @@
 # Sessions router
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends, Request
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func
 from datetime import datetime
 from typing import Optional
@@ -173,15 +173,16 @@ async def end_session(request: Request, session_id: int, background_tasks: Backg
 @router.get("/my-history")
 @limiter.limit("30/minute")
 async def get_my_history(request: Request, limit: int = 50, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
-    sessions_query = db.query(DBSession).filter(
+    sessions_query = db.query(DBSession).options(
+        selectinload(DBSession.errors)
+    ).filter(
         DBSession.patient_id == current_user['user_id']
     ).order_by(DBSession.start_time.desc()).limit(limit).all()
 
     sessions = []
     for session in sessions_query:
-        # Get errors for this session
-        errors = db.query(SessionError).filter(SessionError.session_id == session.id).all()
-        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'displayname': e.error_name, 'count': e.count, 'severity': e.severity} for e in errors]
+        # Get errors for this session using preloaded relationship
+        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'displayname': e.error_name, 'count': e.count, 'severity': e.severity} for e in session.errors]
 
         sessions.append({
             'id': session.id,

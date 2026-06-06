@@ -15,7 +15,7 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#0284c7] mx-auto"></div>
           <p className="mt-4 text-xl text-gray-600">{t("patientDashboard.loading")}</p>
         </div>
       </div>

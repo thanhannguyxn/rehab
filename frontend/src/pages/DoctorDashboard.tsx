@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useDebounce } from 'use-debounce';
 import { useAuth } from '../context/AuthContext';
 import { doctorAPI } from '../utils/api';
 import { PatientCard } from '../components/PatientCard';
+import { CreatePatientModal, SuccessCredentialsPopup } from '../components/CreatePatientModal';
 import type { Patient } from '../types';
 import { useTranslation } from 'react-i18next';
 import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton';
@@ -10,47 +13,62 @@ import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton
 export const DoctorDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const { data, isLoading, refetch: loadPatients } = useQuery<{ patients: Patient[] }>({
+    queryKey: ['doctor-patients'],
+    queryFn: () => doctorAPI.getPatients()
+  });
+
+  const patients: Patient[] = data?.patients || [];
+
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [successData, setSuccessData] = useState<Parameters<typeof SuccessCredentialsPopup>[0]['data'] | null>(null);
+
   // Pagination and Search states
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const { t, i18n } = useTranslation();
 
-  useEffect(() => {
-    loadPatients();
-  }, []);
-
-  // Filter patients based on search term
-  const filteredPatients = patients.filter(patient =>
-    patient.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    patient.username?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter patients based on debounced search term
+  const filteredPatients = useMemo(() => {
+    if (!debouncedSearchTerm) return patients;
+    const term = debouncedSearchTerm.toLowerCase();
+    return patients.filter((patient: Patient) =>
+      patient.full_name?.toLowerCase().includes(term) || 
+      patient.username?.toLowerCase().includes(term)
+    );
+  }, [patients, debouncedSearchTerm]);
 
   // Load more logic
-  const currentPatients = filteredPatients.slice(0, visibleCount);
+  const currentPatients = useMemo(() => {
+    return filteredPatients.slice(0, visibleCount);
+  }, [filteredPatients, visibleCount]);
 
   const handleLoadMore = () => {
     setVisibleCount(prev => prev + 6);
   };
 
   // Reset to initial count when search term changes
-  useEffect(() => {
+  useMemo(() => {
     setVisibleCount(6);
-  }, [searchTerm]);
+  }, [debouncedSearchTerm]);
 
-  const loadPatients = async () => {
-    try {
-      const data = await doctorAPI.getPatients();
-      setPatients(data.patients);
-    } catch (error) {
-      console.error('Failed to load patients:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Memoize heavy stats calculations
+  const todaySessionsCount = useMemo(() => {
+    const today = new Date().toDateString();
+    return patients.filter((p: Patient) => {
+      if (!p.last_session) return false;
+      return new Date(p.last_session.date).toDateString() === today;
+    }).length;
+  }, [patients]);
+
+  const avgAccuracy = useMemo(() => {
+    const patientsWithSessions = patients.filter((p: Patient) => p.last_session);
+    if (patientsWithSessions.length === 0) return '0';
+    const sum = patientsWithSessions.reduce((acc: number, p: Patient) => acc + (p.last_session?.accuracy || 0), 0);
+    return (sum / patientsWithSessions.length).toFixed(1);
+  }, [patients]);
 
   const handleLogout = () => {
     logout();
@@ -58,21 +76,22 @@ export const DoctorDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-200">
+    <>
+      <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-200">
       <div className="max-w-6xl mx-auto p-6">
-        {/* Exercise Management Links */}
+        {/* Action buttons */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <button
             onClick={() => navigate('/exercise-management')}
-            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+            className="bg-[#0369a1] hover:bg-[#0284c7] text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
           >
             <span>Quản Lý Bài Tập</span>
           </button>
           <button
-            onClick={() => navigate('/exercise-management')}
-            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+            onClick={() => setShowCreateModal(true)}
+            className="bg-[#0369a1] hover:bg-[#0284c7] text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
           >
-            <span>Thêm Bài Tập Mới</span>
+            <span>Tạo Tài Khoản Bệnh Nhân</span>
           </button>
         </div>
 
@@ -80,31 +99,18 @@ export const DoctorDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
             <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.totalPatients")}</p>
-            <p className="text-5xl font-bold text-blue-600 dark:text-blue-400">{patients.length}</p>
+            <p className="text-5xl font-bold text-[#0284c7] dark:text-blue-600">{patients.length}</p>
           </div>
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
             <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.todaySessions")}</p>
             <p className="text-5xl font-bold text-green-600 dark:text-green-400">
-              {patients.filter((p) => {
-                if (!p.last_session) return false;
-                const sessionDate = new Date(p.last_session.date);
-                const today = new Date();
-                return sessionDate.toDateString() === today.toDateString();
-              }).length}
+              {todaySessionsCount}
             </p>
           </div>
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center border dark:border-gray-800">
             <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("doctorDashboard.avgAccuracy")}</p>
             <p className="text-5xl font-bold text-purple-600 dark:text-purple-400">
-              {patients.filter((p) => p.last_session).length > 0
-                ? (
-                    patients
-                      .filter((p) => p.last_session)
-                      .reduce((sum, p) => sum + (p.last_session?.accuracy || 0), 0) /
-                    patients.filter((p) => p.last_session).length
-                  ).toFixed(1)
-                : '0'}
-              %
+              {avgAccuracy}%
             </p>
           </div>
         </div>
@@ -117,7 +123,7 @@ export const DoctorDashboard = () => {
               <input
                 type="text"
                 placeholder={t("doctorDashboard.searchPatients", i18n.language === 'vi' ? "Tìm kiếm bệnh nhân" : "Search patients")}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -145,7 +151,7 @@ export const DoctorDashboard = () => {
                 <div className="mt-8 flex justify-center">
                   <button
                     onClick={handleLoadMore}
-                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-medium transition-colors shadow-sm"
+                    className="px-6 py-3 rounded-lg bg-[#0369a1] hover:bg-[#0284c7] text-white font-medium transition-colors shadow-sm"
                   >
                     {t("doctorDashboard.loadMore", i18n.language === 'vi' ? "Xem thêm" : "Load more")}
                   </button>
@@ -156,5 +162,24 @@ export const DoctorDashboard = () => {
         </div>
       </div>
     </div>
+
+    {showCreateModal && (
+      <CreatePatientModal
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={(data) => {
+          setShowCreateModal(false);
+          setSuccessData(data);
+          loadPatients();
+        }}
+      />
+    )}
+
+    {successData && (
+      <SuccessCredentialsPopup
+        data={successData}
+        onClose={() => setSuccessData(null)}
+      />
+    )}
+    </>
   );
 };

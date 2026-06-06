@@ -1,6 +1,6 @@
-# 🚨 FIX LỖI NHẬN DIỆN KHUÔN MẶT & CHẠY HỆ THỐNG
+# FIX LỖI NHẬN DIỆN KHUÔN MẶT & CHẠY HỆ THỐNG
 
-## ⚠️ LỖI ĐÃ FIX
+## LỖI ĐÃ FIX
 
 ### Lỗi MediaPipe (Nhận Diện Khuôn Mặt & Tư Thế)
 
@@ -13,11 +13,11 @@ AttributeError: module 'mediapipe' has no attribute 'solutions'
 
 **Giải pháp**: Downgrade xuống MediaPipe 0.10.5 (có solutions API)
 
-✅ **ĐÃ FIX XONG** - Backend đã được cập nhật và chạy thành công!
+**ĐÃ FIX XONG** - Backend đã được cập nhật và chạy thành công!
 
 ---
 
-## 🚀 CÁCH CHẠY HỆ THỐNG
+## CÁCH CHẠY HỆ THỐNG
 
 ### Phương Án 1: Dùng Script Tự Động (KHUYẾN NGHỊ)
 
@@ -55,15 +55,15 @@ backend\start-with-fix.bat
 
 ---
 
-## 🌐 TRUY CẬP ỨNG DỤNG
+## TRUY CẬP ỨNG DỤNG
 
 Sau khi chạy xong:
 
-- **🖥️ Frontend**: http://localhost:3000 (hoặc 3002 nếu 3000 bị chiếm)
-- **📚 API Docs**: http://localhost:8000/docs
-- **🔌 WebSocket**: ws://localhost:8000
+- **Frontend**: http://localhost:3000 (hoặc 3002 nếu 3000 bị chiếm)
+- **API Docs**: http://localhost:8000/docs
+- **WebSocket**: ws://localhost:8000
 
-### 👥 Tài Khoản Demo
+### Tài Khoản Demo
 
 | Vai Trò    | Username  | Password   |
 |------------|-----------|------------|
@@ -72,7 +72,7 @@ Sau khi chạy xong:
 
 ---
 
-## 🔧 CHI TIẾT NHỮNG GÌ ĐÃ ĐƯỢC FIX
+## CHI TIẾT NHỮNG GÌ ĐÃ ĐƯỢC FIX
 
 ### 1. MediaPipe Version
 ```bash
@@ -81,23 +81,23 @@ mediapipe==0.10.5  # (trước đây: 0.10.33)
 ```
 
 ### 2. Face Service
-- ✅ `services/face_service.py` - Hoạt động với mediapipe 0.10.5
-- ✅ Nhận diện cảm xúc: đau, mệt, vui, tập trung
-- ✅ Calibration tự động trong 30 frames đầu
+- `services/face_service.py` - Hoạt động với mediapipe 0.10.5
+- Nhận diện cảm xúc: đau, mệt, vui, tập trung
+- Calibration tự động trong 30 frames đầu
 
 ### 3. Pose Service
-- ✅ `services/pose_service.py` - Hoạt động với mediapipe 0.10.5
-- ✅ Nhận diện tư thế và đếm số lần tập
-- ✅ Tính góc cử động
+- `services/pose_service.py` - Hoạt động với mediapipe 0.10.5
+- Nhận diện tư thế và đếm số lần tập
+- Tính góc cử động
 
 ### 4. Database
-- ✅ MySQL connection thành công
-- ✅ Migration đã chạy
-- ✅ Tables đã được tạo
+- MySQL connection thành công
+- Migration đã chạy
+- Tables đã được tạo
 
 ---
 
-## 🧪 KIỂM TRA HỆ THỐNG
+## KIỂM TRA HỆ THỐNG
 
 ### Test Backend API:
 ```bash
@@ -114,7 +114,7 @@ python -c "from services.face_service import face_service; from services.pose_se
 
 ---
 
-## ❌ CÁC LỖI CÓ THỂ GẶP VÀ CÁCH FIX
+## CÁC LỖI CÓ THỂ GẶP VÀ CÁCH FIX
 
 ### Lỗi 1: Port 8000 đã được sử dụng
 
@@ -184,18 +184,18 @@ npm run dev
 
 ---
 
-## 📊 TÍNH NĂNG NHẬN DIỆN CẢM XÚC
+## TÍNH NĂNG NHẬN DIỆN CẢM XÚC
 
 Hệ thống đã được fix và có thể nhận diện:
 
 | Cảm xúc | Mô tả | Độ chính xác |
 |---------|-------|--------------|
-| 😊 HAPPY | Mắt mở rộng + miệng cười | Cao |
-| 😐 NEUTRAL | Khuôn mặt bình thường | Cao |
-| 😣 PAIN | Nhíu mày + mắt nhắm + miệng cong xuống | Trung bình |
-| 😓 STRUGGLING | Mắt hơi nhắm + nhíu mày | Trung bình |
-| 😴 TIRED | Mắt lơ đãng + chán nản | Trung bình |
-| 🎯 FOCUSED | Nhíu mày nhẹ + tập trung | Trung bình |
+| HAPPY | Mắt mở rộng + miệng cười | Cao |
+| NEUTRAL | Khuôn mặt bình thường | Cao |
+| PAIN | Nhíu mày + mắt nhắm + miệng cong xuống | Trung bình |
+| STRUGGLING | Mắt hơi nhắm + nhíu mày | Trung bình |
+| TIRED | Mắt lơ đãng + chán nản | Trung bình |
+| FOCUSED | Nhíu mày nhẹ + tập trung | Trung bình |
 
 ### Calibration
 - Hệ thống tự động calibrate trong 30 frames đầu
@@ -204,7 +204,7 @@ Hệ thống đã được fix và có thể nhận diện:
 
 ---
 
-## 🎯 KIỂM TRA CHỨC NĂNG
+## KIỂM TRA CHỨC NĂNG
 
 ### 1. Đăng Nhập
 - Vào http://localhost:3000 (hoặc port frontend đang chạy)
@@ -214,14 +214,14 @@ Hệ thống đã được fix và có thể nhận diện:
 - Vào trang Exercise Session
 - Bật camera
 - Hệ thống sẽ hiển thị:
-  - ✅ Pose landmarks (xương khớp)
-  - ✅ Face mesh (lưới khuôn mặt)
-  - ✅ Emotion state (trạng thái cảm xúc)
-  - ✅ Pain/Fatigue level (mức độ đau/mệt)
+  - Pose landmarks (xương khớp)
+  - Face mesh (lưới khuôn mặt)
+  - Emotion state (trạng thái cảm xúc)
+  - Pain/Fatigue level (mức độ đau/mệt)
 
 ---
 
-## 📞 HỖ TRỢ THÊM
+## HỖ TRỢ THÊM
 
 Nếu vẫn gặp lỗi:
 
@@ -243,4 +243,4 @@ npm run dev > frontend.log 2>&1
 
 ---
 
-**✅ HỆ THỐNG ĐÃ ĐƯỢC FIX VÀ SẴN SÀNG SỬ DỤNG!**
+**HỆ THỐNG ĐÃ ĐƯỢC FIX VÀ SẴN SÀNG SỬ DỤNG!**

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { agentAPI } from '../utils/api';
 
@@ -49,9 +49,13 @@ export function DoctorAssistantChat() {
   const [cooldownUntil, setCooldownUntil] = useState<number>(0);
   const [isClearing, setIsClearing] = useState(false);
 
+  const didFetch = useRef(false);
+
   // Load conversation history from backend on first open
   useEffect(() => {
     if (!isOpen) return;
+    if (didFetch.current) return;
+    didFetch.current = true;
 
     const loadHistory = async () => {
       try {
@@ -155,7 +159,7 @@ export function DoctorAssistantChat() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-40"
+        className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-[#0369a1] hover:bg-[#0284c7] text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-40"
         aria-label="Open Doctor Assistant"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +177,7 @@ export function DoctorAssistantChat() {
       )}
 
       {isOpen && (
-        <div className="fixed bottom-8 right-8 w-96 h-[620px] bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl flex flex-col z-50">
+        <div className="fixed bottom-8 right-8 w-96 h-[620px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl flex flex-col z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <div>
@@ -220,7 +224,7 @@ export function DoctorAssistantChat() {
                   className={`max-w-[80%] px-4 py-2 rounded-lg text-sm leading-relaxed ${
                     message.role === 'assistant'
                       ? 'bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
-                      : 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white'
+                      : 'bg-[#0369a1] text-white'
                   }`}
                 >
                   {message.role === 'assistant' ? renderMessageContent(message.content) : message.content}
@@ -244,7 +248,7 @@ export function DoctorAssistantChat() {
               onChange={(e) => setInput(e.target.value)}
               rows={3}
               placeholder="Ask about a patient trend, risk signal, or next clinical action..."
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
               disabled={isSending || remainingCooldown > 0}
             />
             <div className="flex items-center justify-between gap-2">
@@ -254,7 +258,7 @@ export function DoctorAssistantChat() {
               <button
                 type="submit"
                 disabled={!canSend}
-                className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-[#0369a1] hover:bg-[#0284c7] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 Send
               </button>

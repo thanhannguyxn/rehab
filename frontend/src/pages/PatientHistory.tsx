@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sessionAPI } from '../utils/api';
 import { SessionCard } from '../components/SessionCard';
@@ -19,7 +19,11 @@ export const PatientHistory = () => {
   const [sortBy, setSortBy] = useState<'date' | 'accuracy' | 'reps'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadHistory();
   }, []);
 
@@ -143,7 +147,7 @@ export const PatientHistory = () => {
         <div className="max-w-7xl mx-auto p-6">
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-2 bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-black text-[#0369a1] dark:text-blue-600 mb-2">
             {t("patientHistory.title")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
@@ -158,7 +162,7 @@ export const PatientHistory = () => {
             <p className="text-2xl text-gray-600 mb-6">{t("patientHistory.noSessions")}</p>
             <button
               onClick={() => navigate('/exercise')}
-              className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition"
+              className="bg-[#0284c7] hover:bg-[#0284c7] text-white font-bold py-4 px-8 rounded-lg text-xl transition"
             >
               {t("patientHistory.startExercise")}
             </button>
@@ -172,7 +176,7 @@ export const PatientHistory = () => {
             <HeatmapCalendar sessions={sessions} />
 
             {/* Weekly Goal Progress */}
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 p-6 rounded-xl shadow-lg mb-6">
+            <div className="bg-[#0369a1] dark:bg-[#0284c7] p-6 rounded-xl shadow-lg mb-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div>
@@ -192,7 +196,7 @@ export const PatientHistory = () => {
                   style={{ width: `${weeklyProgress.percentage}%` }}
                 >
                   {weeklyProgress.percentage >= 20 && (
-                    <span className="text-xs font-bold text-blue-600">
+                    <span className="text-xs font-bold text-[#0284c7]">
                       {weeklyProgress.percentage.toFixed(0)}%
                     </span>
                   )}
@@ -208,7 +212,7 @@ export const PatientHistory = () => {
             {/* Summary Stats with Streak */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
               {/* Streak Counter - Featured */}
-              <div className="bg-gradient-to-br from-orange-400 to-red-500 dark:from-orange-500 dark:to-red-600 p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
+              <div className="bg-orange-400 dark:bg-orange-500 p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
                 <p className="text-white text-lg mb-2 font-semibold">{t("patientHistory.streakTitle")}</p>
                 <div className="flex items-center justify-center gap-2">
                   <p className="text-6xl font-bold text-white">{currentStreak}</p>
@@ -220,7 +224,7 @@ export const PatientHistory = () => {
 
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
                 <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("patientHistory.totalSessions")}</p>
-                <p className="text-5xl font-bold text-teal-600 dark:text-teal-400">{sessions.length}</p>
+                <p className="text-5xl font-bold text-[#0284c7] dark:text-blue-600">{sessions.length}</p>
               </div>
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
                 <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">{t("patientHistory.avgAccuracy")}</p>
@@ -288,7 +292,7 @@ export const PatientHistory = () => {
                   <select
                     value={filterExercise}
                     onChange={(e) => setFilterExercise(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#0369a1] focus:border-transparent"
                   >
                     <option value="all">{t("patientHistory.filterAllExercises")}</option>
                     {exerciseTypes.map(exercise => (
@@ -300,7 +304,7 @@ export const PatientHistory = () => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'date' | 'accuracy' | 'reps')}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#0369a1] focus:border-transparent"
                   >
                     <option value="date">{t("patientHistory.sortByDate")}</option>
                     <option value="accuracy">{t("patientHistory.sortByAccuracy")}</option>

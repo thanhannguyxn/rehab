@@ -14,6 +14,11 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from limiter import limiter
 import os
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
+from settings import ALLOWED_ORIGINS, REDIS_URL
 
 if sys.platform == "win32":
     # Avoid noisy Proactor transport connection-reset tracebacks on Windows.
@@ -25,10 +30,11 @@ if sys.platform == "win32":
 from routers import auth, sessions, doctor, websocket, profile, general, agent
 
 # Import database initialization
-from db.connection import init_db
+from db.connection import init_db, migrate_db
 
 # Initialize database
 init_db()
+migrate_db()
 
 # Seed default exercises (ensures they exist)
 from seed_exercises import seed_exercises
@@ -37,6 +43,9 @@ seed_exercises()
 app = FastAPI(title="Rehab System V3")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Add GZip Middleware for compressing large JSON responses
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 if not os.path.exists('uploads'):
     os.makedirs('uploads')
@@ -49,7 +58,7 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,6 +73,11 @@ app.include_router(profile.router, prefix="/api/profile", tags=["profile"])
 app.include_router(agent.router, prefix="/api/agent", tags=["agent"])
 app.include_router(websocket.router, prefix="/ws/exercise", tags=["websocket"])
 
+@app.on_event("startup")
+async def startup():
+    redis = aioredis.from_url(REDIS_URL, encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="rehab-cache")
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)
@@ -72,7 +86,10 @@ if __name__ == "__main__":
     print("Server: http://localhost:8000")
     print("Docs: http://localhost:8000/docs")
     print("\nDefault Accounts:")
-    print("   Doctor: doctor1 / doctor123")
+    print("   Doctor:  doctor1  / doctor123")
+    print("   Doctor:  doctor2  / Doctor@2024")
     print("   Patient: patient1 / patient123")
+    print("   Patient: patient2 / patient123")
+    print("   Patient: patient3 / Patient@2024")
     print("=" * 60)
     uvicorn.run(app, host="0.0.0.0", port=8000)

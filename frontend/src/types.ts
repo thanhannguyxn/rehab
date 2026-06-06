@@ -42,7 +42,7 @@ export interface User {
 }
 
 export interface LoginResponse {
-  token: string;
+  access_token: string;
   user: User;
 }
 
@@ -78,7 +78,7 @@ export interface SessionSummary extends Session {
 // ============= PATIENT TYPES =============
 
 export interface Patient extends User {
-  created_at: string;
+  created_at?: string;
   last_session?: {
     date: string;
     exercise: string;

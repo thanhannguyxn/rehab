@@ -10,10 +10,12 @@ import json
 import shutil
 import threading
 
-from models import User, UserRole, DBSession, SessionError, PendingExercise, Exercise, ExerciseAngleRule, get_db
+from models import User, UserRole, DBSession, SessionError, SessionFrame, PendingExercise, Exercise, ExerciseAngleRule, get_db
 from routers.auth import get_current_user
 from limiter import limiter
 from db.connection import SessionLocal
+from fastapi_cache.decorator import cache
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 
@@ -177,19 +179,32 @@ async def get_my_patients(request: Request, current_user = Depends(get_current_u
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
-    patients_query = db.query(User).filter(
+    patients = db.query(User).filter(
         User.role == UserRole.patient,
         User.doctor_id == current_user['user_id']
     ).order_by(User.full_name).all()
 
-    patients = []
-    for patient in patients_query:
-        # Get latest session
-        last_session = db.query(DBSession).filter(
-            DBSession.patient_id == patient.id
-        ).order_by(DBSession.start_time.desc()).first()
+    patient_ids = [p.id for p in patients]
 
-        patients.append({
+    # Get latest session for each patient efficiently
+    subquery = db.query(
+        DBSession.patient_id,
+        func.max(DBSession.start_time).label('max_time')
+    ).filter(DBSession.patient_id.in_(patient_ids)).group_by(DBSession.patient_id).subquery()
+
+    latest_sessions_query = db.query(DBSession).join(
+        subquery,
+        (DBSession.patient_id == subquery.c.patient_id) & 
+        (DBSession.start_time == subquery.c.max_time)
+    ).all()
+
+    latest_sessions_map = {s.patient_id: s for s in latest_sessions_query}
+
+    result = []
+    for patient in patients:
+        last_session = latest_sessions_map.get(patient.id)
+
+        result.append({
             'id': patient.id,
             'username': patient.username,
             'full_name': patient.full_name,
@@ -203,7 +218,7 @@ async def get_my_patients(request: Request, current_user = Depends(get_current_u
             } if last_session else None
         })
 
-    return {'patients': patients}
+    return {'patients': result}
 
 @router.get("/patient/{patient_id}/history")
 @limiter.limit("30/minute")
@@ -211,15 +226,16 @@ async def get_patient_history(request: Request, patient_id: int, limit: int = 20
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
 
-    sessions_query = db.query(DBSession).filter(
+    sessions_query = db.query(DBSession).options(
+        selectinload(DBSession.errors)
+    ).filter(
         DBSession.patient_id == patient_id
     ).order_by(DBSession.start_time.desc()).limit(limit).all()
 
     sessions = []
     for session in sessions_query:
-        # Get errors
-        errors = db.query(SessionError).filter(SessionError.session_id == session.id).all()
-        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'count': e.count, 'severity': e.severity} for e in errors]
+        # Get errors using preloaded relationship to avoid N+1 query
+        error_list = [{'name': get_vietnamese_error_name(e.error_name), 'count': e.count, 'severity': e.severity} for e in session.errors]
 
         sessions.append({
             'id': session.id,
@@ -724,6 +740,7 @@ BASE_EXERCISE_ANGLES = {
 
 @router.get("/exercises")
 @limiter.limit("30/minute")
+@cache(expire=3600)  # Cache exercises for 1 hour to reduce DB load
 async def get_doctor_exercises(
     request: Request,
     current_user=Depends(get_current_user),

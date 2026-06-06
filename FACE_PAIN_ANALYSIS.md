@@ -12,28 +12,28 @@ Hệ thống phân tích biểu hiện đau và mệt mỏi trên khuôn mặt b
 [Browser / WebSocket]
         │
         │  Gửi frame ảnh liên tục (JPEG base64)
-        ▼
+        
 [backend/routers/websocket.py]
         │
         │  Lấy mẫu 1 frame mỗi 5 giây → buffer_frame(session_id, jpeg_bytes)
-        ▼
+        
 [backend/services/session_runtime.py]  ← _frame_buffers (in-memory)
         │
         │  Khi bệnh nhân bấm "Kết thúc buổi tập"
-        ▼
+        
 [POST /api/sessions/{id}/end]
         │
         │  pop_frame_buffer(session_id) → danh sách JPEG bytes
         │  background_tasks.add_task(analyze_session_pain, ...)
-        ▼
+        
 [backend/services/pain_analysis_task.py]  ← chạy nền, không block response
         │
         │  Với mỗi frame: asyncio.to_thread(analyzer.analyze_frame, bgr)
-        ▼
+        
 [backend/services/face_service.py]  ← FacePainAnalyzer (MediaPipe FaceMesh)
         │
         │  Ghi kết quả vào DB
-        ▼
+        
 [Bảng sessions]  avg_pain_level, avg_fatigue_level, predominant_emotion, ...
 ```
 
@@ -158,11 +158,11 @@ Giá trị `NULL` = chưa có dữ liệu (session cũ hoặc không phát hiệ
 
 | Badge | Điều kiện | Màu |
 |-------|-----------|-----|
-| 😊 Tốt | `pain < 0.35` và `fatigue < 0.50` | Xanh lá |
-| 😴 Mệt | `fatigue ≥ 0.50` | Vàng |
-| 😟 Khó chịu | `pain ≥ 0.35` | Cam |
-| 😣 Đau | `pain ≥ 0.55` | Đỏ |
-| 😐 Chưa có phân tích | `avg_pain_level = null` | Xám (nét đứt) |
+| Tốt | `pain < 0.35` và `fatigue < 0.50` | Xanh lá |
+| Mệt | `fatigue ≥ 0.50` | Vàng |
+| Khó chịu | `pain ≥ 0.35` | Cam |
+| Đau | `pain ≥ 0.55` | Đỏ |
+| Chưa có phân tích | `avg_pain_level = null` | Xám (nét đứt) |
 
 Dưới badge hiển thị thêm:
 - Số lần đau / số frame phân tích

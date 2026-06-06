@@ -23,6 +23,7 @@ class UpdateProfileRequest(BaseModel):
     medical_conditions: Optional[str] = None
     mobility_level: Optional[str] = None
     pain_level: Optional[int] = None
+    injury_type: Optional[str] = None
 
 class PersonalizedParamsRequest(BaseModel):
     exercise_type: str
@@ -71,6 +72,9 @@ async def update_profile(
 
     if profile_req.pain_level is not None:
         user.pain_level = profile_req.pain_level
+
+    if profile_req.injury_type is not None:
+        user.injury_type = profile_req.injury_type
 
     db.commit()
 

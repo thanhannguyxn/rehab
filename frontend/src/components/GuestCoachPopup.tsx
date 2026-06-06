@@ -76,7 +76,7 @@ export function GuestCoachPopup({ visible = true }: GuestCoachPopupProps) {
               </button>
               <button
                 onClick={() => navigate('/login-choice')}
-                className="rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold py-2.5 px-4 hover:from-teal-600 hover:to-cyan-600 transition-colors"
+                className="rounded-lg bg-[#0369a1] hover:bg-[#0284c7] text-white font-semibold py-2.5 px-4 transition-colors"
               >
                 Chat with Coach
               </button>
@@ -88,7 +88,7 @@ export function GuestCoachPopup({ visible = true }: GuestCoachPopupProps) {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Open guest coach"
-        className="relative h-14 w-14 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg hover:shadow-xl hover:from-teal-600 hover:to-cyan-600 transition-all duration-200 flex items-center justify-center"
+        className="relative h-14 w-14 rounded-full bg-[#0369a1] hover:bg-[#0284c7] text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
       >
         <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path

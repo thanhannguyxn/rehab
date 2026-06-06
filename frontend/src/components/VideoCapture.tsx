@@ -170,7 +170,7 @@ useEffect(() => {
   ];
 
   // Draw lines
-  ctx.strokeStyle = '#14b8a6'; // teal-500
+  ctx.strokeStyle = '#14b8a6'; // blue-500
   ctx.lineWidth = 4;
   ctx.shadowColor = 'rgba(20, 184, 166, 0.5)';
   ctx.shadowBlur = 8;
@@ -215,7 +215,7 @@ useEffect(() => {
           ))}
           <button
             onClick={() => window.location.reload()}
-            className="mt-2 px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition"
+            className="mt-2 px-6 py-2 bg-[#0284c7] hover:bg-[#0284c7] text-white font-semibold rounded-lg transition"
           >
             Tải lại trang
           </button>
@@ -235,7 +235,7 @@ useEffect(() => {
       {/* Main canvas (video frames) */}
       <canvas
         ref={canvasRef}
-        className="w-full rounded-lg shadow-2xl border-4 border-teal-600"
+        className="w-full rounded-lg shadow-2xl border-4 border-[#0284c7]"
         style={{ display: 'block' }}
       />
 

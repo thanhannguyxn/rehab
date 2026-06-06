@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { profileAPI } from '../utils/api';
 
 interface ProfileData {
   age: number | '';
@@ -8,6 +9,7 @@ interface ProfileData {
   height_cm: number | '';
   weight_kg: number | '';
   medical_conditions: string[];
+  injury_type: string;
   mobility_level: string;
   pain_level: number;
 }
@@ -26,6 +28,7 @@ export const UserProfile = () => {
     height_cm: '',
     weight_kg: '',
     medical_conditions: [],
+    injury_type: '',
     mobility_level: 'beginner',
     pain_level: 0,
   });
@@ -41,7 +44,22 @@ export const UserProfile = () => {
     { value: 'stroke_recovery', label: t("userProfile.medicalConditions.strokeRecovery") },
   ];
 
+  const injuryOptions = [
+    { value: '', label: 'Chọn loại chấn thương' },
+    { value: 'knee_pain', label: 'Đau khớp gối' },
+    { value: 'shoulder_pain', label: 'Đau vai' },
+    { value: 'back_pain', label: 'Đau lưng' },
+    { value: 'balance_issue', label: 'Vấn đề cân bằng' },
+    { value: 'hip_pain', label: 'Đau hông' },
+    { value: 'ankle_pain', label: 'Đau cổ chân' },
+    { value: 'other', label: 'Khác' },
+  ];
+
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadProfile();
   }, []);
 
@@ -56,25 +74,19 @@ export const UserProfile = () => {
 
   const loadProfile = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/profile/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+      const data = await profileAPI.getMe();
+      setProfile({
+        age: (data.age as number) || '',
+        gender: (data.gender as string) || 'male',
+        height_cm: (data.height_cm as number) || '',
+        weight_kg: (data.weight_kg as number) || '',
+        medical_conditions: data.medical_conditions
+          ? JSON.parse(data.medical_conditions as string)
+          : [],
+        injury_type: (data.injury_type as string) || '',
+        mobility_level: (data.mobility_level as string) || 'beginner',
+        pain_level: (data.pain_level as number) || 0,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfile({
-          age: data.age || '',
-          gender: data.gender || 'male',
-          height_cm: data.height_cm || '',
-          weight_kg: data.weight_kg || '',
-          medical_conditions: data.medical_conditions ? JSON.parse(data.medical_conditions) : [],
-          mobility_level: data.mobility_level || 'beginner',
-          pain_level: data.pain_level || 0,
-        });
-      }
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {
@@ -113,33 +125,18 @@ export const UserProfile = () => {
     setMessage(null);
 
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/profile/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          age: profile.age ? Number(profile.age) : null,
-          gender: profile.gender,
-          height_cm: profile.height_cm ? Number(profile.height_cm) : null,
-          weight_kg: profile.weight_kg ? Number(profile.weight_kg) : null,
-          medical_conditions: JSON.stringify(profile.medical_conditions),
-          mobility_level: profile.mobility_level,
-          pain_level: profile.pain_level,
-        }),
+      await profileAPI.update({
+        age: profile.age ? Number(profile.age) : null,
+        gender: profile.gender,
+        height_cm: profile.height_cm ? Number(profile.height_cm) : null,
+        weight_kg: profile.weight_kg ? Number(profile.weight_kg) : null,
+        medical_conditions: JSON.stringify(profile.medical_conditions),
+        injury_type: profile.injury_type,
+        mobility_level: profile.mobility_level,
+        pain_level: profile.pain_level,
       });
-
-      if (response.ok) {
-        await response.json();
-        setMessage({ type: 'success', text: t("userProfile.success") });
-        
-        // Reload profile to get BMI
-        await loadProfile();
-      } else {
-        setMessage({ type: 'error', text: t("userProfile.error") });
-      }
+      setMessage({ type: 'success', text: t("userProfile.success") });
+      await loadProfile();
     } catch (error) {
       console.error('Error updating profile:', error);
       setMessage({ type: 'error', text: t("userProfile.serverError") });
@@ -183,7 +180,7 @@ export const UserProfile = () => {
                 onClick={() => setActiveTab('basic')}
                 className={`flex-1 px-6 py-4 text-base font-semibold transition-colors ${
                   activeTab === 'basic'
-                    ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 bg-teal-50 dark:bg-teal-900/20'
+                    ? 'text-[#0284c7] dark:text-blue-600 border-b-2 border-[#0284c7] dark:border-blue-600 bg-blue-50 dark:bg-[#075985]/20'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
@@ -194,7 +191,7 @@ export const UserProfile = () => {
                 onClick={() => setActiveTab('medical')}
                 className={`flex-1 px-6 py-4 text-base font-semibold transition-colors ${
                   activeTab === 'medical'
-                    ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 bg-teal-50 dark:bg-teal-900/20'
+                    ? 'text-[#0284c7] dark:text-blue-600 border-b-2 border-[#0284c7] dark:border-blue-600 bg-blue-50 dark:bg-[#075985]/20'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
@@ -205,7 +202,7 @@ export const UserProfile = () => {
                 onClick={() => setActiveTab('mobility')}
                 className={`flex-1 px-6 py-4 text-base font-semibold transition-colors ${
                   activeTab === 'mobility'
-                    ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 bg-teal-50 dark:bg-teal-900/20'
+                    ? 'text-[#0284c7] dark:text-blue-600 border-b-2 border-[#0284c7] dark:border-blue-600 bg-blue-50 dark:bg-[#075985]/20'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
@@ -233,7 +230,7 @@ export const UserProfile = () => {
                   type="number"
                   value={profile.age}
                   onChange={(e) => setProfile({ ...profile, age: e.target.value ? Number(e.target.value) : '' })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0369a1] dark:focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={t("userProfile.placeholders.age")}
                   required
                   min="1"
@@ -249,7 +246,7 @@ export const UserProfile = () => {
                 <select
                   value={profile.gender}
                   onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0369a1] dark:focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   required
                 >
                   <option value="male">{t("userProfile.genderOptions.male")}</option>
@@ -267,7 +264,7 @@ export const UserProfile = () => {
                   type="number"
                   value={profile.height_cm}
                   onChange={(e) => setProfile({ ...profile, height_cm: e.target.value ? Number(e.target.value) : '' })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0369a1] dark:focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={t("userProfile.placeholders.height")}
                   required
                   min="100"
@@ -284,7 +281,7 @@ export const UserProfile = () => {
                   type="number"
                   value={profile.weight_kg}
                   onChange={(e) => setProfile({ ...profile, weight_kg: e.target.value ? Number(e.target.value) : '' })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0369a1] dark:focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={t("userProfile.placeholders.weight")}
                   required
                   min="20"
@@ -295,11 +292,11 @@ export const UserProfile = () => {
 
             {/* BMI Display */}
             {bmi && (
-              <div className="mt-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
+              <div className="mt-6 p-4 bg-blue-50 dark:bg-[#075985]/20 rounded-lg border border-blue-200 dark:border-[#075985]">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t("userProfile.bmi.label")}:</p>
-                    <p className="text-3xl font-bold text-teal-600 dark:text-teal-400">{bmi}</p>
+                    <p className="text-3xl font-bold text-[#0284c7] dark:text-blue-600">{bmi}</p>
                   </div>
                   {bmiCategory && (
                     <div className="text-right">
@@ -323,21 +320,40 @@ export const UserProfile = () => {
                   {t("userProfile.medicalSubtitle")}
                 </p>
 
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                Loại chấn thương
+              </label>
+              <select
+                value={profile.injury_type}
+                onChange={(e) => setProfile({ ...profile, injury_type: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0369a1] dark:focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                {injuryOptions.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-3 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Tình trạng bệnh lý
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {medicalOptions.map((option) => (
                 <label
                   key={option.value}
                   className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                     profile.medical_conditions.includes(option.value)
-                      ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-teal-300 dark:hover:border-teal-700'
+                      ? 'border-[#0369a1] bg-blue-50 dark:bg-[#075985]/20'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-[#0284c7]'
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={profile.medical_conditions.includes(option.value)}
                     onChange={() => handleMedicalConditionToggle(option.value)}
-                    className="w-5 h-5 text-teal-500 border-gray-300 rounded focus:ring-teal-500"
+                    className="w-5 h-5 text-[#0369a1] border-gray-300 rounded focus:ring-[#0369a1]"
                   />
                   <span className="text-gray-900 dark:text-white font-medium">{option.label}</span>
                 </label>
@@ -369,8 +385,8 @@ export const UserProfile = () => {
                       key={level.value}
                       className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                         profile.mobility_level === level.value
-                          ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/20'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-teal-300 dark:hover:border-teal-700'
+                          ? 'border-[#0369a1] bg-blue-50 dark:bg-[#075985]/20'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-[#0284c7]'
                       }`}
                     >
                       <input
@@ -393,7 +409,7 @@ export const UserProfile = () => {
               {/* Pain Level */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                  {t("userProfile.fields.painLevel")}: <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.pain_level}/10</span>
+                  {t("userProfile.fields.painLevel")}: <span className="text-2xl font-bold text-[#0284c7] dark:text-blue-600">{profile.pain_level}/10</span>
                 </label>
                 <input
                   type="range"
@@ -401,7 +417,7 @@ export const UserProfile = () => {
                   max="10"
                   value={profile.pain_level}
                   onChange={(e) => setProfile({ ...profile, pain_level: Number(e.target.value) })}
-                  className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
+                  className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#0369a1]"
                 />
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
                   <span>0 - {t("userProfile.painScale.none")}</span>
@@ -418,7 +434,7 @@ export const UserProfile = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition shadow-lg disabled:cursor-not-allowed"
+                className="flex-1 bg-[#0369a1] hover:bg-[#0284c7] disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-xl text-lg transition shadow-lg disabled:cursor-not-allowed"
               >
                 {saving ? t("userProfile.loading") : t("userProfile.save")}
               </button>

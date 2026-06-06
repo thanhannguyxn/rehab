@@ -34,7 +34,7 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
             {patient.age} {t("patientCard.age")} • {patient.gender}
           </p>
         </div>
-        <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold">
+        <div className="bg-blue-100 dark:bg-[#075985]/40 text-[#075985] dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold">
           {patient.username}
         </div>
       </div>

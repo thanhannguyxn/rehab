@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL, API_BASE_URL } from '../utils/config';
+import { API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
+import { exerciseManagementAPI } from '../utils/api';
 
 interface PendingExercise {
   id: number;
@@ -73,22 +74,19 @@ export const ExerciseManagement = () => {
   });
   const [saving, setSaving] = useState(false);
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadPendingExercises();
     loadApprovedExercises();
   }, []);
 
   const loadPendingExercises = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/pending`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPendingList(data.pending_exercises);
-      }
+      const data = await exerciseManagementAPI.getPendingList();
+      setPendingList(data.pending_exercises as PendingExercise[]);
     } catch (error) {
       console.error('Error loading pending exercises:', error);
     } finally {
@@ -98,15 +96,8 @@ export const ExerciseManagement = () => {
 
   const loadApprovedExercises = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setApprovedList(data.exercises);
-      }
+      const data = await exerciseManagementAPI.getApprovedList();
+      setApprovedList(data.exercises as ApprovedExercise[]);
     } catch (error) {
       console.error('Error loading approved exercises:', error);
     }
@@ -136,37 +127,17 @@ export const ExerciseManagement = () => {
     if (!selectedFile) return;
 
     setUploading(true);
-
     try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/upload`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        await response.json();
-        alert(t('exerciseManagement.alerts.uploadSuccess'));
-        setSelectedFile(null);
-        // Reset file input
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-        // Reload pending list
-        loadPendingExercises();
-        setActiveTab('pending');
-      } else {
-        const error = await response.json();
-        alert(error.detail || t('exerciseManagement.alerts.uploadFailed'));
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert(t('exerciseManagement.alerts.uploadError'));
+      await exerciseManagementAPI.upload(selectedFile);
+      alert(t('exerciseManagement.alerts.uploadSuccess'));
+      setSelectedFile(null);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      loadPendingExercises();
+      setActiveTab('pending');
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || t('exerciseManagement.alerts.uploadFailed'));
     } finally {
       setUploading(false);
     }
@@ -193,28 +164,14 @@ export const ExerciseManagement = () => {
 
     setSaving(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/${editingExercise.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(editForm)
-      });
-
-      if (response.ok) {
-        alert(t('exerciseManagement.alerts.updateSuccess'));
-        setEditModalOpen(false);
-        setEditingExercise(null);
-        loadApprovedExercises();
-      } else {
-        const error = await response.json();
-        alert(error.detail || t('exerciseManagement.alerts.updateError'));
-      }
-    } catch (error) {
-      console.error('Error saving:', error);
-      alert(t('exerciseManagement.alerts.updateError'));
+      await exerciseManagementAPI.updateExercise(editingExercise.id, editForm);
+      alert(t('exerciseManagement.alerts.updateSuccess'));
+      setEditModalOpen(false);
+      setEditingExercise(null);
+      loadApprovedExercises();
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || t('exerciseManagement.alerts.updateError'));
     } finally {
       setSaving(false);
     }
@@ -224,31 +181,21 @@ export const ExerciseManagement = () => {
     if (!window.confirm(t('exerciseManagement.deleteConfirm'))) return;
 
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/doctor/exercises/${exerciseId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        alert(t('exerciseManagement.deleteSuccess'));
-        loadApprovedExercises();
-      } else {
-        const error = await response.json();
-        alert(error.detail || t('exerciseManagement.alerts.deleteErrorTitle'));
-      }
-    } catch (error) {
-      console.error('Error deleting:', error);
-      alert(t('exerciseManagement.alerts.deleteErrorTitle'));
+      await exerciseManagementAPI.deleteExercise(exerciseId);
+      alert(t('exerciseManagement.deleteSuccess'));
+      loadApprovedExercises();
+    } catch (error: unknown) {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      alert(detail || t('exerciseManagement.alerts.deleteErrorTitle'));
     }
   };
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      'UPLOADING': 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
+      'UPLOADING': 'bg-blue-100 text-[#0284c7] dark:bg-[#0369a1]/20 dark:text-blue-600',
       'PROCESSING': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400',
       'PENDING': 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400',
-      'APPROVED': 'bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
+      'APPROVED': 'bg-blue-100 text-[#0284c7] dark:bg-[#0369a1]/20 dark:text-blue-600',
       'REJECTED': 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400',
       'ERROR': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
     };
@@ -301,7 +248,7 @@ export const ExerciseManagement = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-black bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-black text-[#0369a1]">
               {t('exerciseManagement.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
@@ -317,7 +264,7 @@ export const ExerciseManagement = () => {
         </div>
 
         {/* Upload Card */}
-        <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-8">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             {t('exerciseManagement.uploadCardTitle')}
           </h2>
@@ -342,7 +289,7 @@ export const ExerciseManagement = () => {
               <button
                 onClick={handleUpload}
                 disabled={!selectedFile || uploading}
-                className="w-full mt-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
+                className="w-full mt-4 bg-[#0369a1] hover:bg-[#0284c7] text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
               >
                 {uploading ? t('exerciseManagement.uploading') : t('exerciseManagement.uploadBtn')}
               </button>
@@ -385,7 +332,7 @@ export const ExerciseManagement = () => {
             onClick={() => setActiveTab('approved')}
             className={`px-6 py-3 rounded-lg font-bold transition ${
               activeTab === 'approved'
-                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg'
+                ? 'bg-[#0369a1] text-white shadow-lg'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
           >
@@ -395,7 +342,7 @@ export const ExerciseManagement = () => {
             onClick={() => setActiveTab('pending')}
             className={`px-6 py-3 rounded-lg font-bold transition ${
               activeTab === 'pending'
-                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg'
+                ? 'bg-[#0369a1] text-white shadow-lg'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
           >
@@ -405,14 +352,14 @@ export const ExerciseManagement = () => {
 
         {/* Approved Exercises Tab */}
         {activeTab === 'approved' && (
-          <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {t('exerciseManagement.listTitle')}
               </h2>
               <button
                 onClick={loadApprovedExercises}
-                className="text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-[#0284c7] dark:text-blue-600 hover:underline"
               >
                 {t('exerciseManagement.refresh')}
               </button>
@@ -439,7 +386,7 @@ export const ExerciseManagement = () => {
                             {exercise.name}
                           </h3>
                           {exercise.is_default && (
-                            <span className="px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 rounded-full text-xs font-semibold">
+                            <span className="px-2 py-1 bg-blue-100 text-[#0284c7] dark:bg-[#0369a1]/20 dark:text-blue-600 rounded-full text-xs font-semibold">
                               {t('exerciseManagement.defaultBadge')}
                             </span>
                           )}
@@ -458,7 +405,7 @@ export const ExerciseManagement = () => {
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                             <div>
                               <span className="text-gray-500 dark:text-gray-400">{t('exerciseManagement.typeLabel')}</span>
-                              <span className="ml-1 font-semibold text-teal-600 dark:text-teal-400">
+                              <span className="ml-1 font-semibold text-[#0284c7] dark:text-blue-600">
                                 {getBaseExerciseLabel(exercise.base_exercise_type)}
                               </span>
                             </div>
@@ -523,7 +470,7 @@ export const ExerciseManagement = () => {
                         <div className="flex gap-2 ml-4">
                           <button
                             onClick={() => openEditModal(exercise)}
-                            className="p-2 bg-blue-100 hover:bg-blue-200 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 text-blue-600 dark:text-blue-400 rounded-lg transition"
+                            className="p-2 bg-blue-100 hover:bg-blue-200 dark:bg-[#0369a1]/20 dark:hover:bg-[#0369a1]/30 text-[#0284c7] dark:text-blue-600 rounded-lg transition"
                             title="Chỉnh sửa"
                           >
                             {t('exerciseManagement.editBtn')}
@@ -547,14 +494,14 @@ export const ExerciseManagement = () => {
 
         {/* Pending Exercises Tab */}
         {activeTab === 'pending' && (
-          <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {t('exerciseManagement.pendingTitle')}
               </h2>
               <button
                 onClick={loadPendingExercises}
-                className="text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-[#0284c7] dark:text-blue-600 hover:underline"
               >
                 {t('exerciseManagement.refresh')}
               </button>
@@ -614,11 +561,11 @@ export const ExerciseManagement = () => {
                         </span>
                         <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full"
+                            className="bg-[#0369a1] h-2 rounded-full"
                             style={{ width: `${pending.confidence * 100}%` }}
                           />
                         </div>
-                        <span className="text-sm font-semibold text-teal-600 dark:text-teal-400">
+                        <span className="text-sm font-semibold text-[#0284c7] dark:text-blue-600">
                           {Math.round(pending.confidence * 100)}%
                         </span>
                       </div>
@@ -660,8 +607,8 @@ export const ExerciseManagement = () => {
               </div>
 
               {/* Angle Tracking Info (Read-only) */}
-              <div className="bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded-lg p-4 mb-6">
-                <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-400 mb-2">
+              <div className="bg-blue-50 dark:bg-[#075985]/30 border border-blue-200 dark:border-[#0369a1]/30 rounded-lg p-4 mb-6">
+                <h3 className="text-lg font-semibold text-[#0284c7] dark:text-blue-600 mb-2">
                   {t('exerciseManagement.angleInfoTitle')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -680,7 +627,7 @@ export const ExerciseManagement = () => {
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-teal-600 dark:text-teal-400 mt-2">
+                <p className="text-xs text-[#0284c7] dark:text-blue-600 mt-2">
                   {editingExercise.angle_tracking?.description}
                 </p>
               </div>
@@ -840,7 +787,7 @@ export const ExerciseManagement = () => {
                 <button
                   onClick={handleSaveEdit}
                   disabled={saving || !editForm.name}
-                  className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
+                  className="flex-1 bg-[#0369a1] hover:bg-[#0284c7] text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
                 >
                   {saving ? t('exerciseManagement.saving') : t('exerciseManagement.saveBtn')}
                 </button>

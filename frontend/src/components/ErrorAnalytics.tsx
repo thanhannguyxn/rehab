@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { sessionAPI, doctorAPI } from '../utils/api';
 import type { ExerciseErrorAnalytics } from '../utils/types';
@@ -14,7 +14,11 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadAnalytics();
   }, [patientId]);
 
@@ -40,7 +44,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("errorAnalytics.title")}</h3>
         <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0284c7]"></div>
         </div>
       </div>
     );
@@ -70,11 +74,11 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-4 rounded-lg shadow-lg border-2 border-teal-500">
+        <div className="bg-white p-4 rounded-lg shadow-lg border-2 border-[#0369a1]">
           <p className="font-bold text-gray-800 mb-2">{data.name}</p>
           <p className="text-orange-600 font-semibold">{t("errorAnalytics.tooltip.total")}: {data.value} {t("errorAnalytics.data.reps")}</p>
           <p className="text-amber-600 font-semibold">{t("errorAnalytics.tooltip.average")}: {data.avgValue} {t("errorAnalytics.data.rps")}</p>
-          <p className="text-teal-600 font-semibold">{t("errorAnalytics.labels.sessionCount")}: {data.sessions} {t("errorAnalytics.data.sessions")}</p>
+          <p className="text-[#0284c7] font-semibold">{t("errorAnalytics.labels.sessionCount")}: {data.sessions} {t("errorAnalytics.data.sessions")}</p>
         </div>
       );
     }
@@ -85,7 +89,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   const COLORS = ['#0d9488', '#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4'];
 
   return (
-    <div className="bg-gradient-to-br from-white to-teal-50 p-6 rounded-xl shadow-lg">
+    <div className="bg-white p-6 rounded-xl shadow-lg">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
         {t("errorAnalytics.commonErrors")}
       </h3>
@@ -98,8 +102,8 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
             onClick={() => setSelectedExercise(exercise.exercise_name)}
             className={`px-5 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-md ${
               selectedExercise === exercise.exercise_name
-                ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border-2 border-gray-200'
+                ? 'bg-[#0369a1] text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-blue-50 border-2 border-gray-200'
             }`}
           >
             {exercise.exercise_name}
@@ -228,7 +232,7 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">{t("errorAnalytics.labels.sessionCount")}:</span>
-                    <span className="font-bold text-xl text-teal-600">{error.session_count} {t("errorAnalytics.data.sessions")}</span>
+                    <span className="font-bold text-xl text-[#0284c7]">{error.session_count} {t("errorAnalytics.data.sessions")}</span>
                   </div>
                 </div>
               </div>

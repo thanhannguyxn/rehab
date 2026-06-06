@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VideoCapture } from '../components/VideoCapture';
 import { useWebSocket } from '../hooks/useWebSocket';
-import { exerciseAPI, sessionAPI } from '../utils/api';
+import { exerciseAPI, sessionAPI, profileAPI } from '../utils/api';
 import type { Exercise } from '../utils/types';
 import { AngleDisplay } from '../components/AngleDisplay';
 import { RelaxationPopup } from '../components/RelaxationPopup';
 import { VoiceSettings } from '../components/VoiceSettings';
+import { NewUserPopup } from '../components/NewUserPopup';
 import { voiceService, VoiceMessages } from '../utils/voiceService';
-import { API_URL, API_BASE_URL } from '../utils/config';
+import { API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
 
 interface PersonalizedParams {
@@ -35,11 +36,11 @@ export const ExercisePage = () => {
   const [loadingParams, setLoadingParams] = useState(false);
   const [showRelaxation, setShowRelaxation] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [showNewUserPopup, setShowNewUserPopup] = useState(false);
 
   const { t } = useTranslation();
 
   const currentExercise = exercises.find((ex) => ex.id === selectedExercise);
-  const selectedExerciseObj = currentExercise;
   const selectedTrackingType = currentExercise?.base_exercise_type || selectedExercise || 'squat';
 
   // Ưu tiên target_reps của bài do bác sĩ giao (is_default === false), sau đó đến AI, cuối cùng là mặc định
@@ -66,9 +67,25 @@ export const ExercisePage = () => {
     sessionId
   );
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadExercises();
+    checkNewUser();
   }, []);
+
+  const checkNewUser = async () => {
+    try {
+      const data = await sessionAPI.getMyHistory(1);
+      if (data.sessions.length === 0) {
+        setShowNewUserPopup(true);
+      }
+    } catch (error) {
+      console.error('Failed to check user history:', error);
+    }
+  };
 
   useEffect(() => {
     if (selectedExercise) {
@@ -93,25 +110,9 @@ export const ExercisePage = () => {
 
     setLoadingParams(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch(`${API_URL}/personalized-params`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ exercise_type: selectedTrackingType })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPersonalizedParams(data);
-      } else {
-        // If profile not set, params will be null
-        setPersonalizedParams(null);
-      }
-    } catch (error) {
-      console.error('Failed to load personalized params:', error);
+      const data = await profileAPI.getPersonalizedParams(selectedTrackingType);
+      setPersonalizedParams(data as unknown as PersonalizedParams);
+    } catch {
       setPersonalizedParams(null);
     } finally {
       setLoadingParams(false);
@@ -347,10 +348,10 @@ export const ExercisePage = () => {
     <>
       <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300">
         <div className="max-w-7xl mx-auto p-6">
-          <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-8 bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">{t("exercisePage.title")}</h1>
+          <h1 className="text-5xl font-black text-[#0369a1] dark:text-blue-600 mb-8">{t("exercisePage.title")}</h1>
 
           {/* Exercise Selection at Top */}
-          <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-6 transition-colors duration-300">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl mb-6 transition-colors duration-300">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t("exercisePage.selectExercise")}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -375,13 +376,13 @@ export const ExercisePage = () => {
                     disabled={isExercising}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
                       isSelected
-                        ? 'border-teal-500 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-500/20 dark:to-cyan-500/20 shadow-lg shadow-teal-500/20'
-                        : 'border-gray-300 dark:border-gray-700 hover:border-teal-400 dark:hover:border-teal-500/50 bg-white dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        ? 'border-[#0369a1] bg-blue-50 dark:bg-[#0369a1]/20 shadow-lg shadow-[#0369a1]/20'
+                        : 'border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-[#0369a1]/50 bg-white dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800'
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-xl ${isSelected ? 'bg-gradient-to-br from-teal-500 to-cyan-500' : 'bg-gray-300 dark:bg-gray-700'}`}>
+                        <div className={`p-2 rounded-xl ${isSelected ? 'bg-[#0369a1]' : 'bg-gray-300 dark:bg-gray-700'}`}>
                           {exercise.id === 'squat' || exercise.base_exercise_type === 'squat' ? (
                             <svg className={`w-6 h-6 ${isSelected ? 'text-white' : 'text-gray-700 dark:text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -404,7 +405,7 @@ export const ExercisePage = () => {
                         </div>
                       </div>
                       {isSelected && (
-                        <div className="text-teal-500 dark:text-teal-400">
+                        <div className="text-[#0369a1] dark:text-blue-600">
                           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
@@ -467,8 +468,8 @@ export const ExercisePage = () => {
                 disabled={!selectedExercise}
                 className={`w-full py-6 rounded-xl font-bold text-2xl transition shadow-2xl ${
                   isExercising
-                    ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-red-500/50'
-                    : 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-teal-500/50'
+                    ? 'bg-red-600 hover:bg-red-700 text-white shadow-red-500/50'
+                    : 'bg-[#0369a1] hover:bg-[#0284c7] text-white shadow-[#0369a1]/50'
                 } disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105`}
               >
                 {isExercising ? '⏸ ' + t("exercisePage.pause") : '▶ ' + t("exercisePage.start")}
@@ -485,7 +486,7 @@ export const ExercisePage = () => {
               {isExercising && (
                 <button
                   onClick={handleReset}
-                  className="w-full bg-gray-200 dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 hover:bg-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold py-4 rounded-xl text-xl transition shadow-lg"
+                  className="w-full bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold py-4 rounded-xl text-xl transition shadow-lg"
                 >
                   {t("exercisePage.reset")}
                 </button>
@@ -493,7 +494,7 @@ export const ExercisePage = () => {
 
               {/* Instructions Section */}
               {currentExercise && (
-                <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     {t("exercisePage.instructions")}: {currentExercise.name}
                   </h2>
@@ -518,7 +519,7 @@ export const ExercisePage = () => {
               )}
 
               {/* Exercise instruction video */}
-              <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t("exercisePage.videoGuide")}</h3>
                 <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300 overflow-hidden">
                   {selectedExercise && currentExercise ? (
@@ -603,7 +604,7 @@ export const ExercisePage = () => {
             <div className="lg:col-span-1">
               <div className="sticky top-6 space-y-3">
                 {/* Exercise Progress Section */}
-                <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-xl transition-colors duration-300 z-10">
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-xl transition-colors duration-300 z-10">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t("exercisePage.progress")}</h2>
                   <p className="text-xs text-gray-700 dark:text-gray-400 mb-3">{t("exercisePage.target")}: {targetReps} {t("exercisePage.targetReps")} {currentExercise?.duration_seconds ? Math.floor(currentExercise.duration_seconds / 60) : 3} {t("exercisePage.minute")}</p>
                   
@@ -615,7 +616,7 @@ export const ExercisePage = () => {
                           ? 'bg-red-600 border-red-500'
                           : remainingTime <= 30
                           ? 'bg-orange-600 border-orange-500'
-                          : 'bg-gradient-to-br from-blue-600 to-blue-700 border-blue-500'
+                          : 'bg-[#0284c7] border-[#0369a1]'
                       } text-white shadow-lg`}>
                         <div className="text-2xl font-bold mb-0.5 text-center">
                           {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
@@ -627,8 +628,8 @@ export const ExercisePage = () => {
                     {/* Rep counter */}
                     <div className={`w-full px-4 py-3 rounded-lg border-2 ${
                       isExercising && analysisData?.rep_count && analysisData.rep_count >= targetReps
-                        ? 'bg-gradient-to-br from-green-600 to-green-700 border-green-500'
-                        : 'bg-gradient-to-br from-teal-600 to-cyan-600 border-teal-500'
+                        ? 'bg-green-600 border-green-500'
+                        : 'bg-[#0284c7] border-[#0369a1]'
                     } text-white shadow-lg`}>
                       <div className="text-3xl font-bold mb-0.5 text-center">
                         {isExercising ? analysisData?.rep_count || 0 : 0} / {targetReps}
@@ -655,20 +656,20 @@ export const ExercisePage = () => {
 
               {/* Personalized Parameters Card */}
               {personalizedParams && (
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border border-blue-300 dark:border-blue-500/30 rounded-xl p-5 shadow-lg">
+                <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5 shadow-lg">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t("exercisePage.personalized")}</h3>
 
                   {/* Difficulty Score */}
                   <div className="mb-4 p-3 bg-blue-100 dark:bg-black/30 rounded-lg border border-blue-200 dark:border-transparent">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-base text-gray-700 dark:text-gray-300">{t("exercisePage.difficulty")}:</span>
-                      <span className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                      <span className="text-lg font-bold text-[#0284c7] dark:text-blue-600">
                         {Math.round(personalizedParams.difficulty_score * 100)}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2.5">
                       <div
-                        className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2.5 rounded-full transition-all duration-500"
+                        className="bg-[#0369a1] h-2.5 rounded-full transition-all duration-500"
                         style={{ width: `${personalizedParams.difficulty_score * 100}%` }}
                       ></div>
                     </div>
@@ -698,7 +699,7 @@ export const ExercisePage = () => {
 
                   {/* Warnings */}
                   {personalizedParams.warnings.length > 0 && (
-                    <div className="mb-3 p-3 bg-orange-50 dark:bg-orange-900/30 border border-orange-300 dark:border-orange-500/30 rounded-lg">
+                    <div className="mb-3 p-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
                       <span className="font-semibold text-orange-700 dark:text-orange-300 text-base block mb-2">{t("exercisePage.warnings")}:</span>
                       <ul className="space-y-1.5 text-sm text-orange-800 dark:text-orange-200">
                         {personalizedParams.warnings.map((warning, idx) => (
@@ -710,7 +711,7 @@ export const ExercisePage = () => {
 
                   {/* Recommendations */}
                   {personalizedParams.recommendations.length > 0 && (
-                    <div className="p-3 bg-green-50 dark:bg-green-900/30 border border-green-300 dark:border-green-500/30 rounded-lg">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
                       <span className="font-semibold text-green-700 dark:text-green-300 text-base block mb-2">{t("exercisePage.recommendations")}:</span>
                       <ul className="space-y-1.5 text-sm text-green-800 dark:text-green-200">
                         {personalizedParams.recommendations.map((rec, idx) => (
@@ -724,7 +725,7 @@ export const ExercisePage = () => {
 
               {/* Profile prompt if no personalized params */}
               {!loadingParams && !personalizedParams && (
-                <div className="p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-xl">
+                <div className="p-3 bg-gray-800/30 border border-gray-700/30 rounded-xl">
                   <p className="text-xs text-yellow-200 font-semibold mb-1">
                     {t("exercisePage.noProfile")}
                   </p>
@@ -733,7 +734,7 @@ export const ExercisePage = () => {
                   </p>
                   <button
                     onClick={() => navigate('/profile')}
-                    className="text-[10px] bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded-lg transition"
+                    className="text-[10px] bg-[#0284c7] hover:bg-[#0284c7] text-white px-2 py-1 rounded-lg transition"
                   >
                     {t("exercisePage.fillNow")} →
                   </button>
@@ -747,7 +748,7 @@ export const ExercisePage = () => {
         {/* Session Summary Modal Popup */}
         {showSummary && sessionSummary && (
           <div className="fixed inset-0 bg-black/80 dark:bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-8">
                 {/* Header with completion status */}
                 <div className="text-center mb-8">
@@ -776,15 +777,15 @@ export const ExercisePage = () => {
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="bg-blue-50 dark:bg-gradient-to-br dark:from-blue-500/20 dark:to-blue-600/20 border border-blue-200 dark:border-blue-500/30 p-4 rounded-xl text-center">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-xl text-center">
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.totalReps")}</p>
-                    <p className="text-3xl font-bold text-blue-500 dark:text-blue-400">{sessionSummary?.total_reps}</p>
+                    <p className="text-3xl font-bold text-[#0369a1] dark:text-blue-600">{sessionSummary?.total_reps}</p>
                   </div>
-                  <div className="bg-green-50 dark:bg-gradient-to-br dark:from-green-500/20 dark:to-green-600/20 border border-green-200 dark:border-green-500/30 p-4 rounded-xl text-center">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-xl text-center">
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.correctReps")}</p>
                     <p className="text-3xl font-bold text-green-500 dark:text-green-400">{sessionSummary?.correct_reps}</p>
                   </div>
-                  <div className="bg-purple-50 dark:bg-gradient-to-br dark:from-purple-500/20 dark:to-purple-600/20 border border-purple-200 dark:border-purple-500/30 p-4 rounded-xl text-center">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-xl text-center">
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{t("exercisePage.duration")}</p>
                     <p className="text-3xl font-bold text-purple-500 dark:text-purple-400">
                       {Math.floor(sessionSummary?.duration_seconds / 60)}:{(sessionSummary?.duration_seconds % 60).toString().padStart(2, '0')}
@@ -794,7 +795,7 @@ export const ExercisePage = () => {
 
                 {/* Common Errors */}
                 {sessionSummary?.common_errors && Object.keys(sessionSummary.common_errors).length > 0 && (
-                  <div className="bg-orange-50 dark:bg-gradient-to-br dark:from-orange-500/20 dark:to-red-500/20 border border-orange-200 dark:border-orange-500/30 rounded-xl p-4 mb-6">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-6">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t("exercisePage.commonErrors")}</h3>
                     <div className="space-y-2">
                       {Object.entries(sessionSummary.common_errors).map(([error, data]: [string, any]) => (
@@ -815,7 +816,7 @@ export const ExercisePage = () => {
                       setSessionId(null);
                       setCompletionStatus(null);
                     }}
-                    className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl text-xl transition shadow-2xl shadow-teal-500/30"
+                    className="flex-1 bg-[#0369a1] hover:bg-[#0284c7] text-white font-bold py-4 px-6 rounded-xl text-xl transition shadow-2xl shadow-[#0369a1]/30"
                   >
                     {t("exercisePage.continue")}
                   </button>
@@ -848,6 +849,12 @@ export const ExercisePage = () => {
         <VoiceSettings
           isOpen={showVoiceSettings}
           onClose={() => setShowVoiceSettings(false)}
+        />
+
+        {/* New User Instruction Popup */}
+        <NewUserPopup
+          isOpen={showNewUserPopup}
+          onClose={() => setShowNewUserPopup(false)}
         />
       </div>
     </>

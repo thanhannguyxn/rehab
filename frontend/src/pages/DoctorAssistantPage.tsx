@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
@@ -70,7 +70,11 @@ export function DoctorAssistantPage() {
     [patients, selectedPatientId]
   );
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     const loadPatients = async () => {
       try {
         const data = await doctorAPI.getPatients();
@@ -159,7 +163,7 @@ export function DoctorAssistantPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8">
         <div className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Doctor Assistant</h1>
@@ -194,8 +198,8 @@ export function DoctorAssistantPage() {
                       onClick={() => choosePatient(patient.id)}
                       className={`w-full text-left p-3 rounded-xl border transition ${
                         active
-                          ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 dark:border-indigo-500'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600'
+                          ? 'border-blue-600 bg-blue-50 dark:bg-[#075985]/20 dark:border-[#0369a1]'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-[#0284c7]'
                       }`}
                     >
                       <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{patient.full_name}</p>
@@ -247,7 +251,7 @@ export function DoctorAssistantPage() {
                     className={`max-w-[85%] px-4 py-3 rounded-xl text-sm leading-relaxed ${
                       message.role === 'assistant'
                         ? 'bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
-                        : 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white'
+                        : 'bg-[#0369a1] text-white'
                     }`}
                   >
                     {message.role === 'assistant' ? renderMessageContent(message.content) : message.content}
@@ -270,7 +274,7 @@ export function DoctorAssistantPage() {
                 onChange={(e) => setInput(e.target.value)}
                 rows={3}
                 placeholder="Ask the assistant to analyze patient trends, risk signals, or recommend next rehab actions..."
-                className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
                 disabled={isSending}
               />
 
@@ -279,7 +283,7 @@ export function DoctorAssistantPage() {
                 <button
                   type="submit"
                   disabled={isSending || !input.trim()}
-                  className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#0369a1] hover:bg-[#0284c7] text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Send
                 </button>

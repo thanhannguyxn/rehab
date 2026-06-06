@@ -127,7 +127,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
                   cy="96"
                   r="88"
                   stroke="currentColor"
-                  className="text-teal-500 dark:text-cyan-500 transition-all duration-1000"
+                  className="text-[#0369a1] dark:text-cyan-500 transition-all duration-1000"
                   strokeWidth="8"
                   fill="none"
                   strokeDasharray={`${2 * Math.PI * 88}`}
@@ -152,16 +152,16 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
             <div className="flex items-center gap-6">
               {/* Breathing bubble - smaller */}
               <div className="relative w-24 h-24 flex-shrink-0">
-                <div className="absolute inset-0 bg-teal-500/50 dark:bg-cyan-500/50 rounded-full animate-breatheBubble shadow-xl blur-sm"></div>
-                <div className="absolute inset-2 bg-teal-400/70 dark:bg-cyan-400/70 rounded-full animate-breatheBubble shadow-lg" style={{ animationDelay: '0.15s' }}></div>
-                <div className="absolute inset-4 bg-teal-300/80 dark:bg-cyan-300/80 rounded-full animate-breatheBubble" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-0 bg-[#0369a1]/50 dark:bg-[#0369a1]/50 rounded-full animate-breatheBubble shadow-xl blur-sm"></div>
+                <div className="absolute inset-2 bg-blue-600/70 dark:bg-blue-600/70 rounded-full animate-breatheBubble shadow-lg" style={{ animationDelay: '0.15s' }}></div>
+                <div className="absolute inset-4 bg-blue-300/80 dark:bg-blue-300/80 rounded-full animate-breatheBubble" style={{ animationDelay: '0.3s' }}></div>
                 <div className="absolute inset-6 bg-white/90 dark:bg-gray-800/90 rounded-full animate-breatheBubble" style={{ animationDelay: '0.45s' }}></div>
               </div>
               
               {/* Breathing instruction */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
+                  <div className="w-1.5 h-1.5 bg-[#0369a1] dark:bg-[#0369a1] rounded-full animate-breatheText"></div>
                   <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
                     {t("relaxation.breathing.inhale")}
                   </span>
@@ -169,7 +169,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
                   <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
                     {t("relaxation.breathing.exhale")}
                   </span>
-                  <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
+                  <div className="w-1.5 h-1.5 bg-[#0369a1] dark:bg-[#0369a1] rounded-full animate-breatheText"></div>
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 text-xs font-light tracking-widest uppercase">
                   {t("relaxation.breathing.rhythm")}
@@ -184,19 +184,19 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
               </h3>
               <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
                 <li className="flex items-start gap-2">
-                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span className="text-[#0369a1] dark:text-cyan-500">•</span>
                   <span>{t("relaxation.tips.tip1")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span className="text-[#0369a1] dark:text-cyan-500">•</span>
                   <span>{t("relaxation.tips.tip2")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span className="text-[#0369a1] dark:text-cyan-500">•</span>
                   <span>{t("relaxation.tips.tip3")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span className="text-[#0369a1] dark:text-cyan-500">•</span>
                   <span>{t("relaxation.tips.tip4")}</span>
                 </li>
               </ul>
@@ -215,7 +215,7 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
           
           <button
             onClick={skipRelaxation}
-            className="flex-1 bg-teal-500 dark:bg-cyan-500 hover:bg-teal-600 dark:hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2"
+            className="flex-1 bg-[#0369a1] dark:bg-[#0369a1] hover:bg-[#0284c7] dark:hover:bg-[#0284c7] text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2"
           >
             {t("relaxation.controls.skip")}
           </button>

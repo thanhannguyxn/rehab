@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 
+const BACKEND = process.env.VITE_BACKEND_URL || 'http://localhost:8000'
+const BACKEND_WS = BACKEND.replace(/^http/, 'ws')
+
 export default defineConfig({
   plugins: [react(), basicSsl()],
   test: {
@@ -21,15 +24,26 @@ export default defineConfig({
       clientPort: 443
     },
     proxy: {
+      // All /api/* requests go through the proxy → cookies stay on same-scheme origin
       '/api': {
-        target: 'http://backend:8000',
-        changeOrigin: true
+        target: BACKEND,
+        changeOrigin: true,
       },
+      // Static assets (exercise demo videos, thumbnails)
+      '/static': {
+        target: BACKEND,
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: BACKEND,
+        changeOrigin: true,
+      },
+      // WebSocket — exercise pose analysis
       '/ws': {
-        target: 'ws://backend:8000',
+        target: BACKEND_WS,
         ws: true,
-        secure: false
-      }
-    }
-  }
+        secure: false,
+      },
+    },
+  },
 })

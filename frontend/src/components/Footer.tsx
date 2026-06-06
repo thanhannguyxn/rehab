@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               <a 
                 href="mailto:support@rehab-system.com" 
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-[#0284c7] dark:hover:text-blue-600 transition-colors"
               >
                 HN 2.2
               </a>
@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               <a 
                 href="tel:+84123456789" 
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-[#0284c7] dark:hover:text-blue-600 transition-colors"
               >
                 {t("footer.contact")}
               </a>

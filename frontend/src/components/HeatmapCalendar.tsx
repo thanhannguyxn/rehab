@@ -194,11 +194,11 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
       };
     } else if (percentage >= 60) {
       return {
-        stroke: 'stroke-teal-500',
-        fill: 'fill-teal-500',
-        bg: 'bg-teal-50 dark:bg-teal-900/20',
-        border: 'border-teal-200 dark:border-teal-800',
-        text: 'text-teal-700 dark:text-teal-300',
+        stroke: 'stroke-[#0369a1]',
+        fill: 'fill-[#0369a1]',
+        bg: 'bg-blue-50 dark:bg-[#075985]/20',
+        border: 'border-blue-200 dark:border-[#075985]',
+        text: 'text-[#0284c7] dark:text-blue-300',
       };
     } else if (percentage >= 40) {
       return {
@@ -275,7 +275,7 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
             <select
               value={timeFilter}
               onChange={(e) => setTimeFilter(e.target.value as TimeFilter)}
-              className="appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base font-medium rounded-lg px-4 py-2.5 pr-10 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-colors"
+              className="appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base font-medium rounded-lg px-4 py-2.5 pr-10 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-[#0369a1] transition-colors"
             >
               <option value="7days">{t("heatmap.filters.last7Days")}</option>
               <option value="1month">{t("heatmap.filters.last1Month")}</option>
@@ -291,19 +291,19 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-4 rounded-lg border border-teal-200 dark:border-teal-800">
+          <div className="bg-blue-50 dark:bg-[#075985]/20 p-4 rounded-lg border border-blue-200 dark:border-[#075985]">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
               {t("heatmap.stats.totalSessions")} {timeFilter !== 'all' && `(${getFilterLabel()})`}
             </div>
-            <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">{totalSessions}</div>
+            <div className="text-3xl font-bold text-[#0284c7] dark:text-blue-600">{totalSessions}</div>
           </div>
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
               {showDailyView ? t("heatmap.stats.averagePerDay") : t("heatmap.stats.averagePerWeek")}
             </div>
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{averagePerPeriod}</div>
+            <div className="text-3xl font-bold text-[#0284c7] dark:text-blue-600">{averagePerPeriod}</div>
           </div>
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">
               {showDailyView ? t("heatmap.stats.bestDay") : t("heatmap.stats.bestWeek")}
             </div>
@@ -420,8 +420,8 @@ export const HeatmapCalendar = ({ sessions }: HeatmapCalendarProps) => {
           <div className="w-4 h-4 bg-green-500 rounded-full"></div>
           <span className="text-gray-800 dark:text-gray-200 font-medium">≥{t("heatmap.legend.excellent")}</span>
         </div>
-        <div className="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 p-2 rounded-lg border border-teal-200 dark:border-teal-800">
-          <div className="w-4 h-4 bg-teal-500 rounded-full"></div>
+        <div className="flex items-center gap-2 bg-blue-50 dark:bg-[#075985]/20 p-2 rounded-lg border border-blue-200 dark:border-[#075985]">
+          <div className="w-4 h-4 bg-[#0369a1] rounded-full"></div>
           <span className="text-gray-800 dark:text-gray-200 font-medium">≥{t("heatmap.legend.good")}</span>
         </div>
         <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded-lg border border-yellow-200 dark:border-yellow-800">

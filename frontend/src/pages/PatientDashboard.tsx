@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { sessionAPI } from '../utils/api';
@@ -12,7 +12,11 @@ export const PatientDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
+  const didFetch = useRef(false);
+
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadRecentSessions();
   }, []);
 
@@ -47,7 +51,7 @@ export const PatientDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-blue-600 text-white p-6 shadow-lg">
+      <div className="bg-[#0284c7] text-white p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">{t("patientDashboard.greeting")}, {user?.full_name}!</h1>
@@ -55,7 +59,7 @@ export const PatientDashboard = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
+            className="bg-white text-[#0284c7] px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
           >
             {t("patientDashboard.logout")}
           </button>
@@ -68,7 +72,7 @@ export const PatientDashboard = () => {
         <div className="mb-8">
           <Link
             to="/exercise"
-            className="block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-2xl p-10 shadow-2xl transition-all transform hover:scale-105"
+            className="block bg-[#0284c7] hover:bg-[#0284c7] text-white rounded-2xl p-10 shadow-2xl transition-all transform hover:scale-105"
           >
             <div className="flex items-center justify-center">
               <svg className="w-16 h-16 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +88,7 @@ export const PatientDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <p className="text-gray-600 text-lg mb-2">{t("patientDashboard.totalSessions")}</p>
-            <p className="text-5xl font-bold text-blue-600">{recentSessions.length}</p>
+            <p className="text-5xl font-bold text-[#0284c7]">{recentSessions.length}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <p className="text-gray-600 text-lg mb-2">{t("patientDashboard.avgAccuracy")}</p>
@@ -108,7 +112,7 @@ export const PatientDashboard = () => {
             <h2 className="text-2xl font-bold text-gray-800">{t("patientDashboard.recentSessions")}</h2>
             <Link
               to="/history"
-              className="text-blue-600 hover:text-blue-700 font-semibold text-lg"
+              className="text-[#0284c7] hover:text-[#0284c7] font-semibold text-lg"
             >
               {t("patientDashboard.viewAll")} →
             </Link>

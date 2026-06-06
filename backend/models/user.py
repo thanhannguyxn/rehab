@@ -1,5 +1,5 @@
 # User model
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, Enum, CheckConstraint, Index
+from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, Enum, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
@@ -12,14 +12,9 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
-        if pwd_context.verify(plain_password, hashed_password):
-            return True
+        return pwd_context.verify(plain_password, hashed_password)
     except Exception:
-        pass
-    import hashlib
-    if hashed_password == hashlib.sha256(plain_password.encode()).hexdigest():
-        return True
-    return plain_password == hashed_password
+        return False
 
 class UserRole(enum.Enum):
     patient = "patient"
@@ -43,6 +38,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(255), unique=True, nullable=False)
+    email = Column(String(255), nullable=True)
     password_hash = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), nullable=False)
     full_name = Column(String(255))

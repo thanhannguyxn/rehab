@@ -1,6 +1,6 @@
 # Hướng Dẫn Setup và Chạy Hệ Thống AI Rehab
 
-## 📋 Mục Lục
+## Mục Lục
 1. [Yêu Cầu Hệ Thống](#yêu-cầu-hệ-thống)
 2. [Cài Đặt Nhanh](#cài-đặt-nhanh)
 3. [Cài Đặt Thủ Công Chi Tiết](#cài-đặt-thủ-công-chi-tiết)
@@ -8,7 +8,7 @@
 5. [Kiểm Tra Hệ Thống](#kiểm-tra-hệ-thống)
 6. [Chạy Bằng Docker](#chạy-bằng-docker)
 
-## 🖥️ Yêu Cầu Hệ Thống
+## Yêu Cầu Hệ Thống
 
 ### Phần Mềm Cần Thiết
 - **Python 3.10+** (khuyến nghị 3.11)
@@ -24,7 +24,7 @@ npm --version
 mysql --version
 ```
 
-## 🚀 Cài Đặt Nhanh (Khuyến Nghị)
+## Cài Đặt Nhanh (Khuyến Nghị)
 
 ### Bước 1: Tạo Database MySQL
 ```sql
@@ -54,7 +54,7 @@ start-frontend.bat
   - Bác sĩ: `doctor1` / `doctor123`
   - Bệnh nhân: `patient1` / `patient123`
 
-## 🔧 Cài Đặt Thủ Công Chi Tiết
+## Cài Đặt Thủ Công Chi Tiết
 
 ### Backend Setup
 
@@ -136,9 +136,9 @@ copy .env.example .env
 npm run dev
 ```
 
-## 🔥 Khắc Phục Lỗi Thường Gặp
+## Khắc Phục Lỗi Thường Gặp
 
-### ❌ Lỗi Backend
+### Lỗi Backend
 
 #### 1. Lỗi `ModuleNotFoundError: No module named 'xyz'`
 ```cmd
@@ -203,7 +203,7 @@ netstat -ano | findstr :8000
 taskkill /PID [PID_NUMBER] /F
 ```
 
-### ❌ Lỗi Frontend
+### Lỗi Frontend
 
 #### 1. Lỗi `npm install` Failed
 ```cmd
@@ -233,7 +233,7 @@ VITE_API_BASE_URL=http://localhost:8000
 VITE_WS_BASE_URL=ws://localhost:8000
 ```
 
-### ❌ Lỗi Chung
+### Lỗi Chung
 
 #### 1. Lỗi Permission (Windows)
 ```cmd
@@ -249,7 +249,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 python3 --version
 ```
 
-## ✅ Kiểm Tra Hệ Thống
+## Kiểm Tra Hệ Thống
 
 ### Kiểm Tra Backend Hoạt Động
 ```bash
@@ -276,7 +276,7 @@ with engine.connect() as conn:
 "
 ```
 
-## 🐳 Chạy Bằng Docker (Tùy Chọn)
+## Chạy Bằng Docker (Tùy Chọn)
 
 ### Yêu Cầu
 - Docker Desktop đã được cài đặt và đang chạy
@@ -293,7 +293,7 @@ docker-compose logs -f
 docker-compose down
 ```
 
-## 📝 Scripts Hữu Ích
+## Scripts Hữu Ích
 
 ### Tạo file `quick-start.bat`:
 ```batch
@@ -329,7 +329,7 @@ echo All processes stopped.
 pause
 ```
 
-## 🆘 Hỗ Trợ Thêm
+## Hỗ Trợ Thêm
 
 ### Nếu Vẫn Gặp Lỗi:
 

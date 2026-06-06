@@ -16,7 +16,6 @@ export const Login = () => {
 
   const isDoctor = role === 'doctor';
   const roleText = isDoctor ? t("login.doctorAccount") : t("login.patientAccount");
-  const roleColor = isDoctor ? 'green' : 'teal';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,18 +40,18 @@ export const Login = () => {
           {/* Left side - Branding and Info */}
           <div className="flex flex-col justify-center space-y-6 border-r border-gray-200 dark:border-gray-700 pr-8">
             <div className="text-center md:text-left">
-              <div className={`bg-${roleColor}-100 dark:bg-${roleColor}-900/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-4`}>
+              <div className="bg-sky-100 dark:bg-sky-900/30 w-24 h-24 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-4">
                 {isDoctor ? (
-                  <svg className={`w-14 h-14 text-${roleColor}-600 dark:text-${roleColor}-400`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-14 h-14 text-[#0284c7] dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 ) : (
-                  <svg className={`w-14 h-14 text-${roleColor}-600 dark:text-${roleColor}-400`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-14 h-14 text-[#0284c7] dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 )}
               </div>
-              <h1 className={`text-4xl font-bold text-${roleColor}-600 dark:text-${roleColor}-400 mb-2`}>
+              <h1 className="text-4xl font-bold text-[#0284c7] dark:text-sky-400 mb-2">
                 {t("login.loginButton")} {roleText}
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-400">{t("login.systemName")}</p>
@@ -61,7 +60,7 @@ export const Login = () => {
             <div className="text-center md:text-left">
               <Link
                 to="/login-choice"
-                className="text-lg text-gray-600 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition inline-block"
+                className="text-lg text-gray-600 dark:text-gray-400 hover:text-[#0284c7] dark:hover:text-blue-600 transition inline-block"
               >
                 ← {t("login.switchAccount")}
               </Link>
@@ -86,8 +85,9 @@ export const Login = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className={`w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-${roleColor}-500 focus:ring-2 focus:ring-${roleColor}-200 dark:focus:ring-${roleColor}-800 transition`}
+              className="w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-[#0284c7] focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-800 transition"
               placeholder={t("login.usernamePlaceholder")}
+              autoComplete="username"
               required
               autoFocus
             />
@@ -102,8 +102,9 @@ export const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-${roleColor}-500 focus:ring-2 focus:ring-${roleColor}-200 dark:focus:ring-${roleColor}-800 transition`}
+              className="w-full px-6 py-4 text-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:border-[#0284c7] focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-800 transition"
               placeholder={t("login.passwordPlaceholder")}
+              autoComplete="current-password"
               required
             />
           </div>
@@ -111,7 +112,7 @@ export const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-${roleColor}-600 hover:bg-${roleColor}-700 dark:bg-${roleColor}-500 dark:hover:bg-${roleColor}-600 text-white font-bold py-5 px-6 rounded-lg text-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg`}
+            className="w-full bg-[#0284c7] hover:bg-[#0369a1] dark:bg-[#0369a1] dark:hover:bg-[#075985] text-white font-bold py-5 px-6 rounded-lg text-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
             {isLoading ? t("login.loggingIn") : t("login.loginButton")}
           </button>

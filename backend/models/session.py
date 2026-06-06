@@ -37,7 +37,7 @@ class SessionFrame(Base):
     __tablename__ = "session_frames"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey('sessions.id'), nullable=False)
+    session_id = Column(Integer, ForeignKey('sessions.id'), nullable=False, index=True)
     timestamp = Column(DateTime, nullable=False)
     rep_count = Column(Integer)
     angles = Column(Text)  # JSON string
@@ -57,7 +57,7 @@ class SessionError(Base):
     __tablename__ = "session_errors"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey('sessions.id'), nullable=False)
+    session_id = Column(Integer, ForeignKey('sessions.id'), nullable=False, index=True)
     error_name = Column(String(255), nullable=False)
     count = Column(Integer, default=0)
     severity = Column(String(50))

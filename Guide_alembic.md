@@ -1,10 +1,10 @@
-## 🗂️ **Hướng dẫn đầy đủ: Thay đổi Database với Alembic**
+## **Hướng dẫn đầy đủ: Thay đổi Database với Alembic**
 
 Dưới đây là **quy trình hoàn chỉnh** để thay đổi database schema một cách an toàn và có thể rollback.
 
 ---
 
-## 📋 **Quy trình 5 bước cơ bản**
+## **Quy trình 5 bước cơ bản**
 
 ### **Bước 1: Thay đổi Model SQLAlchemy**
 ```python
@@ -64,7 +64,7 @@ alembic downgrade -1  # Quay lại 1 bước
 
 ---
 
-## 🛠️ **Các lệnh Alembic quan trọng**
+## **Các lệnh Alembic quan trọng**
 
 ### **Kiểm tra trạng thái:**
 ```bash
@@ -103,7 +103,7 @@ alembic upgrade head --sql  # Xem SQL sẽ chạy (không thực thi)
 
 ---
 
-## 🎯 **Các tình huống phổ biến**
+## **Các tình huống phổ biến**
 
 ### **1. Thêm cột:**
 ```python
@@ -145,7 +145,7 @@ op.alter_column('table_name', 'column_name',
 
 ---
 
-## ⚠️ **Lưu ý quan trọng**
+## **Lưu ý quan trọng**
 
 ### **Backup database trước khi migrate:**
 ```bash
@@ -175,7 +175,7 @@ alembic upgrade head
 
 ---
 
-## 🔄 **Workflow khuyến nghị**
+## **Workflow khuyến nghị**
 
 ```bash
 # 1. Thay đổi models.py
@@ -196,7 +196,7 @@ alembic history
 
 ---
 
-## 🚨 **Các lỗi thường gặp và cách sửa**
+## **Các lỗi thường gặp và cách sửa**
 
 ### **"Target database is not up to date"**
 ```bash
@@ -220,7 +220,7 @@ alembic merge heads  # Tạo merge migration
 
 ---
 
-## 📁 **Cấu trúc thư mục Alembic**
+## **Cấu trúc thư mục Alembic**
 
 ```
 backend/

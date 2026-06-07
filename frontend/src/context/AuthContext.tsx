@@ -22,20 +22,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (didRestore.current) return;
     didRestore.current = true;
-    // Clear any tokens left over from the old sessionStorage-based auth system.
-    sessionStorage.removeItem('token');
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
 
     const restore = async () => {
       try {
         const { access_token, user: restoredUser } = await authAPI.refreshToken();
         setAccessToken(access_token);
         setUser(restoredUser);
-        sessionStorage.setItem('user', JSON.stringify(restoredUser));
       } catch {
         // No valid refresh token — user needs to log in.
-        sessionStorage.removeItem('user');
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -50,7 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const onForcedLogout = () => {
       setUser(null);
-      sessionStorage.removeItem('user');
     };
     window.addEventListener('auth:logout', onForcedLogout);
     return () => window.removeEventListener('auth:logout', onForcedLogout);
@@ -60,8 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { access_token, user: loggedInUser } = await authAPI.login(username, password, role);
     setAccessToken(access_token);
     setUser(loggedInUser);
-    // User object is not sensitive — storing it avoids a round-trip on the next render
-    sessionStorage.setItem('user', JSON.stringify(loggedInUser));
   };
 
   const logout = async () => {
@@ -71,7 +62,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setAccessToken(null);
       setUser(null);
-      sessionStorage.removeItem('user');
     }
   };
 

@@ -477,8 +477,8 @@ def _call_chat_completion(messages: List[Dict[str, str]]) -> str:
     endpoint = LLM_API_BASE_URL.rstrip("/") + "/chat/completions"
     payload: Dict[str, Any] = {
         "model": LLM_MODEL,
-        "temperature": 0.4,
-        "max_tokens": 800,
+        "temperature": 0.5,
+        "max_tokens": 1024,
         "messages": messages,
     }
 
@@ -531,7 +531,6 @@ def generate_patient_coach_reply(
     Generate patient coach reply with conversation memory, safety checks, and LLM.
     All user/assistant messages are persisted to the database.
     """
-    profile_consent = True
     safety_level, safety_message, skip_llm = _assess_safety_level(user_message)
 
     # Load conversation history BEFORE saving the new user message
@@ -563,73 +562,112 @@ def generate_patient_coach_reply(
 
     context = _build_patient_context(db, user_id, exercise_type)
 
-    # Build conversation context string for the LLM
+    # ── Format context as readable text (much better LLM comprehension than raw JSON) ──
+    p = context.get("profile", {})
+    ps = context.get("progress_summary", {})
+    sessions = context.get("recent_sessions", [])
+    errors = context.get("recurring_errors", [])
+    progressions = context.get("recent_progressions", [])
+    upcoming = context.get("upcoming_schedules", [])
+    past_sched = context.get("past_schedules", [])
+    limits = context.get("saved_limits", {})
+
+    def fmt_session(s: Dict) -> str:
+        mins = int((s.get("duration_seconds") or 0) // 60)
+        return (
+            f"  - {s.get('exercise_name','?')}: {s.get('total_reps',0)} reps, "
+            f"chính xác {s.get('accuracy',0):.0f}%, {mins} phút"
+        )
+
+    trend_label = ""
+    trend = ps.get("accuracy_trend")
+    if trend is not None:
+        if trend > 2:
+            trend_label = f"cải thiện +{trend:.1f}%"
+        elif trend < -2:
+            trend_label = f"giảm {trend:.1f}%"
+        else:
+            trend_label = "ổn định"
+
+    context_text = f"""=== HỒ SƠ BỆNH NHÂN ===
+Tên: {p.get('full_name','?')}  |  Tuổi: {p.get('age','?')}  |  Giới tính: {p.get('gender','?')}
+Mức đau: {p.get('pain_level','?')}/10  |  Vận động: {p.get('mobility_level','?')}
+Chấn thương: {p.get('injury_type') or 'Không có'}
+Bệnh nền: {p.get('medical_conditions') or 'Không có'}
+BMI: {p.get('bmi','?')}
+
+=== TIẾN TRÌNH ===
+Tổng buổi tập: {ps.get('total_sessions',0)}
+Độ chính xác trung bình: {ps.get('avg_accuracy',0):.1f}%  ({trend_label})
+Bài tập đã tập: {', '.join(ps.get('unique_exercises',[]) or ['Chưa có'])}
+
+=== 5 BUỔI GẦN NHẤT ===
+{chr(10).join(fmt_session(s) for s in sessions[:5]) if sessions else '  Chưa có buổi tập nào'}
+
+=== LỖI KỸ THUẬT THƯỜNG GẶP ===
+{chr(10).join(f'  - {e["name"]}: {e["count"]} lần' for e in errors) if errors else '  Không có lỗi nổi bật'}
+
+=== GIỚI HẠN CÁ NHÂN HOÁ ===
+Reps tối đa/hiệp: {limits.get('max_reps_per_set') or 'Chưa đặt'}
+Nghỉ giữa hiệp: {limits.get('recommended_rest_seconds') or 'Chưa đặt'} giây
+Điểm khó: {limits.get('difficulty_score') or 'Chưa đặt'}
+
+=== TĂNG CẤP ĐỘ GẦN ĐÂY ===
+{chr(10).join(f'  - {pr["exercise_name"]}: {pr["prev_reps"]} → {pr["new_reps"]} reps (đã duyệt)' for pr in progressions) if progressions else '  Chưa có'}
+
+=== LỊCH TẬP SẮP TỚI ===
+{chr(10).join(f'  - {s["exercise_name"]}: {s["scheduled_for"]}' + (f' ({s["note"]})' if s.get("note") else '') for s in upcoming) if upcoming else '  Không có lịch tập nào'}
+
+=== LỊCH TẬP ĐÃ QUA ===
+{chr(10).join(f'  - {s["exercise_name"]}: {s["scheduled_for"]}' for s in past_sched) if past_sched else '  Không có'}"""
+
+    # Build conversation history
     history_block = ""
     if conversation_history:
         history_lines = []
         for msg in conversation_history:
-            role_label = "User" if msg["role"] == "user" else "Coach"
+            role_label = "Bệnh nhân" if msg["role"] == "user" else "Huấn luyện viên"
             history_lines.append(f"{role_label}: {msg['content']}")
         history_block = (
-            "\n[Conversation History - refer to this for context]\n"
-            + "\n".join(history_lines)
-            + "\n[End of history]\n"
+            "\n=== LỊCH SỬ HỘI THOẠI ===\n"
+            + "\n".join(history_lines[-12:])   # last 6 exchanges
+            + "\n=== HẾT LỊCH SỬ ===\n"
         )
 
     system_prompt = (
-        "Bạn là Huấn Luyện Viên Phục Hồi Chức Năng chuyên nghiệp. "
-        "Luôn trả lời bằng tiếng Việt, đúng trọng tâm câu hỏi, tối đa 150 từ trừ khi được yêu cầu chi tiết.\n\n"
+        "Bạn là Huấn Luyện Viên Phục Hồi Chức Năng, người đồng hành đáng tin cậy của bệnh nhân cao tuổi. "
+        "Giọng điệu: ân cần, rõ ràng, khích lệ — như nói chuyện với bố mẹ. "
+        "Luôn trả lời bằng tiếng Việt, đúng trọng tâm, tối đa 180 từ trừ khi được yêu cầu chi tiết hơn.\n\n"
 
-        "BÀI TẬP HỆ THỐNG (chỉ đề xuất 4 bài này):\n"
-        "- arm_raise → Nâng tay: bài tập phục hồi vai/cánh tay, tập trung vào biên độ và kiểm soát\n"
-        "- squat → Squat: bài tập chân/đầu gối, chú ý góc gập và trọng tâm\n"
-        "- calf_raise → Nâng gót chân: phục hồi cổ chân/bắp chân, cân bằng và sức mạnh\n"
-        "- single_leg_stand → Đứng một chân: thăng bằng và ổn định khớp\n"
-        "QUAN TRỌNG: Khi nói chuyện CHỈ dùng tên tiếng Việt. KHÔNG BAO GIỜ viết tên kỹ thuật (arm_raise, squat, calf_raise, single_leg_stand) hay đặt chúng trong ngoặc đơn.\n\n"
+        "TÊN BÀI TẬP (LUÔN dùng tên tiếng Việt, KHÔNG bao giờ viết tên kỹ thuật ra):\n"
+        "arm_raise → Nâng tay | squat → Squat | calf_raise → Nâng gót chân | single_leg_stand → Đứng một chân\n\n"
 
-        "PHÂN TÍCH DỮ LIỆU BỆNH NHÂN:\n"
-        "- Dùng recent_sessions để nhận xét xu hướng: độ chính xác tăng/giảm, số reps, thời gian\n"
-        "- Dùng recurring_errors để chỉ ra lỗi kỹ thuật cụ thể và cách sửa\n"
-        "- Dùng accuracy_trend (số dương = cải thiện, số âm = giảm) để đánh giá tiến trình\n"
-        "- Dùng saved_limits (max_reps_per_set, difficulty_score, injury_risk_score) để điều chỉnh cường độ\n"
-        "- Dùng pain_level (0-10) và mobility_level để cá nhân hóa lời khuyên\n"
-        "- Dùng injury_type và medical_conditions để cảnh báo rủi ro phù hợp\n\n"
+        "CÁCH PHÂN TÍCH DỮ LIỆU:\n"
+        "- So sánh buổi gần nhất với trung bình để nhận xét cụ thể (VD: 'Buổi hôm qua đạt 85%, cao hơn mức trung bình 72% của bạn')\n"
+        "- Dùng lỗi kỹ thuật để giải thích nguyên nhân độ chính xác thấp (VD: 'Lỗi gập gối quá ít chiếm 8 lần — đó là lý do chính khiến điểm giảm')\n"
+        "- Dùng pain_level để điều chỉnh khuyến nghị (pain >= 7: đề nghị nghỉ; pain 4-6: giảm cường độ; pain <= 3: duy trì/tăng)\n"
+        "- Dùng injury_type để cảnh báo đúng bài tập (VD: chấn thương vai → thận trọng với Nâng tay)\n"
+        "- Dùng accuracy_trend: tăng = khen ngợi + đề xuất tiếp tục; giảm = tìm nguyên nhân từ lỗi kỹ thuật\n\n"
 
-        "KHẢ NĂNG TƯ VẤN:\n"
-        "- Giải thích tại sao độ chính xác cao/thấp dựa trên lỗi thường gặp\n"
-        "- Đề xuất tăng/giảm cường độ dựa trên xu hướng tiến trình\n"
-        "- So sánh buổi tập gần nhất với trung bình để đánh giá\n"
-        "- Gợi ý kỹ thuật sửa lỗi cụ thể theo từng bài tập\n"
-        "- Đề xuất thứ tự bài tập hợp lý cho buổi tập tiếp theo\n"
-        "- Giải thích mục đích y học của từng bài tập với chấn thương cụ thể\n"
-        "- Hướng dẫn khởi động/thư giãn phù hợp\n\n"
+        "LỊCH TẬP:\n"
+        "- Hỏi về lịch → chỉ liệt kê lịch từ dữ liệu, KHÔNG thêm hướng dẫn kỹ thuật\n"
+        "- Không có lịch → báo 'Hiện chưa có lịch tập nào' rồi dừng\n\n"
 
-        "TĂNG CẤP ĐỘ (recent_progressions trong dữ liệu):\n"
-        "- Nếu recent_progressions không rỗng: chủ động chúc mừng bệnh nhân đã được tăng cấp độ\n"
-        "- Nêu rõ bài tập nào, số reps tăng từ bao nhiêu lên bao nhiêu\n"
-        "- Nhắc nhở bệnh nhân giữ kỹ thuật đúng khi tập với cường độ mới\n"
-        "- Chỉ đề cập khi liên quan đến câu hỏi hoặc lần đầu trong cuộc trò chuyện\n\n"
-
-        "LỊCH TẬP (upcoming_schedules / past_schedules trong dữ liệu):\n"
-        "- Khi người dùng hỏi về lịch tập: kiểm tra upcoming_schedules và past_schedules trong context\n"
-        "- Nếu upcoming_schedules không rỗng: liệt kê từng mục (exercise_name + scheduled_for + note nếu có)\n"
-        "- Nếu upcoming_schedules rỗng: báo 'Hiện chưa có lịch tập nào được đặt' — DỪNG LẠI, không thêm gì khác\n"
-        "- Không tự ý giải thích bài tập hay đưa hướng dẫn kỹ thuật khi người dùng chỉ hỏi về lịch\n\n"
+        "TIẾN BỘ & ĐỘNG VIÊN:\n"
+        "- Khi có tăng cấp độ mới: chúc mừng cụ thể ('Bác đã tăng từ X lên Y reps — thành tích tốt!')\n"
+        "- Khi tiến trình đang tốt: ghi nhận và khích lệ tiếp tục\n"
+        "- Khi tiến trình giảm: động viên nhẹ nhàng, giải thích nguyên nhân, đề xuất điều chỉnh cụ thể\n\n"
 
         "QUY TẮC:\n"
-        "1. Trả lời ĐÚNG câu hỏi, KHÔNG thêm thông tin ngoài phạm vi câu hỏi\n"
-        "2. Nếu profile_sharing_consent=true trong dữ liệu: dùng toàn bộ thông tin hồ sơ để tư vấn cá nhân hóa, không hỏi lại\n"
-        "3. Không nhắc nhở an toàn định kỳ — chỉ khi người dùng báo triệu chứng\n"
-        "4. Không chẩn đoán bệnh hoặc kê đơn thuốc\n"
-        "5. Câu hỏi có/không → trả lời có/không trước, sau đó mới thêm chi tiết nếu cần\n\n"
+        "1. Trả lời ĐÚNG câu hỏi được hỏi, không thêm thông tin ngoài phạm vi\n"
+        "2. Dùng số liệu thực từ hồ sơ để tư vấn — không nói chung chung\n"
+        "3. Không chẩn đoán bệnh hoặc kê đơn thuốc\n"
+        "4. Câu hỏi có/không → trả lời có/không trước, rồi giải thích ngắn\n\n"
 
         "ĐỊNH DẠNG:\n"
-        "TUYỆT ĐỐI KHÔNG dùng ký hiệu markdown: không **, không *chữ*, không #, không __.\n"
-        "Tiêu đề mục chỉ viết hoa chữ cái đầu tiên, ví dụ: Tổng quan, Lỗi kỹ thuật, Khuyến nghị.\n"
-        "- 'cách làm/hướng dẫn' → bước đánh số (1. 2. 3.)\n"
-        "- 'tại sao/giải thích' → đoạn văn ngắn\n"
-        "- 'tóm tắt/tiến trình/lịch sử' → gạch đầu dòng (-)\n"
-        "- Câu hỏi thường → 1-3 câu trực tiếp, không cần tiêu đề\n\n"
+        "TUYỆT ĐỐI KHÔNG dùng: **, *, #, __\n"
+        "Tiêu đề: chỉ viết hoa chữ đầu (VD: Tổng quan, Lỗi kỹ thuật)\n"
+        "Hướng dẫn → đánh số 1. 2. 3.  |  Tóm tắt → gạch đầu dòng -  |  Câu hỏi thường → 1-3 câu trực tiếp\n\n"
 
         "AN TOÀN (chỉ khi người dùng báo triệu chứng):\n"
         "- Khó chịu nhẹ → giảm tốc độ, biên độ, số reps\n"
@@ -637,23 +675,21 @@ def generate_patient_coach_reply(
         "- Đau ngực/chóng mặt/khó thở/tê liệt → dừng ngay, gọi cấp cứu"
     )
 
-    user_payload = {
-        "user_message": user_message,
-        "profile_sharing_consent": profile_consent,
-        "context": context,
-    }
-
-    # Prepend conversation history to give the LLM short-term memory
+    # Build LLM messages with formatted context in system (not raw JSON in user)
     llm_messages: List[Dict[str, str]] = [
         {"role": "system", "content": system_prompt},
+        {"role": "system", "content": context_text},
     ]
     if history_block:
         llm_messages.append({"role": "system", "content": history_block})
-    llm_messages.append({"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)})
+    llm_messages.append({"role": "user", "content": user_message})
 
+    import re as _re
     reply = _call_chat_completion(llm_messages)
-    # Strip markdown the model might still produce despite the prompt ban
     reply = reply.replace("**", "").replace("__", "")
+    reply = _re.sub(r"^[•·▪▸➤]\s*", "- ", reply, flags=_re.MULTILINE)
+    for tech in ["arm_raise", "squat", "calf_raise", "single_leg_stand"]:
+        reply = reply.replace(f"({tech})", "").replace(f" {tech}", "")
 
     _save_message(
         db,

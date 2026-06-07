@@ -10,7 +10,7 @@ import json
 import shutil
 import threading
 
-from models import User, UserRole, DBSession, SessionError, SessionFrame, PendingExercise, Exercise, ExerciseAngleRule, ProgressionSuggestion, get_db
+from models import User, UserRole, DBSession, SessionError, SessionFrame, PendingExercise, Exercise, ExerciseAngleRule, ProgressionSuggestion, PatientExerciseAssignment, get_db
 from routers.auth import get_current_user
 from limiter import limiter
 from services.progression_service import apply_suggestion
@@ -1216,3 +1216,98 @@ async def reject_progression_suggestion(
     db.commit()
 
     return {'ok': True, 'message': 'Đã từ chối đề xuất.'}
+
+
+# ============================================================
+# EXERCISE ASSIGNMENT ENDPOINTS
+# ============================================================
+
+@router.get("/exercises/{exercise_id}/assignments")
+@limiter.limit("30/minute")
+async def get_exercise_assignments(
+    request: Request,
+    exercise_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List patients currently assigned to a custom exercise."""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
+
+    assignments = (
+        db.query(PatientExerciseAssignment)
+        .filter(
+            PatientExerciseAssignment.exercise_id == exercise_id,
+            PatientExerciseAssignment.assigned_by == current_user['user_id'],
+            PatientExerciseAssignment.is_active == True,
+        )
+        .all()
+    )
+    assigned_ids = {a.patient_id for a in assignments}
+
+    # Return all doctor's patients with assigned flag
+    patients = db.query(User).filter(
+        User.doctor_id == current_user['user_id'],
+        User.role == 'patient',
+    ).all()
+
+    return {
+        'patients': [
+            {
+                'id': p.id,
+                'full_name': p.full_name,
+                'username': p.username,
+                'assigned': p.id in assigned_ids,
+            }
+            for p in patients
+        ]
+    }
+
+
+@router.post("/exercises/{exercise_id}/assign")
+@limiter.limit("20/minute")
+async def assign_exercise(
+    request: Request,
+    exercise_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Assign/unassign a custom exercise to a list of patients."""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
+
+    exercise = db.query(Exercise).filter(Exercise.id == exercise_id).first()
+    if not exercise or exercise.is_default:
+        raise HTTPException(status_code=400, detail="Chỉ có thể giao bài tập tùy chỉnh")
+
+    body = await request.json()
+    patient_ids: list[int] = body.get('patient_ids', [])
+    note: str = body.get('note', '')
+
+    # Deactivate all existing assignments for this exercise by this doctor
+    db.query(PatientExerciseAssignment).filter(
+        PatientExerciseAssignment.exercise_id == exercise_id,
+        PatientExerciseAssignment.assigned_by == current_user['user_id'],
+    ).update({'is_active': False})
+
+    # Create new active assignments
+    for pid in patient_ids:
+        existing = db.query(PatientExerciseAssignment).filter(
+            PatientExerciseAssignment.exercise_id == exercise_id,
+            PatientExerciseAssignment.patient_id == pid,
+        ).first()
+        if existing:
+            existing.is_active = True
+            existing.note = note
+            existing.assigned_by = current_user['user_id']
+        else:
+            db.add(PatientExerciseAssignment(
+                patient_id=pid,
+                exercise_id=exercise_id,
+                assigned_by=current_user['user_id'],
+                note=note,
+                is_active=True,
+            ))
+
+    db.commit()
+    return {'ok': True, 'assigned_count': len(patient_ids)}

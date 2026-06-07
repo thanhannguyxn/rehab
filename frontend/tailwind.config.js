@@ -8,12 +8,16 @@ export default {
   theme: {
     extend: {
       fontSize: {
-        'base': '18px',
-        'lg': '20px',
-        'xl': '24px',
-        '2xl': '28px',
-        '3xl': '32px',
-        '4xl': '36px',
+        'xs':   ['13px', { lineHeight: '1.5' }],
+        'sm':   ['15px', { lineHeight: '1.5' }],
+        'base': ['17px', { lineHeight: '1.6' }],
+        'lg':   ['20px', { lineHeight: '1.6' }],
+        'xl':   ['23px', { lineHeight: '1.4' }],
+        '2xl':  ['27px', { lineHeight: '1.3' }],
+        '3xl':  ['33px', { lineHeight: '1.25' }],
+        '4xl':  ['40px', { lineHeight: '1.2' }],
+        '5xl':  ['48px', { lineHeight: '1.15' }],
+        '6xl':  ['58px', { lineHeight: '1.1' }],
       },
       spacing: {
         '18': '4.5rem',

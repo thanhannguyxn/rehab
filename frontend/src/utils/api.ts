@@ -221,6 +221,16 @@ export const doctorAPI = {
     const { data } = await api.post(`/doctor/progression-suggestions/${id}/reject`, { note });
     return data;
   },
+
+  async getExerciseAssignments(exerciseId: string): Promise<{ patients: { id: number; full_name: string; username: string; assigned: boolean }[] }> {
+    const { data } = await api.get(`/doctor/exercises/${exerciseId}/assignments`);
+    return data;
+  },
+
+  async assignExercise(exerciseId: string, patientIds: number[], note?: string): Promise<{ ok: boolean; assigned_count: number }> {
+    const { data } = await api.post(`/doctor/exercises/${exerciseId}/assign`, { patient_ids: patientIds, note });
+    return data;
+  },
 };
 
 // ─── Exercise management (doctor) ─────────────────────────────────────────────

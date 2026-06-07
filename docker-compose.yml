@@ -47,6 +47,8 @@ services:
   frontend:
     build: ./frontend
     container_name: rehab-frontend
+    environment:
+      - VITE_BACKEND_URL=http://backend:8000
     ports:
       - "3000:3000"
     volumes:

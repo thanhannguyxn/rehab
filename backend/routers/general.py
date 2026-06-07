@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 import jwt
-from models import User, Gender, MobilityLevel, UserExerciseLimits, Exercise, ProgressionSuggestion, get_db
+from models import User, Gender, MobilityLevel, UserExerciseLimits, Exercise, ProgressionSuggestion, PatientExerciseAssignment, get_db
 from routers.auth import verify_token
 from ai_models import PersonalizationEngine
 from limiter import limiter
@@ -115,8 +115,9 @@ async def get_exercises(request: Request, db: Session = Depends(get_db)):
         Exercise.is_active == True
     ).order_by(Exercise.name).all()
 
-    # Try to identify the calling patient to apply their progression limits
+    # Decode token to personalise exercises for the calling patient
     patient_limits: dict[str, int] = {}
+    assigned_exercise_ids: set[str] | None = None  # None = no filter (unauthenticated)
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         try:
@@ -124,6 +125,7 @@ async def get_exercises(request: Request, db: Session = Depends(get_db)):
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_id = payload.get("user_id")
             if user_id:
+                # Personalised reps/duration
                 rows = db.query(UserExerciseLimits).filter(
                     UserExerciseLimits.user_id == user_id,
                     UserExerciseLimits.max_reps_per_set.isnot(None),
@@ -132,18 +134,34 @@ async def get_exercises(request: Request, db: Session = Depends(get_db)):
                     row.exercise_type: int(row.max_reps_per_set)
                     for row in rows
                 }
+                # Custom exercises: only those explicitly assigned to this patient
+                assignments = db.query(PatientExerciseAssignment.exercise_id).filter(
+                    PatientExerciseAssignment.patient_id == user_id,
+                    PatientExerciseAssignment.is_active == True,
+                ).all()
+                assigned_exercise_ids = {a.exercise_id for a in assignments}
         except Exception:
             pass  # unauthenticated or invalid token — use defaults
 
     def _personalized(ex: Exercise) -> tuple[int, int]:
         """Returns (target_reps, duration_seconds) personalized for this patient."""
-        key = ex.base_exercise_type or ex.id
-        if key in patient_limits and ex.target_reps:
+        # Default exercises: use base_exercise_type (AI-personalised limits)
+        # Custom exercises: use their own id (only doctor-approved progression updates this)
+        key = ex.base_exercise_type if ex.is_default else ex.id
+        if key and key in patient_limits and ex.target_reps:
             new_reps = patient_limits[key]
-            # Scale duration proportionally with reps
             new_duration = max(60, round(ex.duration_seconds * new_reps / ex.target_reps))
             return new_reps, new_duration
         return ex.target_reps, ex.duration_seconds
+
+    def _visible(ex: Exercise) -> bool:
+        # Default exercises are always visible
+        if ex.is_default:
+            return True
+        # Unauthenticated (e.g. doctor preview) — show all
+        if assigned_exercise_ids is None:
+            return True
+        return ex.id in assigned_exercise_ids
 
     return {
         "exercises": [
@@ -159,5 +177,6 @@ async def get_exercises(request: Request, db: Session = Depends(get_db)):
                 "is_default": ex.is_default
             }
             for ex in exercises
+            if _visible(ex)
         ]
     }

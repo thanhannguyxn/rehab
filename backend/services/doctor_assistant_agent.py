@@ -393,8 +393,8 @@ def _call_llm_with_tools(messages: List[Dict[str, Any]]) -> Dict[str, Any]:
     endpoint = LLM_API_BASE_URL.rstrip("/") + "/chat/completions"
     payload: Dict[str, Any] = {
         "model": LLM_MODEL,
-        "temperature": 0.3,
-        "max_tokens": 1000,
+        "temperature": 0.4,
+        "max_tokens": 1200,
         "messages": messages,
         "tools": TOOL_DEFINITIONS,
         "tool_choice": "auto",
@@ -499,90 +499,130 @@ def generate_doctor_assistant_reply(
 
     context = _build_doctor_context(db, doctor_id, patient_id)
 
-    # Build conversation history block
+    # ── Format context as readable text ──
+    doc = context.get("doctor_profile", {})
+    practice = context.get("practice_summary", {})
+    patient_list = context.get("patient_summary_list", [])
+    selected = context.get("selected_patient")
+
+    def risk_flag(p: Dict) -> str:
+        flags = []
+        if p.get("session_count", 0) == 0:
+            flags.append("chưa tập lần nào")
+        if (p.get("pain_level") or 0) >= 7:
+            flags.append(f"đau cao ({p['pain_level']}/10)")
+        if (p.get("avg_accuracy") or 0) < 60 and p.get("session_count", 0) > 0:
+            flags.append("kỹ thuật yếu (<60%)")
+        last = p.get("last_session")
+        if last and last.get("start_time"):
+            try:
+                days_ago = (datetime.utcnow() - datetime.fromisoformat(last["start_time"])).days
+                if days_ago > 7:
+                    flags.append(f"không tập {days_ago} ngày")
+            except Exception:
+                pass
+        return " | ".join(flags) if flags else "ổn"
+
+    patient_rows = "\n".join(
+        f"  [{p['patient_id']}] {p['full_name']} — {p['session_count']} buổi, "
+        f"chính xác TB {p['avg_accuracy']:.0f}%, đau {p.get('pain_level','?')}/10 → {risk_flag(p)}"
+        for p in patient_list
+    ) or "  Chưa có bệnh nhân"
+
+    selected_text = ""
+    if selected:
+        err_lines = "\n".join(
+            f"    - {e['name']}: {e['count']} lần"
+            for e in selected.get("recurring_errors", [])
+        ) or "    Không có"
+        sess_lines = "\n".join(
+            f"    - {s['exercise_name']}: {s['total_reps']} reps, {s['accuracy']:.0f}%"
+            for s in selected.get("recent_sessions", [])[:5]
+        ) or "    Chưa có"
+        selected_text = f"""
+=== BỆNH NHÂN ĐANG XEM: {selected['full_name']} (ID {selected['patient_id']}) ===
+Tuổi: {selected.get('age','?')}  |  Giới tính: {selected.get('gender','?')}
+Mức đau: {selected.get('pain_level','?')}/10  |  Vận động: {selected.get('mobility_level','?')}
+Chấn thương: {selected.get('injury_type') or 'Không có'}
+Bệnh nền: {selected.get('medical_conditions') or 'Không có'}
+
+5 buổi tập gần nhất:
+{sess_lines}
+
+Lỗi kỹ thuật thường gặp:
+{err_lines}"""
+
+    context_text = f"""=== THÔNG TIN BÁC SĨ ===
+Tên: {doc.get('full_name','?')}  |  Tổng bệnh nhân: {practice.get('total_patients',0)}
+
+=== DANH SÁCH BỆNH NHÂN ===
+{patient_rows}
+{selected_text}"""
+
+    # Build conversation history
     history_block = ""
     if conversation_history:
         history_lines = []
         for msg in conversation_history:
-            role_label = "Doctor" if msg["role"] == "user" else "Assistant"
+            role_label = "Bác sĩ" if msg["role"] == "user" else "Trợ lý"
             history_lines.append(f"{role_label}: {msg['content']}")
         history_block = (
-            "\n[Conversation History - refer to this for context]\n"
-            + "\n".join(history_lines)
-            + "\n[End of history]\n"
+            "\n=== LỊCH SỬ HỘI THOẠI ===\n"
+            + "\n".join(history_lines[-12:])
+            + "\n=== HẾT LỊCH SỬ ===\n"
         )
 
     system_prompt = (
-        "Bạn là Trợ Lý Bác Sĩ Phục Hồi Chức Năng chuyên nghiệp. "
-        "Luôn trả lời bằng tiếng Việt, chính xác, dựa trên dữ liệu thực tế được cung cấp.\n\n"
+        "Bạn là Trợ Lý Bác Sĩ Phục Hồi Chức Năng chuyên nghiệp và sắc bén. "
+        "Trả lời bằng tiếng Việt, dựa HOÀN TOÀN vào dữ liệu thực tế được cung cấp — không bịa số liệu.\n\n"
 
-        "TÊN BÀI TẬP:\n"
-        "Trong câu trả lời LUÔN dùng tên tiếng Việt, KHÔNG bao giờ viết tên kỹ thuật hay đặt chúng trong ngoặc:\n"
-        "  arm_raise → Nâng tay\n"
-        "  squat → Squat\n"
-        "  calf_raise → Nâng gót chân\n"
-        "  single_leg_stand → Đứng một chân\n"
-        "(Chỉ dùng tên kỹ thuật khi gọi tool, không bao giờ hiển thị ra cho bác sĩ)\n\n"
+        "TÊN BÀI TẬP — TUYỆT ĐỐI KHÔNG viết arm_raise, squat, calf_raise, single_leg_stand trong câu trả lời:\n"
+        "arm_raise → Nâng tay | squat → Squat | calf_raise → Nâng gót chân | single_leg_stand → Đứng một chân\n"
+        "Chỉ dùng tên kỹ thuật khi GỌI TOOL, không bao giờ hiển thị ra ngoài.\n\n"
+        "TÊN TRƯỜNG DỮ LIỆU — KHÔNG viết pain_level, session_count, avg_accuracy, accuracy ra câu trả lời:\n"
+        "pain_level → mức đau | session_count → số buổi tập | avg_accuracy/accuracy → độ chính xác\n\n"
 
-        "PHÂN TÍCH LÂM SÀNG:\n"
-        "- session_count + last_session → đánh giá tuân thủ điều trị\n"
-        "- avg_accuracy + recurring_errors → chất lượng kỹ thuật\n"
-        "- accuracy_trend dương = tiến triển tốt, âm = cần điều chỉnh\n"
-        "- pain_level + mobility_level + injury_type → mức rủi ro\n"
-        "- Không tập >7 ngày = nguy cơ bỏ điều trị\n"
-        "- Độ chính xác <60% liên tục = cần hướng dẫn lại kỹ thuật\n"
-        "- Độ chính xác >90% ổn định = có thể tăng cường độ\n\n"
+        "PHÂN TÍCH LÂM SÀNG — luôn suy luận từ dữ liệu:\n"
+        "- Tuân thủ: session_count thấp hoặc không tập >7 ngày = nguy cơ bỏ điều trị → đề xuất nhắc nhở\n"
+        "- Kỹ thuật: avg_accuracy <60% = cần hướng dẫn lại; >90% ổn định = sẵn sàng tăng cường độ\n"
+        "- Đau & rủi ro: pain_level ≥7 = cần đánh giá lại; kết hợp injury_type để cá nhân hoá\n"
+        "- Lỗi tái diễn: recurring_errors cao → chỉ ra nguyên nhân cụ thể và phương án can thiệp\n"
+        "- Khi phân tích nhiều bệnh nhân: ưu tiên liệt kê người có rủi ro cao nhất trước\n\n"
 
-        "CÔNG CỤ — gọi chủ động khi cần:\n"
-        "- list_doctor_patients: danh sách tổng quan tất cả bệnh nhân\n"
-        "- get_patient_details(patient_id): chi tiết 1 bệnh nhân\n"
+        "CÔNG CỤ — gọi chủ động khi cần thông tin chi tiết hơn:\n"
+        "- list_doctor_patients: tổng quan tất cả bệnh nhân\n"
+        "- get_patient_details(patient_id): chi tiết đầy đủ 1 bệnh nhân\n"
         "- create_patient_schedule(patient_id, exercise_name, scheduled_for, note): lên lịch tập\n"
-        "- list_progression_suggestions(status): đề xuất tăng cấp độ (status: pending/approved/rejected)\n"
-        "- approve_progression_suggestion(suggestion_id, note): duyệt đề xuất tăng cấp độ\n\n"
+        "- list_progression_suggestions(status): xem đề xuất tăng cấp (pending/approved/rejected)\n"
+        "- approve_progression_suggestion(suggestion_id, note): duyệt tăng cấp độ\n\n"
 
         "QUY TẮC:\n"
-        "1. Chỉ dùng dữ liệu thực từ context, không bịa thêm\n"
-        "2. Không kê đơn thuốc hoặc chẩn đoán bệnh chính thức\n"
-        "3. Sau khi tool trả kết quả, phân tích và đưa nhận xét lâm sàng — không liệt kê dữ liệu thô\n\n"
+        "1. Chỉ dùng số liệu thực — nếu thiếu dữ liệu, nói rõ 'chưa có dữ liệu' thay vì ước đoán\n"
+        "2. Sau khi tool trả kết quả: phân tích lâm sàng ngay, không liệt kê dữ liệu thô\n"
+        "3. Không kê đơn thuốc hoặc chẩn đoán bệnh chính thức\n"
+        "4. Câu hỏi ngắn → trả lời thẳng 1-3 câu\n\n"
 
-        "ĐỊNH DẠNG BẮT BUỘC:\n"
-        "TUYỆT ĐỐI KHÔNG dùng ký hiệu markdown: không **, không *, không #, không •.\n"
-        "Bullet dùng dấu gạch ngang: -\n"
-        "Tiêu đề section: chỉ viết hoa chữ cái đầu tiên của tiêu đề, không viết hoa toàn bộ.\n\n"
-        "Cấu trúc cho câu trả lời phân tích bệnh nhân:\n\n"
+        "ĐỊNH DẠNG:\n"
+        "KHÔNG dùng: **, *, #, __  |  Bullet: dấu -  |  Tiêu đề: chỉ viết hoa chữ đầu\n\n"
+        "Cho phân tích bệnh nhân đầy đủ, dùng cấu trúc:\n"
         "Nhận xét chính\n"
-        "[1-2 câu tóm tắt tình trạng và xu hướng nổi bật nhất]\n\n"
+        "[1-2 câu tóm tắt tình trạng nổi bật, dùng số liệu cụ thể]\n\n"
         "Đề xuất tiếp theo\n"
-        "- [hành động cụ thể 1]\n"
-        "- [hành động cụ thể 2]\n\n"
+        "- [hành động cụ thể với lý do]\n"
+        "- [hành động cụ thể với lý do]\n\n"
         "Rủi ro cần lưu ý\n"
-        "- [cảnh báo hoặc dấu hiệu cần theo dõi]\n\n"
+        "- [cảnh báo cụ thể dựa trên dữ liệu]\n\n"
         "Chỉ số theo dõi\n"
-        "- [chỉ số 1: mục tiêu cụ thể]\n"
-        "- [chỉ số 2: mục tiêu cụ thể]\n\n"
-        "Với câu hỏi ngắn: trả lời thẳng 1-3 câu, không dùng template trên."
+        "- [chỉ số: mục tiêu cụ thể trong X tuần]"
     )
 
-    user_payload = {
-        "doctor_message": user_message,
-        "context": context,
-        "response_format": {
-            "style": "clinical_concise",
-            "must_include": [
-                "one key insight",
-                "one suggested next action",
-                "one safety/risk note if relevant",
-            ],
-        },
-    }
-
-    # Build messages for the LLM (OpenAI-compatible format)
     llm_messages: List[Dict[str, Any]] = [
         {"role": "system", "content": system_prompt},
+        {"role": "system", "content": context_text},
     ]
     if history_block:
         llm_messages.append({"role": "system", "content": history_block})
-    llm_messages.append({"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)})
+    llm_messages.append({"role": "user", "content": user_message})
 
     # First LLM call
     response = _call_llm_with_tools(llm_messages)
@@ -626,8 +666,27 @@ def generate_doctor_assistant_reply(
         current_content = response.get("content") or ""
         tool_call = response.get("tool_call")
 
-    # If no content was generated, use a fallback
-    final_reply = current_content.strip().replace("**", "")
+    # Strip disallowed formatting
+    import re as _re
+    final_reply = current_content.strip()
+    final_reply = final_reply.replace("**", "").replace("__", "")
+    # Replace bullet variants with dash
+    final_reply = _re.sub(r"^[•·▪▸➤]\s*", "- ", final_reply, flags=_re.MULTILINE)
+    # Remove technical names shown in parentheses after Vietnamese names
+    for tech, viet in [
+        ("arm_raise", "Nâng tay"), ("squat", "Squat"),
+        ("calf_raise", "Nâng gót chân"), ("single_leg_stand", "Đứng một chân"),
+    ]:
+        final_reply = final_reply.replace(f"({tech})", "").replace(f" {tech}", f" {viet}")
+    # Replace field name labels with natural Vietnamese
+    field_map = {
+        "pain_level": "mức đau", "Pain_level": "Mức đau",
+        "session_count": "số buổi tập", "Session_count": "Số buổi tập",
+        "avg_accuracy": "độ chính xác trung bình", "accuracy": "độ chính xác",
+        "Accuracy": "Độ chính xác",
+    }
+    for eng, vi in field_map.items():
+        final_reply = final_reply.replace(eng, vi)
     if not final_reply:
         final_reply = (
             "Tôi đã xử lý yêu cầu của bạn nhưng không tạo được phản hồi. "

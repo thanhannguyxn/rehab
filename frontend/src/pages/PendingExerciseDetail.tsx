@@ -58,6 +58,14 @@ export const PendingExerciseDetail = () => {
   const [editDownThreshold, setEditDownThreshold] = useState<number | ''>('');
   const [editUpThreshold, setEditUpThreshold] = useState<number | ''>('');
 
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ label: string; message: string; onConfirm: () => void } | null>(null);
+
+  const showToast = (type: 'success' | 'error' | 'info', text: string) => {
+    setToast({ type, text });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const didFetch = useRef(false);
 
   useEffect(() => {
@@ -76,16 +84,14 @@ export const PendingExerciseDetail = () => {
       setEditUpThreshold(data.detected_thresholds?.up_threshold || '');
     } catch (error) {
       console.error('Error loading pending detail:', error);
-      alert('Không tìm thấy bài tập');
+      showToast('error', 'Không tìm thấy bài tập');
       navigate('/exercise-management');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleApprove = async () => {
-    if (!window.confirm('Bạn có chắc muốn duyệt bài tập này?')) return;
-
+  const doApprove = async () => {
     setProcessing(true);
     try {
       await exerciseManagementAPI.updatePending(id!, {
@@ -97,49 +103,62 @@ export const PendingExerciseDetail = () => {
           hysteresis: 5.0,
         },
       });
-
       const data = await exerciseManagementAPI.approve(id!) as { exercise_id: string };
-      alert(`Thành công! Bài tập "${data.exercise_id}" đã được thêm vào hệ thống.`);
-      navigate('/exercise-management');
+      showToast('success', `Đã duyệt bài tập "${data.exercise_id}" thành công!`);
+      setTimeout(() => navigate('/exercise-management'), 1500);
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || 'Lỗi khi duyệt bài tập');
+      showToast('error', detail || 'Lỗi khi duyệt bài tập');
     } finally {
       setProcessing(false);
     }
   };
 
-  const handleReject = async () => {
-    if (!window.confirm('Bạn có chắc muốn xóa bài tập này? Video sẽ bị xóa vĩnh viễn.')) return;
-
+  const doReject = async () => {
     setProcessing(true);
     try {
       await exerciseManagementAPI.deletePending(id!);
-      alert('Đã xóa bài tập');
-      navigate('/exercise-management');
+      showToast('success', 'Đã xóa bài tập');
+      setTimeout(() => navigate('/exercise-management'), 1500);
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || 'Lỗi khi xóa');
+      showToast('error', detail || 'Lỗi khi xóa');
     } finally {
       setProcessing(false);
     }
   };
 
-  const handleReanalyze = async () => {
-    if (!window.confirm('Bạn có muốn phân tích lại video này?')) return;
-
+  const doReanalyze = async () => {
     setProcessing(true);
     try {
       await exerciseManagementAPI.reanalyze(id!);
-      alert('Đang phân tích lại video...');
+      showToast('info', 'Đang phân tích lại video...');
       loadPendingDetail();
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || 'Lỗi');
+      showToast('error', detail || 'Lỗi');
     } finally {
       setProcessing(false);
     }
   };
+
+  const handleApprove = () => setConfirmAction({
+    label: 'Duyệt bài tập',
+    message: 'Bạn có chắc muốn duyệt bài tập này?',
+    onConfirm: doApprove,
+  });
+
+  const handleReject = () => setConfirmAction({
+    label: 'Xóa bài tập',
+    message: 'Bạn có chắc muốn xóa bài tập này? Video sẽ bị xóa vĩnh viễn.',
+    onConfirm: doReject,
+  });
+
+  const handleReanalyze = () => setConfirmAction({
+    label: 'Phân tích lại',
+    message: 'Bạn có muốn phân tích lại video này?',
+    onConfirm: doReanalyze,
+  });
 
   if (loading) {
     return (
@@ -540,6 +559,64 @@ export const PendingExerciseDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Confirm Modal */}
+      {confirmAction && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">{confirmAction.label}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{confirmAction.message}</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => { confirmAction.onConfirm(); setConfirmAction(null); }}
+                className="flex-1 bg-[#0369a1] hover:bg-[#0284c7] text-white font-semibold py-2.5 rounded-xl transition"
+              >
+                Xác nhận
+              </button>
+              <button
+                onClick={() => setConfirmAction(null)}
+                className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold py-2.5 rounded-xl transition"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-50 animate-slide-in-right">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl border-l-4 min-w-[300px] bg-white dark:bg-gray-800 ${
+            toast.type === 'success' ? 'border-green-500' : toast.type === 'error' ? 'border-red-500' : 'border-blue-500'
+          }`}>
+            <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
+              toast.type === 'success' ? 'bg-green-100 dark:bg-green-900/40' : toast.type === 'error' ? 'bg-red-100 dark:bg-red-900/40' : 'bg-blue-100 dark:bg-blue-900/40'
+            }`}>
+              {toast.type === 'success' ? (
+                <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+              ) : toast.type === 'error' ? (
+                <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+              ) : (
+                <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+              )}
+            </div>
+            <p className="flex-1 font-medium text-gray-900 dark:text-white text-sm">{toast.text}</p>
+            <button onClick={() => setToast(null)} className="text-gray-400 hover:text-gray-600 transition">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

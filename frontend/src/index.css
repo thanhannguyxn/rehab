@@ -14,16 +14,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ensure minimum font size for accessibility */
 @layer base {
   html {
     font-size: 16px;
-  }
-  
-  @media (min-width: 768px) {
-    html {
-      font-size: 18px;
-    }
   }
 }
 

@@ -11,7 +11,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from models import DBSession, User, UserExerciseLimits, ProgressionSuggestion
+from models import DBSession, Exercise, User, UserExerciseLimits, ProgressionSuggestion
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -46,6 +46,13 @@ _DELTA: dict = {
     },
 }
 
+# Fallback delta for custom exercises (no predefined type)
+_DEFAULT_DELTA: dict = {
+    "max_reps_per_set": 2,
+    "difficulty_score": 0.1,
+    "recommended_rest_seconds": -10,
+}
+
 # Absolute floors so suggestions never go below safe minimums
 _FLOOR_REST = 20      # seconds
 _FLOOR_REPS = 3
@@ -67,8 +74,14 @@ def check_and_create_suggestion(
     Called in a background task after every session.end endpoint.
     """
     delta = _DELTA.get(exercise_name)
+    custom_exercise: Exercise | None = None
     if delta is None:
-        return None  # custom exercises — skip
+        # Custom exercise — look up by ID to confirm it exists
+        custom_exercise = db.query(Exercise).filter(Exercise.id == exercise_name).first()
+        if custom_exercise is None:
+            return None
+        # Inherit delta from base type, or use generic default
+        delta = _DELTA.get(custom_exercise.base_exercise_type or "", _DEFAULT_DELTA)
 
     # --- fetch last N valid sessions for this exercise ---
     recent = (
@@ -123,7 +136,9 @@ def check_and_create_suggestion(
         .first()
     )
 
-    current_reps = int(limits.max_reps_per_set) if limits and limits.max_reps_per_set else None
+    # For custom exercises with no prior limit entry, fall back to the exercise's own target_reps
+    _reps_fallback = custom_exercise.target_reps if custom_exercise else None
+    current_reps = int(limits.max_reps_per_set) if limits and limits.max_reps_per_set else _reps_fallback
     current_diff = float(limits.difficulty_score) if limits and limits.difficulty_score else None
     current_rest = int(limits.recommended_rest_seconds) if limits and limits.recommended_rest_seconds else None
 

@@ -97,11 +97,10 @@ def migrate_db():
             conn.execute(text('ALTER TABLE users ADD COLUMN email VARCHAR(255) NULL'))
             conn.commit()
 
-    # Create progression_suggestions table if it does not exist yet.
-    # SQLAlchemy create_all with checkfirst=True handles this safely.
     from models.session import ProgressionSuggestion
-    from models.base import Base
+    from models.exercise import PatientExerciseAssignment
     ProgressionSuggestion.__table__.create(bind=engine, checkfirst=True)
+    PatientExerciseAssignment.__table__.create(bind=engine, checkfirst=True)
 
 
 def ensure_default_exercises(db):

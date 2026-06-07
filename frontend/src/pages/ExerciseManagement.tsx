@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../utils/config';
 import { useTranslation } from 'react-i18next';
 import { exerciseManagementAPI } from '../utils/api';
+import { AssignExerciseModal } from '../components/AssignExerciseModal';
 
 interface PendingExercise {
   id: number;
@@ -74,6 +75,18 @@ export const ExerciseManagement = () => {
   });
   const [saving, setSaving] = useState(false);
 
+  // Assign exercise modal state
+  const [assigningExercise, setAssigningExercise] = useState<{ id: string; name: string } | null>(null);
+
+  // In-app toast + confirm dialog
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  const showToast = (type: 'success' | 'error', text: string) => {
+    setToast({ type, text });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const didFetch = useRef(false);
 
   useEffect(() => {
@@ -109,13 +122,13 @@ export const ExerciseManagement = () => {
 
       // Validate file type
       if (!file.type.startsWith('video/')) {
-        alert(t('exerciseManagement.alerts.onlyVideo'));
+        showToast('error', t('exerciseManagement.alerts.onlyVideo'));
         return;
       }
 
       // Validate file size (max 100MB)
       if (file.size > 100 * 1024 * 1024) {
-        alert(t('exerciseManagement.alerts.fileTooLarge'));
+        showToast('error', t('exerciseManagement.alerts.fileTooLarge'));
         return;
       }
 
@@ -129,7 +142,7 @@ export const ExerciseManagement = () => {
     setUploading(true);
     try {
       await exerciseManagementAPI.upload(selectedFile);
-      alert(t('exerciseManagement.alerts.uploadSuccess'));
+      showToast('success', t('exerciseManagement.alerts.uploadSuccess'));
       setSelectedFile(null);
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
@@ -137,7 +150,7 @@ export const ExerciseManagement = () => {
       setActiveTab('pending');
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || t('exerciseManagement.alerts.uploadFailed'));
+      showToast('error', detail || t('exerciseManagement.alerts.uploadFailed'));
     } finally {
       setUploading(false);
     }
@@ -165,28 +178,33 @@ export const ExerciseManagement = () => {
     setSaving(true);
     try {
       await exerciseManagementAPI.updateExercise(editingExercise.id, editForm);
-      alert(t('exerciseManagement.alerts.updateSuccess'));
+      showToast('success', t('exerciseManagement.alerts.updateSuccess'));
       setEditModalOpen(false);
       setEditingExercise(null);
       loadApprovedExercises();
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || t('exerciseManagement.alerts.updateError'));
+      showToast('error', detail || t('exerciseManagement.alerts.updateError'));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDeleteExercise = async (exerciseId: string) => {
-    if (!window.confirm(t('exerciseManagement.deleteConfirm'))) return;
+  const handleDeleteExercise = (exerciseId: string) => {
+    setConfirmDelete(exerciseId);
+  };
 
+  const confirmDeleteExercise = async () => {
+    if (!confirmDelete) return;
+    const id = confirmDelete;
+    setConfirmDelete(null);
     try {
-      await exerciseManagementAPI.deleteExercise(exerciseId);
-      alert(t('exerciseManagement.deleteSuccess'));
+      await exerciseManagementAPI.deleteExercise(id);
+      showToast('success', t('exerciseManagement.deleteSuccess'));
       loadApprovedExercises();
     } catch (error: unknown) {
       const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      alert(detail || t('exerciseManagement.alerts.deleteErrorTitle'));
+      showToast('error', detail || t('exerciseManagement.alerts.deleteErrorTitle'));
     }
   };
 
@@ -469,15 +487,22 @@ export const ExerciseManagement = () => {
                       {!exercise.is_default && (
                         <div className="flex gap-2 ml-4">
                           <button
+                            onClick={() => setAssigningExercise({ id: exercise.id, name: exercise.name })}
+                            className="px-3 py-2 bg-green-100 hover:bg-green-200 dark:bg-green-500/20 dark:hover:bg-green-500/30 text-green-700 dark:text-green-400 rounded-lg transition text-sm font-medium"
+                            title="Giao cho bệnh nhân"
+                          >
+                            Phân bổ bài tập
+                          </button>
+                          <button
                             onClick={() => openEditModal(exercise)}
-                            className="p-2 bg-blue-100 hover:bg-blue-200 dark:bg-[#0369a1]/20 dark:hover:bg-[#0369a1]/30 text-[#0284c7] dark:text-blue-600 rounded-lg transition"
+                            className="px-3 py-2 bg-blue-100 hover:bg-blue-200 dark:bg-[#0369a1]/20 dark:hover:bg-[#0369a1]/30 text-[#0284c7] dark:text-blue-600 rounded-lg transition text-sm font-medium"
                             title="Chỉnh sửa"
                           >
                             {t('exerciseManagement.editBtn')}
                           </button>
                           <button
                             onClick={() => handleDeleteExercise(exercise.id)}
-                            className="p-2 bg-red-100 hover:bg-red-200 dark:bg-red-500/20 dark:hover:bg-red-500/30 text-red-600 dark:text-red-400 rounded-lg transition"
+                            className="px-3 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-500/20 dark:hover:bg-red-500/30 text-red-600 dark:text-red-400 rounded-lg transition text-sm font-medium"
                             title="Xóa"
                           >
                             {t('exerciseManagement.deleteBtn')}
@@ -799,6 +824,77 @@ export const ExerciseManagement = () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Exercise Modal */}
+      {assigningExercise && (
+        <AssignExerciseModal
+          exerciseId={assigningExercise.id}
+          exerciseName={assigningExercise.name}
+          onClose={() => setAssigningExercise(null)}
+        />
+      )}
+
+      {/* Confirm Delete Modal */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">Xóa bài tập</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{t('exerciseManagement.deleteConfirm')}</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={confirmDeleteExercise}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl transition"
+              >
+                Xóa
+              </button>
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold py-2.5 rounded-xl transition"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-50 animate-slide-in-right">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl border-l-4 min-w-[300px] bg-white dark:bg-gray-800 ${
+            toast.type === 'success' ? 'border-green-500' : 'border-red-500'
+          }`}>
+            <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
+              toast.type === 'success' ? 'bg-green-100 dark:bg-green-900/40' : 'bg-red-100 dark:bg-red-900/40'
+            }`}>
+              {toast.type === 'success' ? (
+                <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <p className="flex-1 font-medium text-gray-900 dark:text-white text-sm">{toast.text}</p>
+            <button onClick={() => setToast(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
       )}

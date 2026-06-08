@@ -1,5 +1,5 @@
 # User model
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, Enum, CheckConstraint
+from sqlalchemy import Column, Integer, String, Float, Text, DateTime, Boolean, ForeignKey, Enum, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
@@ -54,7 +54,8 @@ class User(Base):
     doctor_notes = Column(Text)
     contraindicated_exercises = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow, index=True) # Add index for faster queries by created_at
-    doctor_id = Column(Integer, ForeignKey('users.id'), index=True) # Add index for faster queries by doctor_id
+    doctor_id = Column(Integer, ForeignKey('users.id'), index=True)
+    password_changed = Column(Boolean, default=True, nullable=False, server_default='1')
 
     # Relationships
     doctor = relationship("User", remote_side=[id])

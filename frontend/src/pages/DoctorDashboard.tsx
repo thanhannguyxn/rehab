@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { useAuth } from '../context/AuthContext';
 import { doctorAPI } from '../utils/api';
 import { PatientCard } from '../components/PatientCard';
 import { CreatePatientModal, SuccessCredentialsPopup } from '../components/CreatePatientModal';
@@ -12,7 +11,6 @@ import { PatientCardSkeleton } from '../components/skeletons/PatientCardSkeleton
 import { ProgressionSuggestionsPanel } from '../components/ProgressionSuggestionsPanel';
 
 export const DoctorDashboard = () => {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { data, isLoading, refetch: loadPatients } = useQuery<{ patients: Patient[] }>({
     queryKey: ['doctor-patients'],
@@ -70,11 +68,6 @@ export const DoctorDashboard = () => {
     const sum = patientsWithSessions.reduce((acc: number, p: Patient) => acc + (p.last_session?.accuracy || 0), 0);
     return (sum / patientsWithSessions.length).toFixed(1);
   }, [patients]);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   return (
     <>

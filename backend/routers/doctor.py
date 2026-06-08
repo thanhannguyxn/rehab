@@ -973,8 +973,10 @@ async def delete_exercise(
 # ================ EMOTION TRACKING ENDPOINTS ================
 
 @router.get("/sessions/{session_id}/emotions")
-async def get_session_emotions(session_id: int, db: Session = Depends(get_db)):
+async def get_session_emotions(session_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Get emotion data and timeline for a specific session"""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
     # Get session to verify it exists
     session = db.query(DBSession).filter(DBSession.id == session_id).first()
     if not session:
@@ -1027,8 +1029,10 @@ async def get_session_emotions(session_id: int, db: Session = Depends(get_db)):
     }
 
 @router.get("/patients/{patient_id}/emotion-trends")
-async def get_patient_emotion_trends(patient_id: int, db: Session = Depends(get_db)):
+async def get_patient_emotion_trends(patient_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Get emotion trends over multiple sessions for a patient"""
+    if current_user['role'] != 'doctor':
+        raise HTTPException(status_code=403, detail="Doctors only")
     # Get recent sessions with emotion data
     sessions = db.query(DBSession).filter(
         DBSession.patient_id == patient_id,

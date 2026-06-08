@@ -18,9 +18,13 @@ REDIS_URL = os.getenv(
     "redis://localhost:6379/0"
 )
 
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
-# Separate key for refresh tokens — compromise of one key doesn't affect the other
-REFRESH_SECRET_KEY = os.getenv("REFRESH_SECRET_KEY", "your-refresh-secret-key-change-in-production")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")
+
+REFRESH_SECRET_KEY = os.getenv("REFRESH_SECRET_KEY")
+if not REFRESH_SECRET_KEY:
+    raise RuntimeError("REFRESH_SECRET_KEY environment variable is not set")
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "15"))
 REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))

@@ -135,6 +135,11 @@ export const authAPI = {
     await api.post('/auth/logout');
   },
 
+  async changePassword(newPassword: string): Promise<{ ok: boolean }> {
+    const { data } = await api.post('/auth/change-password', { new_password: newPassword });
+    return data;
+  },
+
   async createPatient(payload: {
     full_name: string;
     username: string;

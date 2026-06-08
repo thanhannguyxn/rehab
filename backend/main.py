@@ -50,9 +50,6 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 if not os.path.exists('uploads'):
     os.makedirs('uploads')
 
-# Mount static files directory for music and assets
-app.mount("/static", StaticFiles(directory="."), name="static")
-
 # Mount uploads directory for exercise videos and thumbnails
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
@@ -60,8 +57,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 # Include routers

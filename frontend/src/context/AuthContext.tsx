@@ -7,6 +7,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (username: string, password: string, role: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (updated: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,7 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      // Tell the backend to clear the HttpOnly refresh-token cookie
       await authAPI.logoutUser();
     } finally {
       setAccessToken(null);
@@ -65,8 +65,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUser = (updated: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...updated } : prev);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -96,6 +96,9 @@ def migrate_db():
         if 'email' not in existing_cols:
             conn.execute(text('ALTER TABLE users ADD COLUMN email VARCHAR(255) NULL'))
             conn.commit()
+        if 'password_changed' not in existing_cols:
+            conn.execute(text('ALTER TABLE users ADD COLUMN password_changed TINYINT(1) NOT NULL DEFAULT 1'))
+            conn.commit()
 
     from models.session import ProgressionSuggestion
     from models.exercise import PatientExerciseAssignment

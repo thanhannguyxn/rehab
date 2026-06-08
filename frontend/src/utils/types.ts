@@ -7,6 +7,7 @@ export interface User {
   full_name: string;
   age?: number;
   gender?: string;
+  password_changed?: boolean;
 }
 
 export interface LoginResponse {

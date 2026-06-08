@@ -110,6 +110,7 @@ def _user_dict(user: User) -> dict:
         'age': user.age,
         'gender': user.gender.value if user.gender else None,
         'doctor_id': user.doctor_id,
+        'password_changed': bool(user.password_changed),
     }
 
 
@@ -176,7 +177,7 @@ async def register(
         new_user = User(
             username=reg_req.username,
             password_hash=hash_password(reg_req.password),
-            role=UserRole.patient if reg_req.role == 'patient' else UserRole.doctor,
+            role=UserRole.patient,
             full_name=reg_req.full_name,
             age=reg_req.age,
             gender=Gender(reg_req.gender) if reg_req.gender else None,
@@ -318,6 +319,7 @@ async def create_patient(
             password_hash=hash_password(plain_password),
             email=patient_req.email,
             role=UserRole.patient,
+            password_changed=False,
             full_name=patient_req.full_name,
             age=patient_req.age,
             gender=Gender(patient_req.gender) if patient_req.gender else None,
@@ -352,3 +354,38 @@ async def create_patient(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+
+
+class ChangePasswordRequest(BaseModel):
+    new_password: str
+
+
+@router.post("/change-password")
+@limiter.limit("10/minute")
+async def change_password(
+    request: Request,
+    body: ChangePasswordRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    """Đổi mật khẩu lần đầu đăng nhập. Xoá cờ must_change_password."""
+    import re
+    pw = body.new_password
+    if len(pw) < 8:
+        raise HTTPException(status_code=400, detail="Mật khẩu phải có ít nhất 8 ký tự")
+    if not re.search(r'[A-Z]', pw):
+        raise HTTPException(status_code=400, detail="Mật khẩu phải có ít nhất 1 chữ in hoa")
+    if not re.search(r'[0-9]', pw):
+        raise HTTPException(status_code=400, detail="Mật khẩu phải có ít nhất 1 chữ số")
+    if not re.search(r'[^a-zA-Z0-9]', pw):
+        raise HTTPException(status_code=400, detail="Mật khẩu phải có ít nhất 1 ký tự đặc biệt")
+
+    user = db.query(User).filter(User.id == current_user['user_id']).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Không tìm thấy người dùng")
+
+    user.password_hash = hash_password(body.new_password)
+    user.password_changed = True
+    db.commit()
+
+    return {'ok': True, 'message': 'Đổi mật khẩu thành công'}
